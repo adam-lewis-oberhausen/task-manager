@@ -141,7 +141,7 @@ const TaskList = () => {
             </TableRow>
           </TableHead>
           <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="tasks">
+            <Droppable droppableId="droppable-tasks">
               {(provided) => (
                 <TableBody {...provided.droppableProps} ref={provided.innerRef}>
                   {tasks.map((task, index) => (
@@ -150,10 +150,9 @@ const TaskList = () => {
                         <TableRow
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          {...provided.dragHandleProps}
                           className={isOverdue(task.dueDate) ? 'overdue' : ''}
                         >
-                          <TableCell>
+                          <TableCell {...provided.dragHandleProps}>
                             <DragHandle />
                           </TableCell>
                           <TableCell>
