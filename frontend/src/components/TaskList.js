@@ -3,7 +3,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Edit, Delete, ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import { getTasks, deleteTask, updateTask, updateTaskOrder } from '../services/taskService';
 import TaskForm from './TaskForm';
-import EditTask from './EditTask';
 import '../styles/App.css';
 
 const TaskList = () => {
@@ -37,6 +36,13 @@ const TaskList = () => {
     setAddingTask(false);
   };
 
+  const updateTaskInList = (id, updatedTask) => {
+    const updatedTasks = tasks.map(task => (task._id === id ? { ...task, ...updatedTask } : task));
+    setTasks(updatedTasks);
+    setEditingTask(null);
+    setAddingTask(false);
+  };
+
   const startEditing = (task) => {
     if (editingTask && editingTask._id !== task._id) {
       if (changeMessage) {
@@ -56,33 +62,16 @@ const TaskList = () => {
     }
   };
 
-  const handleUpdate = (id, updatedTask) => {
-    const updatedTasks = tasks.map(task => (task._id === id ? { ...task, ...updatedTask } : task));
-    setTasks(updatedTasks);
+  const handleCancelEdit = () => {
     setEditingTask(null);
-    setPendingEditTask(null);
+    setAddingTask(false);
     setChangeMessage("");
-  };
-
-  const handleCancelEdit = (isModified) => {
-    if (isModified) {
-      const confirmDiscard = window.confirm(`You have unsaved changes:\n${changeMessage}\nDo you really want to discard them?`);
-      if (confirmDiscard) {
-        setEditingTask(pendingEditTask);
-        setPendingEditTask(null);
-        setChangeMessage("");
-      }
-    } else {
-      setEditingTask(pendingEditTask);
-      setPendingEditTask(null);
-      setChangeMessage("");
-    }
   };
 
   const toggleCompletion = async (task) => {
     const updatedTask = { ...task, completed: !task.completed };
     await updateTask(task._id, updatedTask);
-    handleUpdate(task._id, updatedTask);
+    updateTaskInList(task._id, updatedTask);
   };
 
   const isOverdue = (dueDate) => {
@@ -132,13 +121,12 @@ const TaskList = () => {
       {!(addingTask || editingTask) && (
         <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add New Task</Button>
       )}
-      {addingTask && <TaskForm addTask={addTask} />}
-      {editingTask && (
-        <EditTask
+      {(addingTask || editingTask) && (
+        <TaskForm
+          addTask={addTask}
+          updateTaskInList={updateTaskInList}
           task={editingTask}
-          onUpdate={handleUpdate}
           onCancel={handleCancelEdit}
-          onChange={setChangeMessage}
         />
       )}
       <TableContainer component={Paper}>
@@ -147,7 +135,6 @@ const TaskList = () => {
             <TableRow>
               <TableCell onClick={() => handleSort('completed')}>Mark Complete</TableCell>
               <TableCell onClick={() => handleSort('title')}>Title</TableCell>
-              <TableCell onClick={() => handleSort('description')}>Description</TableCell>
               <TableCell onClick={() => handleSort('priority')}>Priority</TableCell>
               <TableCell onClick={() => handleSort('dueDate')}>Due Date</TableCell>
               <TableCell>Edit</TableCell>
@@ -160,11 +147,10 @@ const TaskList = () => {
               <TableRow key={task._id} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
                 <TableCell><Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} /></TableCell>
                 <TableCell>{task.title}</TableCell>
-                <TableCell>{task.description}</TableCell>
                 <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
                 <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
-                <TableCell><Button variant="contained" color="success" onClick={() => startEditing(task)}>Edit</Button></TableCell>
-                <TableCell><Button variant="contained" color="error" onClick={() => handleDelete(task._id)}>Delete</Button></TableCell>
+                <TableCell><IconButton color='primary' onClick={() => startEditing(task)}><Edit /></IconButton></TableCell>
+                <TableCell><IconButton color='primary' onClick={() => handleDelete(task)}><Delete /></IconButton></TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleOrderChange(task._id, 'up')}><ArrowUpward /></IconButton>
                   <IconButton onClick={() => handleOrderChange(task._id, 'down')}><ArrowDownward /></IconButton>

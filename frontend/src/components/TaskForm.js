@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { createTask } from '../services/taskService';
+import { createTask, updateTask } from '../services/taskService';
 
-const TaskForm = ({ addTask }) => {
+const TaskForm = ({ addTask, updateTaskInList, task, onCancel }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
 
+  useEffect(() => {
+    if (task) {
+      setTitle(task.title);
+      setDescription(task.description);
+      setPriority(task.priority);
+      setDueDate(task.dueDate ? task.dueDate.substring(0, 10) : '');
+    }
+  }, [task]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTask = { title, description, priority, dueDate };
-    const createdTask = await createTask(newTask);
-    addTask(createdTask);
+    const taskData = { title, description, priority, dueDate };
+
+    if (task) {
+      await updateTask(task._id, taskData);
+      updateTaskInList(task._id, taskData);
+    } else {
+      const newTask = await createTask(taskData);
+      addTask(newTask);
+    }
+
     setTitle('');
     setDescription('');
     setPriority('Medium');
@@ -53,7 +69,14 @@ const TaskForm = ({ addTask }) => {
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
       />
-      <Button type="submit" variant="contained" color="primary">Add Task</Button>
+      <Button type="submit" variant="contained" color="primary">
+        {task ? 'Update Task' : 'Add Task'}
+      </Button>
+      {onCancel && (
+        <Button variant="contained" color="secondary" onClick={onCancel}>
+          Cancel
+        </Button>
+      )}
     </form>
   );
 };
