@@ -18,6 +18,7 @@ const TaskList = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       const tasks = await getTasks();
+      console.log('Fetched tasks:', tasks);  // Add logging
       setTasks(tasks);
     };
 

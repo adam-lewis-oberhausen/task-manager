@@ -1,201 +1,35 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    background-color: #f4f4f9;
-}
-
 .container {
-    width: 100%;
-    max-width: 1000px; /* Increased the max width for better alignment */
+    max-width: 800px;
+    margin: auto;
     padding: 20px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: white;
     border-radius: 8px;
-    margin-top: 20px;
-    box-sizing: border-box;
-    overflow-x: auto; /* Ensure table fits within container */
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-
-button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 15px;
-    min-width: 75px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.delete-btn, .edit-btn {
-    background-color: #dc3545;
-    padding: 5px 10px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    min-width: 75px;
-    text-align: center;
-}
-
-.delete-btn:hover, .edit-btn:hover {
-    background-color: #c82333;
-}
-
-.edit-btn {
-    background-color: #28a745;
-}
-
-.edit-btn:hover {
-    background-color: #218838;
-}
-
-.edit-form {
-    margin-bottom: 20px;
-}
-
-.edit-form button {
-    background-color: #28a745;
-}
-
-.edit-form button:hover {
-    background-color: #218838;
-}
-
-/* New CSS for the task table */
-.task-table {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    box-sizing: border-box;
-}
-
-.task-table th,
-.task-table td {
+  }
+  
+  .task-table th, .task-table td {
+    padding: 8px 12px;
     border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    box-sizing: border-box;
-    word-wrap: break-word; /* Ensure long text breaks within the cell */
-}
-
-.task-table th {
-    background-color: #f2f2f2;
-    color: #333;
-    cursor: pointer;
-}
-
-.task-table th:hover {
-    background-color: #ddd;
-}
-
-.task-table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
-.task-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.task-table .priority-high {
+  }
+  
+  .priority-high {
     color: red;
-}
-
-.task-table .priority-medium {
+  }
+  
+  .priority-medium {
     color: orange;
-}
-
-.task-table .priority-low {
+  }
+  
+  .priority-low {
     color: green;
-}
-
-.task-table .overdue {
-    background-color: #ffcccc;
-}
-
-.task-table .buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.task-table .btn {
-    padding: 5px 10px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-.task-table .btn.edit-btn {
-    background-color: #4CAF50;
-}
-
-.task-table .btn.delete-btn {
-    background-color: #f44336;
-}
-
-.task-table .btn.up-btn,
-.task-table .btn.down-btn {
-    background-color: #007BFF;
-}
-
-.hidden {
-    display: none;
-}
+  }
+  
+  .overdue {
+    background-color: #ffe6e6;
+  }
+  
