@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { createTask } from '../services/taskService';
 
 const TaskForm = ({ addTask }) => {
@@ -19,41 +20,40 @@ const TaskForm = ({ addTask }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label>Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Description</label>
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label>Priority</label>
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label>Due Date</label>
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
-      </div>
-      <button type="submit">Add Task</button>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <TextField
+        label="Title"
+        variant="outlined"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+      />
+      <TextField
+        label="Description"
+        variant="outlined"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <FormControl variant="outlined">
+        <InputLabel>Priority</InputLabel>
+        <Select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          label="Priority"
+        >
+          <MenuItem value="High">High</MenuItem>
+          <MenuItem value="Medium">Medium</MenuItem>
+          <MenuItem value="Low">Low</MenuItem>
+        </Select>
+      </FormControl>
+      <TextField
+        label="Due Date"
+        type="date"
+        InputLabelProps={{ shrink: true }}
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+      />
+      <Button type="submit" variant="contained" color="primary">Add Task</Button>
     </form>
   );
 };

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Button, IconButton } from '@mui/material';
+import { Edit, Delete, ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import { getTasks, deleteTask, updateTask, updateTaskOrder } from '../services/taskService';
 import TaskForm from './TaskForm';
 import EditTask from './EditTask';
@@ -127,7 +129,9 @@ const TaskList = () => {
   return (
     <div className="container">
       <h1>Task List</h1>
-      <button onClick={() => setAddingTask(!addingTask)}>Add New Task</button>
+      {!(addingTask || editingTask) && (
+        <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add New Task</Button>
+      )}
       {addingTask && <TaskForm addTask={addTask} />}
       {editingTask && (
         <EditTask
@@ -137,37 +141,39 @@ const TaskList = () => {
           onChange={setChangeMessage}
         />
       )}
-      <table className="task-table">
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('completed')}>Mark Complete</th>
-            <th onClick={() => handleSort('title')}>Title</th>
-            <th onClick={() => handleSort('description')}>Description</th>
-            <th onClick={() => handleSort('priority')}>Priority</th>
-            <th onClick={() => handleSort('dueDate')}>Due Date</th>
-            <th>Edit</th>
-            <th>Delete</th>
-            <th>Order</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map(task => (
-            <tr key={task._id} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
-              <td><input type="checkbox" checked={task.completed} onChange={() => toggleCompletion(task)} /></td>
-              <td>{task.title}</td>
-              <td>{task.description}</td>
-              <td className={priorityColors[task.priority]}>{task.priority}</td>
-              <td>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</td>
-              <td><button className="btn edit-btn" onClick={() => startEditing(task)}>Edit</button></td>
-              <td><button className="btn delete-btn" onClick={() => handleDelete(task._id)}>Delete</button></td>
-              <td>
-                <button className="btn up-btn" onClick={() => handleOrderChange(task._id, 'up')}>↑</button>
-                <button className="btn down-btn" onClick={() => handleOrderChange(task._id, 'down')}>↓</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table className="task-table">
+          <TableHead>
+            <TableRow>
+              <TableCell onClick={() => handleSort('completed')}>Mark Complete</TableCell>
+              <TableCell onClick={() => handleSort('title')}>Title</TableCell>
+              <TableCell onClick={() => handleSort('description')}>Description</TableCell>
+              <TableCell onClick={() => handleSort('priority')}>Priority</TableCell>
+              <TableCell onClick={() => handleSort('dueDate')}>Due Date</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Delete</TableCell>
+              <TableCell>Order</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tasks.map(task => (
+              <TableRow key={task._id} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
+                <TableCell><Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} /></TableCell>
+                <TableCell>{task.title}</TableCell>
+                <TableCell>{task.description}</TableCell>
+                <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
+                <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
+                <TableCell><Button variant="contained" color="success" onClick={() => startEditing(task)}>Edit</Button></TableCell>
+                <TableCell><Button variant="contained" color="error" onClick={() => handleDelete(task._id)}>Delete</Button></TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleOrderChange(task._id, 'up')}><ArrowUpward /></IconButton>
+                  <IconButton onClick={() => handleOrderChange(task._id, 'down')}><ArrowDownward /></IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
