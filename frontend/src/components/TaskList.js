@@ -150,9 +150,10 @@ const TaskList = () => {
                         <TableRow
                           ref={provided.innerRef}
                           {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                           className={isOverdue(task.dueDate) ? 'overdue' : ''}
                         >
-                          <TableCell {...provided.dragHandleProps}>
+                          <TableCell>
                             <DragHandle />
                           </TableCell>
                           <TableCell>
