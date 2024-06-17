@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Button, IconButton } from '@mui/material';
-import { Edit, Delete, ArrowUpward, ArrowDownward } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, IconButton, Button } from '@mui/material';
+import { Edit, Delete, DragHandle } from '@mui/icons-material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getTasks, deleteTask, updateTask, updateTaskOrder } from '../services/taskService';
 import TaskForm from './TaskForm';
 import '../styles/App.css';
@@ -99,20 +100,17 @@ const TaskList = () => {
     setTasks(sortedTasks);
   };
 
-  const handleOrderChange = (taskId, direction) => {
-    const index = tasks.findIndex(task => task._id === taskId);
-    if (index < 0) return;
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
 
-    const newOrder = [...tasks];
-    if (direction === 'up' && index > 0) {
-      [newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
-    } else if (direction === 'down' && index < tasks.length - 1) {
-      [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-    }
+    const items = Array.from(tasks);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
-    newOrder.forEach((task, idx) => task.order = idx);
-    setTasks(newOrder);
-    updateTaskOrder(newOrder.map(task => ({ _id: task._id, order: task.order })));
+    setTasks(items);
+
+    // Optionally, update the order in your backend/database
+    updateTaskOrder(items.map((task, index) => ({ _id: task._id, order: index })));
   };
 
   return (
@@ -133,31 +131,55 @@ const TaskList = () => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
-              <TableCell onClick={() => handleSort('completed')}>Mark Complete</TableCell>
-              <TableCell onClick={() => handleSort('title')}>Title</TableCell>
-              <TableCell onClick={() => handleSort('priority')}>Priority</TableCell>
-              <TableCell onClick={() => handleSort('dueDate')}>Due Date</TableCell>
+              <TableCell>Order</TableCell>
+              <TableCell>Mark Complete</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Priority</TableCell>
+              <TableCell>Due Date</TableCell>
               <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
-              <TableCell>Order</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {tasks.map(task => (
-              <TableRow key={task._id} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
-                <TableCell><Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} /></TableCell>
-                <TableCell>{task.title}</TableCell>
-                <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
-                <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
-                <TableCell><IconButton color='primary' onClick={() => startEditing(task)}><Edit /></IconButton></TableCell>
-                <TableCell><IconButton color='primary' onClick={() => handleDelete(task)}><Delete /></IconButton></TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleOrderChange(task._id, 'up')}><ArrowUpward /></IconButton>
-                  <IconButton onClick={() => handleOrderChange(task._id, 'down')}><ArrowDownward /></IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="tasks">
+              {(provided) => (
+                <TableBody {...provided.droppableProps} ref={provided.innerRef}>
+                  {tasks.map((task, index) => (
+                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                      {(provided) => (
+                        <TableRow
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={isOverdue(task.dueDate) ? 'overdue' : ''}
+                        >
+                          <TableCell {...provided.dragHandleProps}>
+                            <DragHandle />
+                          </TableCell>
+                          <TableCell>
+                            <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
+                          </TableCell>
+                          <TableCell>{task.title}</TableCell>
+                          <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
+                          <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
+                          <TableCell>
+                            <IconButton color="primary" onClick={() => startEditing(task)}>
+                              <Edit />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton color="secondary" onClick={() => handleDelete(task._id)}>
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </TableBody>
+              )}
+            </Droppable>
+          </DragDropContext>
         </Table>
       </TableContainer>
     </div>
