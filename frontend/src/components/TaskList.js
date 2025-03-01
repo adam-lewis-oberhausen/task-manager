@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, IconButton, Button } from '@mui/material';
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { getTasks, deleteTask, updateTask, updateTaskOrder } from '../services/taskService';
+import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService'; // Import createTask
 import TaskForm from './TaskForm';
 import '../styles/App.css';
 
@@ -33,9 +33,23 @@ const TaskList = () => {
     }
   };
 
-  const addTask = (task) => {
-    setTasks([...tasks, task]);
+  const handleSave = async (task) => {
+    if (task._id) {
+      // Update existing task
+      await updateTask(task._id, task);
+      setTasks(tasks.map(t => (t._id === task._id ? task : t)));
+    } else {
+      // Add new task
+      const newTask = await createTask(task); // Use createTask
+      setTasks([...tasks, newTask]);
+    }
     setAddingTask(false);
+    setEditingTask(null);
+  };
+
+  const handleCancel = () => {
+    setAddingTask(false);
+    setEditingTask(null);
   };
 
   const updateTaskInList = (id, updatedTask) => {
@@ -117,17 +131,20 @@ const TaskList = () => {
   return (
     <div className="container">
       <h1>Task List</h1>
-      {!(addingTask || editingTask) && (
-        <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add New Task</Button>
-      )}
-      {(addingTask || editingTask) && (
+      {addingTask && (
         <TaskForm
-          addTask={addTask}
-          updateTaskInList={updateTaskInList}
-          task={editingTask}
-          onCancel={handleCancelEdit}
+          onSave={handleSave}
+          onCancel={handleCancel}
         />
       )}
+      {editingTask && (
+        <TaskForm
+          task={editingTask}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      )}
+      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add New Task</Button>
       <TableContainer component={Paper}>
         <Table className="task-table">
           <TableHead>

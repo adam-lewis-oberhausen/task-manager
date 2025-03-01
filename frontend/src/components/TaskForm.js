@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import PropTypes from 'prop-types';
+import '../styles/TaskForm.css'; // Import the CSS file
 
-const TaskForm = ({ addTask, updateTaskInList, task, onCancel }) => {
+const TaskForm = ({ task, onSave, onCancel }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -12,43 +13,90 @@ const TaskForm = ({ addTask, updateTaskInList, task, onCancel }) => {
       setTitle(task.title);
       setDescription(task.description);
       setPriority(task.priority);
-      setDueDate(task.dueDate);
+      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
+    } else {
+      setTitle('');
+      setDescription('');
+      setPriority('Medium');
+      setDueDate('');
     }
   }, [task]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newTask = { title, description, priority, dueDate };
-    if (task) {
-      updateTaskInList(task._id, newTask);
-    } else {
-      addTask(newTask);
-    }
+    onSave({
+      ...task,
+      title,
+      description,
+      priority,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-      <FormControl>
-        <InputLabel>Priority</InputLabel>
-        <Select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <MenuItem value="High">High</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="Low">Low</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        label="Due Date"
-        type="date"
-        value={dueDate}
-        onChange={(e) => setDueDate(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-      />
-      <Button type="submit">{task ? 'Update Task' : 'Add Task'}</Button>
-      <Button onClick={onCancel}>Cancel</Button>
+    <form onSubmit={handleSubmit} className="task-form">
+      <div className="form-group">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          aria-label="Title"
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          aria-label="Description"
+        ></textarea>
+      </div>
+      <div className="form-group">
+        <label htmlFor="priority">Priority</label>
+        <select
+          id="priority"
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          aria-label="Priority"
+        >
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          aria-label="Due Date"
+        />
+      </div>
+      <button type="submit">Save Task</button>
+      <button type="button" onClick={onCancel}>Cancel</button>
     </form>
   );
+};
+
+TaskForm.propTypes = {
+  task: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    priority: PropTypes.string,
+    dueDate: PropTypes.string,
+  }),
+  onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
+
+TaskForm.defaultProps = {
+  task: null,
 };
 
 export default TaskForm;
