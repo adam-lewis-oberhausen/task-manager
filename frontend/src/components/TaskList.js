@@ -91,9 +91,6 @@ const TaskList = () => {
           moveTask(draggedItem.index, index);
           draggedItem.index = index;
         }
-          moveTask(draggedItem.index, index);
-          draggedItem.index = index;
-        }
       },
     }, [index, moveTask]);
 
