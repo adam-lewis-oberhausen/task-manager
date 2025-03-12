@@ -63,11 +63,14 @@ const TaskList = () => {
 
   const moveTask = (dragIndex, hoverIndex) => {
     const draggedTask = tasks[dragIndex];
+    console.log(`Moving task from index ${dragIndex} to ${hoverIndex}`);
     const updatedTasks = [...tasks];
     updatedTasks.splice(dragIndex, 1);
     updatedTasks.splice(hoverIndex, 0, draggedTask);
     setTasks(updatedTasks);
-    updateTaskOrder(updatedTasks.map((task, index) => ({ _id: task._id, order: index })));
+    updateTaskOrder(updatedTasks.map((task, index) => ({ _id: task._id, order: index })))
+      .then(() => console.log('Task order updated successfully'))
+      .catch(error => console.error('Error updating task order:', error));
   };
 
   const startEditing = (task) => {
@@ -75,21 +78,26 @@ const TaskList = () => {
   };
 
   const TaskRow = ({ task, index }) => {
-    const [, ref] = useDrag({
+    const [{ isDragging }, ref] = useDrag({
       type: ItemType,
       item: { index },
-    });
+    }, [index, moveTask]);
 
-    const [, drop] = useDrop({
+    const [{ isOver }, drop] = useDrop({
       accept: ItemType,
       hover: (draggedItem) => {
+        console.log(`Dragging item from index ${draggedItem.index} to ${index}`);
         if (draggedItem.index !== index) {
           moveTask(draggedItem.index, index);
           draggedItem.index = index;
         }
+          moveTask(draggedItem.index, index);
+          draggedItem.index = index;
+        }
       },
-    });
+    }, [index, moveTask]);
 
+    console.log(`Rendering TaskRow for task: ${task.title}, index: ${index}`);
     return (
       <TableRow ref={(node) => ref(drop(node))} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
         <TableCell>
