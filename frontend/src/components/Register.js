@@ -6,15 +6,22 @@ const Register = ({ setView }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const [error, setError] = useState('');
+
   const handleRegister = async () => {
+    setError('');
     try {
       console.log('Attempting to register with:', { username, password });
       const response = await axios.post('/api/auth/register', { email: username, password });
       console.log('Registration response:', response);
-      alert('Registration successful!');
+      setView('login');
     } catch (error) {
       console.error('Error registering:', error.response || error.message);
-      alert('Registration failed');
+      if (error.response && error.response.data) {
+        setError(error.response.data);
+      } else {
+        setError('Registration failed');
+      }
     }
   };
 
@@ -24,6 +31,7 @@ const Register = ({ setView }) => {
         <h2 style={{ textAlign: 'center' }}>Register</h2>
         <TextField fullWidth margin="normal" label="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
         <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>Register</Button>
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <span>Already have an account? </span>
