@@ -152,16 +152,6 @@ const TaskList = ({ onLogout, token }) => {
     <div className="container">
       <Button variant="contained" color="primary" onClick={() => setAddingTask(true)} style={{ margin: '10px 0' }}>Add Task</Button>
 
-      {tasks.length === 0 && (
-        <div className="empty-tasks">
-          <p>No tasks yet. Here are some examples:</p>
-          <ul>
-            <li>e.g., Determine project goal</li>
-            <li>e.g., Schedule kickoff meeting</li>
-            <li>e.g., Set final deadline</li>
-          </ul>
-        </div>
-      )}
       {addingTask && (
         <TaskForm
           onSave={handleSave}
@@ -175,7 +165,6 @@ const TaskList = ({ onLogout, token }) => {
           onCancel={handleCancel}
         />
       )}
-      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add New Task</Button>
       <TableContainer component={Paper}>
         <Table className="task-table">
           <TableHead>
