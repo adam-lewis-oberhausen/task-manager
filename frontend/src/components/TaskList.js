@@ -103,16 +103,14 @@ const TaskList = ({ onLogout, token }) => {
     }, [index, moveTask]);
 
     console.log(`Rendering TaskRow for task: ${task.title}, index: ${index}`);
+    const [showHandle, setShowHandle] = useState(false);
+
     return (
       <TableRow
         ref={(node) => ref(drop(node))}
         className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
-      >
-      <TableRow
-        ref={(node) => ref(drop(node))}
-        className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
       >
         <TableCell>
           {showHandle && <DragHandle />}
