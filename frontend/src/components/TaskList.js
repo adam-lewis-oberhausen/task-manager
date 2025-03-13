@@ -17,7 +17,15 @@ const TaskList = ({ onLogout, token }) => {
     const fetchTasks = async (token) => {
       try {
         const tasks = await getTasks(token);
-        setTasks(tasks);
+        if (tasks.length === 0) {
+          setTasks([
+            { _id: '1', title: 'Mock Task 1' },
+            { _id: '2', title: 'Mock Task 2' },
+            { _id: '3', title: 'Mock Task 3' },
+          ]);
+        } else {
+          setTasks(tasks);
+        }
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
