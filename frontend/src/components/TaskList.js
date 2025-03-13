@@ -107,9 +107,15 @@ const TaskList = ({ onLogout, token }) => {
       <TableRow
         ref={(node) => ref(drop(node))}
         className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
+        onMouseEnter={() => setShowHandle(true)}
+        onMouseLeave={() => setShowHandle(false)}
+      >
+      <TableRow
+        ref={(node) => ref(drop(node))}
+        className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
       >
         <TableCell>
-          <DragHandle />
+          {showHandle && <DragHandle />}
         </TableCell>
         <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
@@ -177,7 +183,6 @@ const TaskList = ({ onLogout, token }) => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
-              <TableCell>Drag</TableCell>
               <TableCell>Complete</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Due Date</TableCell>
