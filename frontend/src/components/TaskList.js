@@ -101,15 +101,14 @@ const TaskList = () => {
         className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
       >
         <TableCell>
-          <div>
-            <DragHandle />
-          </div>
+          <DragHandle />
         </TableCell>
+        <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
         </TableCell>
         <TableCell>{task.title}</TableCell>
-        <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
+        <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>
           <IconButton color="primary" onClick={() => startEditing(task)}>
             <Edit />
