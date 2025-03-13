@@ -11,11 +11,11 @@ const App = () => {
 
   const toggleSidePanel = () => {
     setSidePanelOpen(!sidePanelOpen);
-    setView('register');
     localStorage.setItem('token', token);
   };
 
   const handleLoginClick = () => {
+    localStorage.removeItem('token');
     localStorage.removeItem('token');
     setView('login');
   };
