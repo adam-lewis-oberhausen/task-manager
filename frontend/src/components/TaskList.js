@@ -181,7 +181,7 @@ const TaskList = ({ onLogout, token }) => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
-              <TableCell>Move</TableCell>
+              <TableCell style={{ border: 'none' }}></TableCell>
               <TableCell>Complete</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Due Date</TableCell>
