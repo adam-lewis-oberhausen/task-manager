@@ -20,6 +20,13 @@ const App = () => {
     setView('login');
   };
 
+  useEffect(() => {
+    if (token) {
+      console.log('Token detected, setting view to tasks');
+      setView('tasks');
+    }
+  }, [token]);
+
   const handleLogin = (token) => {
     setToken(token);
   };
