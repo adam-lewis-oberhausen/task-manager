@@ -28,14 +28,6 @@ const Login = ({ onLogin, setView }) => {
           <span>No account yet? </span>
           <a href="#" onClick={() => setView('register')}>Register</a>
         </div>
-        <h2 style={{ textAlign: 'center' }}>Login</h2>
-        <TextField fullWidth margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <Button fullWidth variant="contained" color="primary" onClick={handleLogin}>Login</Button>
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
-          <span>No account yet? </span>
-          <a href="#" onClick={() => alert('Redirect to register')}>Register</a>
-        </div>
       </div>
     </div>
   );
