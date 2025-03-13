@@ -61,4 +61,71 @@ router.post('/login', async (req, res) => {
   }
 });
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+// Password reset request
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      to: user.email,
+      from: process.env.EMAIL_USER,
+      subject: 'Password Reset',
+      text: `Please click the following link to reset your password: http://localhost:3000/reset/${token}`,
+    };
+
+    transporter.sendMail(mailOptions, (err) => {
+      if (err) {
+        return res.status(500).send('Error sending email');
+      }
+      res.send('Password reset email sent');
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Confirm password reset
+router.post('/reset-password/confirm', async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).send('Invalid or expired token');
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.send('Password reset successful');
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
