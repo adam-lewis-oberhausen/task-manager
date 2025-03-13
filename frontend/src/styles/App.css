@@ -35,7 +35,7 @@
 
   .task-table th:nth-child(5), .task-table td:nth-child(5) {
     width: 100px;
-  }
+  .task-table th, .task-table td {
     padding: 8px 12px;
     border: 1px solid #ddd;
   }
