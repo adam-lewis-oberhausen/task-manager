@@ -154,7 +154,18 @@ const TaskList = ({ onLogout, token }) => {
         <h1>Task List</h1>
         <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
       </div>
-      {addingTask && (
+      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add Task</Button>
+      
+      {tasks.length === 0 && (
+        <div className="empty-tasks">
+          <p>No tasks yet. Here are some examples:</p>
+          <ul>
+            <li>e.g., Determine project goal</li>
+            <li>e.g., Schedule kickoff meeting</li>
+            <li>e.g., Set final deadline</li>
+          </ul>
+        </div>
+      )}
         <TaskForm
           onSave={handleSave}
           onCancel={handleCancel}
