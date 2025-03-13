@@ -32,4 +32,7 @@
   .overdue {
     background-color: #ffe6e6;
   }
-  
+  .completed {
+  text-decoration: line-through;
+  background-color: #f0f0f0;
+}

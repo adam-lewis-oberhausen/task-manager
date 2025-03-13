@@ -96,7 +96,10 @@ const TaskList = () => {
 
     console.log(`Rendering TaskRow for task: ${task.title}, index: ${index}`);
     return (
-      <TableRow ref={(node) => ref(drop(node))} className={isOverdue(task.dueDate) ? 'overdue' : ''}>
+      <TableRow
+        ref={(node) => ref(drop(node))}
+        className={`${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
+      >
         <TableCell>
           <div>
             <DragHandle />
@@ -164,11 +167,10 @@ const TaskList = () => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
-              <TableCell>Order</TableCell>
               <TableCell>Complete</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Priority</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Due Date</TableCell>
+              <TableCell>Priority</TableCell>
               <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
