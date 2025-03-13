@@ -8,12 +8,15 @@ const Login = ({ onLogin, setView }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('/api/auth/login', { username, password });
+      console.log('Attempting to login with:', { username, password });
+      const response = await axios.post('/api/auth/login', { email: username, password });
+      console.log('Login response:', response);
       onLogin(response.data.token);
-      alert('Login successful!');
     } catch (error) {
-      console.error('Error logging in:', error);
-      alert('Login failed');
+      console.error('Error logging in:', error.response || error.message);
+      if (error.response && error.response.data) {
+        console.error('Login error details:', error.response.data);
+      }
     }
   };
 
