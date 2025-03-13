@@ -29,34 +29,34 @@ const App = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      </div>
       <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
-      {token && (
-        <nav className="navbar">
-          <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
-          <input type="text" className="search-input" placeholder="Search tasks..." />
-          <div className="dropdown">
-            <button className="dropdown-button">Menu</button>
-            <div className="dropdown-content">
-              <a href="#" onClick={handleLogout}>Logout</a>
+        {token && (
+          <nav className="navbar">
+            <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
+            <input type="text" className="search-input" placeholder="Search tasks..." />
+            <div className="dropdown">
+              <button className="dropdown-button">Menu</button>
+              <div className="dropdown-content">
+                <a href="#" onClick={handleLogout}>Logout</a>
+              </div>
             </div>
-          </div>
-        </nav>
-      )}
-      {!token ? (
-        view === 'login' ? (
-          <Login onLogin={handleLogin} setView={setView} />
+          </nav>
+        )}
+        {!token ? (
+          view === 'login' ? (
+            <Login onLogin={handleLogin} setView={setView} />
+          ) : (
+            <Register setView={setView} />
+          )
         ) : (
-          <Register setView={setView} />
-        )
-      ) : (
-        <TaskList onLogout={handleLogout} token={token} />
-      )}
-      {sidePanelOpen && (
-        <div className="side-panel">
-          {/* Side panel content goes here */}
-        </div>
-      )}
+          <TaskList onLogout={handleLogout} token={token} />
+        )}
+        {sidePanelOpen && (
+          <div className="side-panel">
+            {/* Side panel content goes here */}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
