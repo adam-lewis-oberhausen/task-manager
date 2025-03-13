@@ -130,19 +130,19 @@
   margin-left: 300px; /* Width of the side panel */
 }
 
-.task-panel {                                                                                                        
-  position: fixed;                                                                                                   
-  top: 0;                                                                                                            
-  right: -400px; /* Start off-screen */                                                                              
-  width: 400px;                                                                                                      
-  height: 100%;                                                                                                      
-  background-color: #f9f9f9;                                                                                         
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);                                                                         
-  transition: right 0.3s ease;                                                                                       
-  z-index: 1000;                                                                                                     
-  padding: 20px;                                                                                                     
-}                                                                                                                    
-                                                                                                                     
-.task-panel.open {                                                                                                   
-  right: 0; /* Slide in */                                                                                           
-} 
+.task-panel {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Start off-screen */
+  width: 400px;
+  height: 100%;
+  background-color: #f9f9f9;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.task-panel.open {
+  right: 0; /* Slide in */
+}

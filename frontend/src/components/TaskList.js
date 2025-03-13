@@ -11,7 +11,7 @@ const ItemType = 'TASK';
 const TaskList = ({ onLogout, token }) => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
-  const [addingTask, setAddingTask] = useState(false);
+  const [taskPanelOpen, setTaskPanelOpen] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async (token) => {
@@ -46,6 +46,10 @@ const TaskList = ({ onLogout, token }) => {
     }
   };
 
+  const toggleTaskPanel = () => {
+    setTaskPanelOpen(!taskPanelOpen);
+  };
+
   const handleSave = async (task) => {
     try {
       if (task._id) {
@@ -57,7 +61,7 @@ const TaskList = ({ onLogout, token }) => {
         const newTask = await createTask(task);
         setTasks([...tasks, newTask]);
       }
-      setAddingTask(false);
+      setTaskPanelOpen(false);
       setEditingTask(null);
     } catch (error) {
       console.error('Error saving task:', error);
@@ -65,7 +69,7 @@ const TaskList = ({ onLogout, token }) => {
   };
 
   const handleCancel = () => {
-    setAddingTask(false);
+    setTaskPanelOpen(false);
     setEditingTask(null);
   };
 
@@ -162,14 +166,13 @@ const TaskList = ({ onLogout, token }) => {
 
   return (
     <div className="container">
-      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)} style={{ margin: '10px 0' }}>Add Task</Button>
+      <Button variant="contained" color="primary" onClick={toggleTaskPanel} style={{ margin: '10px 0' }}>
+        Add Task
+      </Button>
 
-      {addingTask && (
-        <TaskForm
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
-      )}
+      <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
+        <TaskForm onSave={handleSave} onCancel={handleCancel} />
+      </div>
       {editingTask && (
         <TaskForm
           task={editingTask}
