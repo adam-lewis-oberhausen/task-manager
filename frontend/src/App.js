@@ -26,6 +26,16 @@ const App = () => {
 
   return (
     <div>
+      <nav className="navbar">
+        <button className="toggle-button">☰</button>
+        <input type="text" className="search-input" placeholder="Search tasks..." />
+        <div className="dropdown">
+          <button className="dropdown-button">Menu</button>
+          <div className="dropdown-content">
+            <a href="#" onClick={handleLogout}>Logout</a>
+          </div>
+        </div>
+      </nav>
       {!token ? (
         view === 'login' ? (
           <Login onLogin={handleLogin} setView={setView} />
