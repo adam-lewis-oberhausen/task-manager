@@ -171,10 +171,6 @@ const TaskList = ({ onLogout, token }) => {
           onSave={handleSave}
           onCancel={handleCancel}
         />
-        <TaskForm
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
       )}
       {editingTask && (
         <TaskForm
