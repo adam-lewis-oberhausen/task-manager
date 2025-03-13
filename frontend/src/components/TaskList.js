@@ -105,7 +105,6 @@ const TaskList = () => {
             <DragHandle />
           </div>
         </TableCell>
-        <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
         </TableCell>
         <TableCell>{task.title}</TableCell>
@@ -167,8 +166,9 @@ const TaskList = () => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
+              <TableCell>Drag</TableCell>
               <TableCell>Complete</TableCell>
-              <TableCell>Name</TableCell>
+              <TableCell>Title</TableCell>
               <TableCell>Due Date</TableCell>
               <TableCell>Priority</TableCell>
               <TableCell>Edit</TableCell>
