@@ -41,7 +41,7 @@ const Register = ({ setView }) => {
         <h2 style={{ textAlign: 'center' }}>Register</h2>
         <TextField fullWidth margin="normal" label="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
+        {error && <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>{error}</div>}
         <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>Register</Button>
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <span>Already have an account? </span>
