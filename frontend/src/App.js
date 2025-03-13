@@ -23,7 +23,7 @@ const App = () => {
     <div>
       {!token ? (
         view === 'login' ? (
-          <Login onLogin={handleLogin} />
+          <Login onLogin={handleLogin} setView={setView} />
         ) : (
           <Register />
         )
