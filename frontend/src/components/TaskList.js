@@ -8,7 +8,7 @@ import '../styles/App.css';
 
 const ItemType = 'TASK';
 
-const TaskList = ({ onLogout }) => {
+const TaskList = ({ onLogout, token }) => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [addingTask, setAddingTask] = useState(false);
@@ -24,7 +24,7 @@ const TaskList = ({ onLogout }) => {
     };
 
     fetchTasks(token);
-  }, []);
+  }, [token]);
 
   const handleDelete = async (id) => {
     try {
