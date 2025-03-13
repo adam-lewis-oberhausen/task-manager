@@ -150,12 +150,8 @@ const TaskList = ({ onLogout, token }) => {
 
   return (
     <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Task List</h1>
-        <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
-      </div>
-      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)}>Add Task</Button>
-      
+      <Button variant="contained" color="primary" onClick={() => setAddingTask(true)} style={{ margin: '10px 0' }}>Add Task</Button>
+
       {tasks.length === 0 && (
         <div className="empty-tasks">
           <p>No tasks yet. Here are some examples:</p>
