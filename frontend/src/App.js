@@ -28,20 +28,21 @@ const App = () => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
-        {token && (
-          <nav className="navbar">
-            <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
-            <input type="text" className="search-input" placeholder="Search tasks..." />
-            <div className="dropdown">
-              <button className="dropdown-button">Menu</button>
-              <div className="dropdown-content">
-                <a href="#" onClick={handleLogout}>Logout</a>
-              </div>
+    <div>
+      {token && (
+        <nav className="navbar">
+          <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
+          <input type="text" className="search-input" placeholder="Search tasks..." />
+          <div className="dropdown">
+            <button className="dropdown-button">Menu</button>
+            <div className="dropdown-content">
+              <a href="#" onClick={handleLogout}>Logout</a>
             </div>
-          </nav>
-        )}
+          </div>
+        </nav>
+      )}
+      <div style={{ display: 'flex' }}>
+      <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
         {!token ? (
           view === 'login' ? (
             <Login onLogin={handleLogin} setView={setView} />
