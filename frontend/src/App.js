@@ -5,16 +5,18 @@ import Login from './components/Login';
 
 const App = () => {
   const [view, setView] = useState('login');
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
 
   const toggleSidePanel = () => {
     setSidePanelOpen(!sidePanelOpen);
     setView('register');
+    localStorage.setItem('token', token);
   };
 
   const handleLoginClick = () => {
+    localStorage.removeItem('token');
     setView('login');
   };
 
