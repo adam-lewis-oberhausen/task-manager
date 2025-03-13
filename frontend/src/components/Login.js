@@ -9,7 +9,7 @@ const Login = ({ onLogin, setView }) => {
   const handleLogin = async () => {
     try {
       console.log('Attempting to login with:', { username, password });
-      const response = await axios.post('/api/auth/login', { email: username, password });
+      const response = await axios.post('/api/auth/login', { email: username.trim(), password });
       console.log('Login response:', response);
       onLogin(response.data.token);
     } catch (error) {
