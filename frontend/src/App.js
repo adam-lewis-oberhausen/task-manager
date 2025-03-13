@@ -24,6 +24,9 @@ const App = () => {
     if (token) {
       console.log('Token detected, setting view to tasks');
       setView('tasks');
+    } else {
+      console.log('No token detected, setting view to login');
+      setView('login');
     }
   }, [token]);
 
