@@ -37,14 +37,14 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });    
     if (!user) {
       console.log('User not found');
-      return res.status(401).send('Invalid credentials');
+      return res.status(401).send('Invalid username or password');
     } else {
       console.log('User found:', user);
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       console.log('Invalid credentials');
-      return res.status(401).send('Invalid credentials');
+      return res.status(401).send('Invalid username or password');
     } else {
       console.log('Password matches');
     }
