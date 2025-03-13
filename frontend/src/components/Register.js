@@ -28,6 +28,7 @@ const Register = () => {
           <a href="#" onClick={() => setView('login')}>Login</a>
         </div>
       </div>
+    </div>
   );
 };
 
