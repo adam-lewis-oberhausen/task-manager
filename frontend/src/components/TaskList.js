@@ -8,7 +8,7 @@ import '../styles/App.css';
 
 const ItemType = 'TASK';
 
-const TaskList = () => {
+const TaskList = ({ onLogout }) => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [addingTask, setAddingTask] = useState(false);
