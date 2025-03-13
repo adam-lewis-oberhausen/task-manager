@@ -2,8 +2,12 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:5000/api/tasks';
 
-export const getTasks = async () => {
-  const response = await axios.get(BASE_URL);
+export const getTasks = async (token) => {
+  const response = await axios.get(BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 

@@ -14,16 +14,16 @@ const TaskList = ({ onLogout }) => {
   const [addingTask, setAddingTask] = useState(false);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchTasks = async (token) => {
       try {
-        const tasks = await getTasks();
+        const tasks = await getTasks(token);
         setTasks(tasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
     };
 
-    fetchTasks();
+    fetchTasks(token);
   }, []);
 
   const handleDelete = async (id) => {

@@ -33,7 +33,7 @@ const App = () => {
           <Register setView={setView} />
         )
       ) : (
-        <TaskList onLogout={handleLogout} />
+        <TaskList onLogout={handleLogout} token={token} />
       )}
     </div>
   );
