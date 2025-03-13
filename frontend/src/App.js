@@ -25,7 +25,7 @@ const App = () => {
         view === 'login' ? (
           <Login onLogin={handleLogin} setView={setView} />
         ) : (
-          <Register />
+          <Register setView={setView} />
         )
       ) : (
         <TaskList />

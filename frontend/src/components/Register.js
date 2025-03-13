@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 
-const Register = () => {
+const Register = ({ setView }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 

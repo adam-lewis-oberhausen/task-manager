@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import axios from 'axios';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, setView }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
