@@ -166,6 +166,11 @@ const TaskList = ({ onLogout, token }) => {
           </ul>
         </div>
       )}
+      {addingTask && (
+        <TaskForm
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
         <TaskForm
           onSave={handleSave}
           onCancel={handleCancel}
