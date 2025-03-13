@@ -9,7 +9,17 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Check if email is already in use
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send('Email is already in use');
+    }
+
+    // Validate password complexity
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).send('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character');
+    }
     const user = new User({ email, password: hashedPassword });
     await user.save();
     res.status(201).send(user);
