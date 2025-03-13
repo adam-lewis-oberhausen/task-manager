@@ -28,12 +28,6 @@ const Register = () => {
           <a href="#" onClick={() => setView('login')}>Login</a>
         </div>
       </div>
-    </div>
-      <h2>Register</h2>
-      <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button variant="contained" color="primary" onClick={handleRegister}>Register</Button>
-    </div>
   );
 };
 
