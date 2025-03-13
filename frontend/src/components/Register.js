@@ -8,10 +8,12 @@ const Register = ({ setView }) => {
 
   const handleRegister = async () => {
     try {
-      await axios.post('/api/auth/register', { username, password });
+      console.log('Attempting to register with:', { username, password });
+      const response = await axios.post('/api/auth/register', { username, password });
+      console.log('Registration response:', response);
       alert('Registration successful!');
     } catch (error) {
-      console.error('Error registering:', error);
+      console.error('Error registering:', error.response || error.message);
       alert('Registration failed');
     }
   };
