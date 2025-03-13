@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  email: {
-    type: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
-    unique: true,
-    match: [/.+@.+\..+/, 'Please enter a valid email address'],
   },
   description: {
     type: String,

@@ -144,9 +144,16 @@ const TaskList = () => {
     Low: 'priority-low',
   };
 
+  const handleLogout = () => {
+    onLogout();
+  };
+
   return (
     <div className="container">
-      <h1>Task List</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Task List</h1>
+        <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+      </div>
       {addingTask && (
         <TaskForm
           onSave={handleSave}

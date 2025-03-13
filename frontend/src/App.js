@@ -19,6 +19,11 @@ const App = () => {
     setToken(token);
   };
 
+  const handleLogout = () => {
+    setToken(null);
+    setView('login');
+  };
+
   return (
     <div>
       {!token ? (
@@ -28,7 +33,7 @@ const App = () => {
           <Register setView={setView} />
         )
       ) : (
-        <TaskList />
+        <TaskList onLogout={handleLogout} />
       )}
     </div>
   );

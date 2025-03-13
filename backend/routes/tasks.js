@@ -2,15 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
 
-// Get all tasks
-router.get('/', async (req, res) => {
-    try {
-      const tasks = await Task.find().sort({ order: 1, priority: -1, dueDate: 1 });
-      res.json(tasks);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
+const auth = require('../middleware/auth');
+
+// Get all tasks for the authenticated user
+router.get('/', auth, async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
   
   // Update task order
   router.patch('/order', async (req, res) => {
@@ -30,11 +32,9 @@ router.get('/', async (req, res) => {
     }
   });
 
-// Create a new task
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({ email, password: hashedPassword });
+    const task = new Task({ ...req.body, user: req.userId });
     await task.save();
     res.status(201).send(task);
   } catch (error) {
