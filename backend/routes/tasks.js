@@ -33,7 +33,8 @@ router.get('/', async (req, res) => {
 // Create a new task
 router.post('/', async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const { email, password } = req.body;
+    const user = new User({ email, password: hashedPassword });
     await task.save();
     res.status(201).send(task);
   } catch (error) {
