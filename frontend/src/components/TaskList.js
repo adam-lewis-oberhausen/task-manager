@@ -112,8 +112,8 @@ const TaskList = ({ onLogout, token }) => {
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
       >
-        <TableCell>
-          {showHandle && <DragHandle />}
+        <TableCell style={{ border: 'none' }}>
+          <DragHandle />
         </TableCell>
         <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />

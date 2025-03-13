@@ -11,7 +11,7 @@
     border-collapse: collapse;
   }
   
-  .task-table th, .task-table td {
+  .task-table th, .task-table td:not(:first-child) {
     padding: 8px 12px;
     border: 1px solid #ddd;
   }
