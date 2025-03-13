@@ -121,7 +121,9 @@
   padding: 20px;
 }
 .content {
+  flex-grow: 1;
   transition: margin-left 0.3s;
+  width: calc(100% - 250px); /* Adjust based on side panel width */
 }
 
 .shifted {
