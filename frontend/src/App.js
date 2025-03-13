@@ -28,7 +28,9 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
+      </div>
+      <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
       {token && (
         <nav className="navbar">
           <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
