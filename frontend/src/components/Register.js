@@ -10,6 +10,16 @@ const Register = ({ setView }) => {
 
   const handleRegister = async () => {
     setError('');
+
+    // Validate email and password
+    if (!username || !/\S+@\S+\.\S+/.test(username)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!password) {
+      setError('Please enter a password.');
+      return;
+    }
     try {
       console.log('Attempting to register with:', { username, password });
       const response = await axios.post('/api/auth/register', { email: username, password });
