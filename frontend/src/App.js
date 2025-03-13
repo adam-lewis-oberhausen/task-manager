@@ -11,7 +11,6 @@ const App = () => {
 
   const toggleSidePanel = () => {
     setSidePanelOpen(!sidePanelOpen);
-  };
     setView('register');
   };
 
@@ -59,7 +58,5 @@ const App = () => {
     </div>
   );
 };
-
-export default App;
 
 export default App;
