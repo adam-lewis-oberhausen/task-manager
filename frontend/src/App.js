@@ -7,7 +7,11 @@ const App = () => {
   const [view, setView] = useState('login');
   const [token, setToken] = useState(null);
 
-  const handleRegisterClick = () => {
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+
+  const toggleSidePanel = () => {
+    setSidePanelOpen(!sidePanelOpen);
+  };
     setView('register');
   };
 
@@ -28,7 +32,7 @@ const App = () => {
     <div>
       {token && (
         <nav className="navbar">
-          <button className="toggle-button">☰</button>
+          <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
           <input type="text" className="search-input" placeholder="Search tasks..." />
           <div className="dropdown">
             <button className="dropdown-button">Menu</button>
@@ -46,6 +50,11 @@ const App = () => {
         )
       ) : (
         <TaskList onLogout={handleLogout} token={token} />
+      )}
+      {sidePanelOpen && (
+        <div className="side-panel">
+          {/* Side panel content goes here */}
+        </div>
       )}
     </div>
   );
