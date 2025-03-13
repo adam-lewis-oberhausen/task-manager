@@ -113,12 +113,12 @@ const TaskList = ({ onLogout, token }) => {
         onMouseLeave={() => setShowHandle(false)}
       >
         <TableCell>
-          {showHandle && <DragHandle />}
-        </TableCell>
-        <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
         </TableCell>
         <TableCell>{task.title}</TableCell>
+        <TableCell>
+          {showHandle && <DragHandle />}
+        </TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
         <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>
