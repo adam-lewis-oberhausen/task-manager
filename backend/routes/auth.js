@@ -48,9 +48,14 @@ router.post('/login', async (req, res) => {
     } else {
       console.log('Password matches');
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);    
-    console.log('Login successful, token generated');
-    res.send({ token });
+    try {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+      console.log('Login successful, token generated');
+      res.send({ token });
+    } catch (jwtError) {
+      console.error('Error generating token:', jwtError);
+      res.status(500).send('Error generating token');
+    }
   } catch (error) {
     res.status(400).send(error);
   }
