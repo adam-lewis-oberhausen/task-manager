@@ -4,6 +4,8 @@ const taskSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    unique: true,
+    match: [/.+@.+\..+/, 'Please enter a valid email address'],
   },
   description: {
     type: String,
