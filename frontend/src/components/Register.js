@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import axios from 'axios';
+import axios from '../services/axiosConfig';
 
 const Register = ({ setView }) => {
   const [username, setUsername] = useState('');
