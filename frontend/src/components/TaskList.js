@@ -16,12 +16,14 @@ const TaskList = ({ onLogout, token }) => {
   useEffect(() => {
     const fetchTasks = async (token) => {
       try {
+        console.log('Attempting to fetch tasks with token:', token); 
         const tasks = await getTasks(token);
+        console.log('Tasks retrieved:', tasks);
         if (tasks.length === 0) {
           setTasks([
-            { _id: '1', title: 'Mock Task 1' },
-            { _id: '2', title: 'Mock Task 2' },
-            { _id: '3', title: 'Mock Task 3' },
+            { _id: '1', name: 'Mock Task 1' },
+            { _id: '2', name: 'Mock Task 2' },
+            { _id: '3', name: 'Mock Task 3' },
           ]);
         } else {
           setTasks(tasks);
@@ -54,11 +56,11 @@ const TaskList = ({ onLogout, token }) => {
     try {
       if (task._id) {
         // Update existing task
-        await updateTask(task._id, task);
+        await updateTask(task._id, task, token);
         setTasks(tasks.map(t => (t._id === task._id ? task : t)));
       } else {
         // Add new task
-        const newTask = await createTask(task);
+        const newTask = await createTask(task, token);
         setTasks([...tasks, newTask]);
       }
       setTaskPanelOpen(false);
@@ -106,8 +108,9 @@ const TaskList = ({ onLogout, token }) => {
       },
     }, [index, moveTask]);
 
-    console.log(`Rendering TaskRow for task: ${task.title}, index: ${index}`);
+    // console.log(`Rendering TaskRow for task: ${task.name}, index: ${index}`);
     const [showHandle, setShowHandle] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
       <TableRow
@@ -122,7 +125,18 @@ const TaskList = ({ onLogout, token }) => {
         <TableCell>
           <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
         </TableCell>
-        <TableCell>{task.title}</TableCell>
+        <TableCell>{task.assignee}</TableCell>
+        <TableCell
+          onMouseEnter={() => setIsHovered(true)}                                                                                             
+          onMouseLeave={() => setIsHovered(false)}                                                                                            
+          style={{                                                                                                                            
+            border: isHovered ? '2px solid #1976d2' : '1px solid rgba(224, 224, 224, 1)',                                                                                 
+            transition: 'border 0.2s ease',                                                                                                   
+            cursor: 'pointer'                                                                                                                 
+          }}
+        > 
+          {task.name}
+        </TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
         <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>
@@ -171,7 +185,7 @@ const TaskList = ({ onLogout, token }) => {
       </Button>
 
       <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-        <TaskForm onSave={handleSave} onCancel={handleCancel} />
+        <TaskForm onSave={handleSave} onCancel={handleCancel} token={token}/>
       </div>
       {editingTask && (
         <TaskForm
@@ -186,7 +200,8 @@ const TaskList = ({ onLogout, token }) => {
             <TableRow>
               <TableCell style={{ border: 'none' }}></TableCell>
               <TableCell>Complete</TableCell>
-              <TableCell>Title</TableCell>
+              <TableCell>Assignee</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Due Date</TableCell>
               <TableCell>Priority</TableCell>
               <TableCell>Edit</TableCell>
