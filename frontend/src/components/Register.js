@@ -53,3 +53,4 @@ const Register = ({ setView }) => {
 };
 
 export default Register;
+import './Register.css';

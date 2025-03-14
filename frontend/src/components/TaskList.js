@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
 import TaskForm from './TaskForm';
-import '../styles/App.css';
+import './TaskList.css';
 
 const ItemType = 'TASK';
 

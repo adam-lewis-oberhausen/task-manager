@@ -25,19 +25,3 @@ h1 {
   font-size: 24px;
   margin-bottom: 20px;
 }
-
-.task-table .priority-high {
-  color: red;
-}
-
-.task-table .priority-medium {
-  color: orange;
-}
-
-.task-table .priority-low {
-  color: green;
-}
-
-.task-table .overdue {
-  background-color: #ffcccc;
-}

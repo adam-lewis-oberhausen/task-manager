@@ -45,3 +45,4 @@ const Login = ({ onLogin, setView }) => {
 };
 
 export default Login;
+import './Login.css';
