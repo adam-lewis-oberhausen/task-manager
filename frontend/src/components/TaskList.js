@@ -15,6 +15,16 @@ const TaskList = ({ token }) => {
   const [editingTaskId, setEditingTaskId] = useState(null);                                                                           
   const [editingName, setEditingName] = useState('');
 
+  const MOCK_TASKS = [
+    { _id: 'mock-1', name: 'e.g Determine project goal' },
+    { _id: 'mock-2', name: 'e.g Schedule kickoff meeting' },
+    { _id: 'mock-3', name: 'e.g. Set final deadline' }
+  ];
+
+  const loadMockTasks = () => {
+    setTasks([...MOCK_TASKS]);
+  };
+
   useEffect(() => {
     const fetchTasks = async (token) => {
       try {
@@ -22,11 +32,7 @@ const TaskList = ({ token }) => {
         const tasks = await getTasks(token);
         console.log('Tasks retrieved:', tasks);
         if (tasks.length === 0) {
-          setTasks([
-            { _id: 'mock-1', name: 'e.g Determine project goal' },                                                                                       
-            { _id: 'mock-2', name: 'e.g Schedule kickoff meeting' },                                                                                       
-            { _id: 'mock-3', name: 'e.g. Set final deadline' }, 
-          ]);
+          loadMockTasks();
         } else {
           setTasks(tasks);
         }
@@ -41,7 +47,15 @@ const TaskList = ({ token }) => {
   const handleDelete = async (id) => {
     try {
       await deleteTask(id);
-      setTasks(tasks.filter(task => task._id !== id));
+      const updatedTasks = tasks.filter(task => task._id !== id);
+      
+      // If we deleted the last real task, reload mock tasks
+      if (updatedTasks.length === 0 && tasks.some(t => !t._id.startsWith('mock-'))) {
+        loadMockTasks();
+      } else {
+        setTasks(updatedTasks);
+      }
+
       if (editingTask && editingTask._id === id) {
         setEditingTask(null);
       }
