@@ -23,9 +23,9 @@ const TaskList = ({ token }) => {
         console.log('Tasks retrieved:', tasks);
         if (tasks.length === 0) {
           setTasks([
-            { _id: '1', name: 'Mock Task 1' },
-            { _id: '2', name: 'Mock Task 2' },
-            { _id: '3', name: 'Mock Task 3' },
+            { _id: 'mock-1', name: 'e.g Determine project goal' },                                                                                       
+            { _id: 'mock-2', name: 'e.g Schedule kickoff meeting' },                                                                                       
+            { _id: 'mock-3', name: 'e.g. Set final deadline' }, 
           ]);
         } else {
           setTasks(tasks);
@@ -55,18 +55,47 @@ const TaskList = ({ token }) => {
   };
 
   const handleNameUpdate = async () => {                                                                                              
-    if (editingTaskId && editingName.trim()) {                                                                                        
+    if (!editingTaskId) return;                                                                                                       
+                                                                                                                                      
+    // If it's a mock task and name is empty, reload mock tasks                                                                       
+    if (editingTaskId.startsWith('mock-') && !editingName.trim()) {                                                                   
+      setTasks([                                                                                                                      
+        { _id: 'mock-1', name: 'e.g Determine project goal' },                                                                                       
+        { _id: 'mock-2', name: 'e.g Schedule kickoff meeting' },                                                                                       
+        { _id: 'mock-3', name: 'e.g. Set final deadline' },                                                                                       
+      ]);                                                                                                                             
+      setEditingTaskId(null);                                                                                                         
+      setEditingName('');                                                                                                             
+      return;                                                                                                                         
+    }                                                                                                                                 
+                                                                                                                                      
+    // If it's a mock task and has content, remove other mock tasks                                                                   
+    if (editingTaskId.startsWith('mock-') && editingName.trim()) {                                                                    
+      const updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));                                                             
+      try {                                                                                                                           
+        const newTask = await createTask({ name: editingName }, token);                                                               
+        setTasks([...updatedTasks, newTask]);                                                                                         
+      } catch (error) {                                                                                                               
+        console.error('Error creating task:', error);                                                                                 
+      }                                                                                                                               
+      setEditingTaskId(null);                                                                                                         
+      setEditingName('');                                                                                                             
+      return;                                                                                                                         
+    }                                                                                                                                 
+                                                                                                                                      
+    // Handle regular task updates                                                                                                    
+    if (editingName.trim()) {                                                                                                         
       try {                                                                                                                           
         const updatedTask = await updateTask(editingTaskId, { name: editingName }, token);                                            
         setTasks(tasks.map(t =>                                                                                                       
           t._id === editingTaskId ? { ...t, name: editingName } : t                                                                   
         ));                                                                                                                           
-        setEditingTaskId(null);                                                                                                       
-        setEditingName('');                                                                                                           
       } catch (error) {                                                                                                               
         console.error('Error updating task name:', error);                                                                            
       }                                                                                                                               
     }                                                                                                                                 
+    setEditingTaskId(null);                                                                                                           
+    setEditingName('');                                                                                                               
   };   
 
   const handleSave = async (task) => {
@@ -148,8 +177,9 @@ const TaskList = ({ token }) => {
           onMouseEnter={() => setIsHovered(true)}                                                                                             
           onMouseLeave={() => setIsHovered(false)}                                                                                            
           onClick={() => {                                                                                                            
-            setEditingTaskId(task._id);                                                                                               
-            setEditingName(task.name);                                                                                                
+            setEditingTaskId(task._id);
+            setTasks(task._id.startsWith('mock-') ? [{ _id: task._id, name: task.name}] : tasks);                                                                                             
+            setEditingName(task._id.startsWith('mock-') ? '' : task.name);                                                                                               
           }}
         > 
           {editingTaskId === task._id ? (                                                                                             
@@ -190,6 +220,10 @@ const TaskList = ({ token }) => {
     } catch (error) {
       console.error('Error toggling task completion:', error);
     }
+  };
+
+  const areAllTasksMock = () => {                                                                                                     
+    return tasks.length > 0 && tasks.every(t => t._id.startsWith('mock-'));                                                           
   };
 
   const isOverdue = (dueDate) => {

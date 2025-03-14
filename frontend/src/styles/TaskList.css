@@ -57,7 +57,7 @@
   cursor: pointer;                                                                                                                    
   border: 1px solid rgba(224, 224, 224, 1);                                                                                           
   padding: 8px;                                                                                                                       
-}                                                                                                                                     
+}                                                                                                                                   
                                                                                                                                       
 .task-table .name-cell.hovered {                                                                                                      
   border: 2px solid #1976d2;                                                                                                          
@@ -68,13 +68,15 @@
 }                                                                                                                                     
                                                                                                                                       
 .task-table .name-input {                                                                                                             
-  width: 100%;                                                                                                                        
-  padding: 4px;                                                                                                                       
+  width: 100%;                                                                     
+  padding: 4px;                                                                                                                   
   border: 1px solid #ddd;                                                                                                             
   border-radius: 4px;                                                                                                                 
   font-size: inherit;                                                                                                                 
   font-family: inherit;                                                                                                               
-}                                                                                                                                     
+  box-sizing: border-box;                                                                                                             
+  margin: 0;                                                                                                                          
+}                                                                                                                                    
                                                                                                                                       
 .task-table .name-input:focus {                                                                                                       
   outline: none;                                                                                                                      
