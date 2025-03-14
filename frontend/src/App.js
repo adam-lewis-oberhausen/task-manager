@@ -11,13 +11,6 @@ const App = () => {
 
   const toggleSidePanel = () => {
     setSidePanelOpen(!sidePanelOpen);
-    localStorage.setItem('token', token);
-  };
-
-  const handleLoginClick = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('token');
-    setView('login');
   };
 
   useEffect(() => {
@@ -31,10 +24,12 @@ const App = () => {
   }, [token]);
 
   const handleLogin = (token) => {
+    localStorage.setItem('token', token);
     setToken(token);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     setToken(null);
     setView('login');
   };

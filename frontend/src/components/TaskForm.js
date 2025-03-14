@@ -1,49 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import '../styles/TaskForm.css'; // Import the CSS file
+import '../styles/TaskForm.css';
 
-const TaskForm = ({ task, onSave, onCancel }) => {
-  const [title, setTitle] = useState('');
+const TaskForm = ({ task, onSave, onCancel, token }) => {
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
     if (task) {
-      setTitle(task.title);
+      setName(task.name);
       setDescription(task.description);
       setPriority(task.priority);
       setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
     } else {
-      setTitle('');
+      setName('');
       setDescription('');
       setPriority('Medium');
       setDueDate('');
     }
   }, [task]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave({
-      ...task,
-      title,
-      description,
-      priority,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
-    });
+  const handleSubmit = (e) => {                                                                                     
+    e.preventDefault();                                                                                             
+    const taskData = {                                                                                              
+      ...task,                                                                                                      
+      name,                                                                                                                                                                                              
+      description,                                                                                                  
+      priority,                                                                                                     
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,                                                                                                       
+    };                                                                                                              
+    console.log('Submitting task data:', taskData);                                                                 
+    onSave(taskData);                                                                                               
   };
 
   return (
     <form onSubmit={handleSubmit} className="task-form">
       <div className="form-group">
-        <label htmlFor="title">Title</label>
+        <label htmlFor="name">Name</label>
         <input
-          id="title"
+          id="name"
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
-          aria-label="Title"
+          aria-label="Name"
         />
       </div>
       <div className="form-group">
@@ -86,7 +88,7 @@ const TaskForm = ({ task, onSave, onCancel }) => {
 
 TaskForm.propTypes = {
   task: PropTypes.shape({
-    title: PropTypes.string,
+    name: PropTypes.string,
     description: PropTypes.string,
     priority: PropTypes.string,
     dueDate: PropTypes.string,

@@ -19,7 +19,7 @@
   white-space: nowrap;
 }
 
-.task-table th:nth-child(3), .task-table td:nth-child(3) {
+.task-table th:nth-child(4), .task-table td:nth-child(4) {
   width: 100%;
 }
   .task-table th, .task-table td {
@@ -132,8 +132,8 @@
 
 .task-panel {
   position: fixed;
-  top: 0;
-  right: -400px; /* Start off-screen */
+  top: 50px; /* Adjust based on navbar height */
+  right: -500px; /* Start off-screen */
   width: 400px;
   height: 100%;
   background-color: #f9f9f9;

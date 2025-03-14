@@ -7,50 +7,44 @@ const auth = require('../middleware/auth');
 // Get all tasks for the authenticated user
 router.get('/', auth, async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
+    console.log('Retreiving tasks for user:', req.userId); 
+    const tasks = await Task.find({ createdBy: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
     res.json(tasks);
   } catch (err) {
+    console.error('Error fetching tasks:', err);
     res.status(500).json({ message: err.message });
   }
 });
   
-  // Update task order
-  router.patch('/order', async (req, res) => {
-    const { orderUpdates } = req.body; // Array of { _id, order } objects
-    const bulkOps = orderUpdates.map(update => ({
-      updateOne: {
-        filter: { _id: update._id },
-        update: { order: update.order }
-      }
-    }));
-  
-    try {
-      await Task.bulkWrite(bulkOps);
-      res.status(200).json({ message: 'Order updated successfully' });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+// Update task order
+router.patch('/order', async (req, res) => {
+  const { orderUpdates } = req.body; // Array of { _id, order } objects
+  const bulkOps = orderUpdates.map(update => ({
+    updateOne: {
+      filter: { _id: update._id },
+      update: { order: update.order }
     }
-  });
+  }));
 
-router.post('/', auth, async (req, res) => {
   try {
-    const task = new Task({ ...req.body, user: req.userId });
-    await task.save();
-    res.status(201).send(task);
-  } catch (error) {
-    res.status(400).send(error);
+    await Task.bulkWrite(bulkOps);
+    res.status(200).json({ message: 'Order updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
-// Read all tasks
-router.get('/', async (req, res) => {
-  try {
-    const tasks = await Task.find({});
-    res.send(tasks);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.post('/', auth, async (req, res) => {                                                                      
+  try {                                                                                                           
+    console.log('Received task data:', req.body);                                                                 
+    const task = new Task({ ...req.body, createdBy: req.userId });                                                     
+    await task.save();                                                                                            
+    res.status(201).send(task);                                                                                   
+  } catch (error) {                                                                                               
+    console.error('Error saving task:', error);                                                                   
+    res.status(400).send(error);                                                                                  
+  }                                                                                                               
+});  
 
 // Read a single task by id
 router.get('/:id', async (req, res) => {

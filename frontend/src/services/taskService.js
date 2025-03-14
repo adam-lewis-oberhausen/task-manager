@@ -11,13 +11,21 @@ export const getTasks = async (token) => {
   return response.data;
 };
 
-export const createTask = async (task) => {
-  const response = await axios.post(BASE_URL, task);
+export const createTask = async (task, token) => {
+  const response = await axios.post(BASE_URL, task, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
-export const updateTask = async (id, updatedTask) => {
-  const response = await axios.patch(`${BASE_URL}/${id}`, updatedTask);
+export const updateTask = async (id, updatedTask, token) => {
+  const response = await axios.patch(`${BASE_URL}/${id}`, updatedTask, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 };
 
