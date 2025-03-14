@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import axios from '../services/axiosConfig';
+import '../styles/Register.css';
 
 const Register = ({ setView }) => {
   const [username, setUsername] = useState('');
@@ -36,9 +37,9 @@ const Register = ({ setView }) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div style={{ width: '300px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-        <h2 style={{ textAlign: 'center' }}>Register</h2>
+    <div className="register-container">                                                                                              
+      <div className="register-box">                                                                                                  
+        <h2 className="register-title">Register</h2> 
         <TextField fullWidth margin="normal" label="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
         <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>{error}</div>}
@@ -53,4 +54,3 @@ const Register = ({ setView }) => {
 };
 
 export default Register;
-import './Register.css';

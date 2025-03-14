@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
+import './styles/App.css';
 
 const App = () => {
   const [view, setView] = useState('login');

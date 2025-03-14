@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
 import TaskForm from './TaskForm';
-import './TaskList.css';
+import '../styles/TaskList.css';
 
 const ItemType = 'TASK';
 
@@ -179,8 +179,8 @@ const TaskList = ({ onLogout, token }) => {
   };
 
   return (
-    <div className="container">
-      <Button variant="contained" color="primary" onClick={toggleTaskPanel} style={{ margin: '10px 0' }}>
+    <div className="task-list-container">                                                                                           
+      <Button variant="contained" color="primary" onClick={toggleTaskPanel} className="add-task-button"> 
         Add Task
       </Button>
 
