@@ -8,10 +8,12 @@ import '../styles/TaskList.css';
 
 const ItemType = 'TASK';
 
-const TaskList = ({ onLogout, token }) => {
+const TaskList = ({ token }) => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState(null);                                                                           
+  const [editingName, setEditingName] = useState('');
 
   useEffect(() => {
     const fetchTasks = async (token) => {
@@ -52,6 +54,21 @@ const TaskList = ({ onLogout, token }) => {
     setTaskPanelOpen(!taskPanelOpen);
   };
 
+  const handleNameUpdate = async () => {                                                                                              
+    if (editingTaskId && editingName.trim()) {                                                                                        
+      try {                                                                                                                           
+        const updatedTask = await updateTask(editingTaskId, { name: editingName }, token);                                            
+        setTasks(tasks.map(t =>                                                                                                       
+          t._id === editingTaskId ? { ...t, name: editingName } : t                                                                   
+        ));                                                                                                                           
+        setEditingTaskId(null);                                                                                                       
+        setEditingName('');                                                                                                           
+      } catch (error) {                                                                                                               
+        console.error('Error updating task name:', error);                                                                            
+      }                                                                                                                               
+    }                                                                                                                                 
+  };   
+
   const handleSave = async (task) => {
     try {
       if (task._id) {
@@ -91,7 +108,7 @@ const TaskList = ({ onLogout, token }) => {
     setEditingTask(task);
   };
 
-  const TaskRow = ({ task, index }) => {
+  const TaskRow = ({ task, index, editingTaskId, setEditingTaskId, editingName, setEditingName, handleNameUpdate }) => {
     const [{ isDragging }, ref] = useDrag({
       type: ItemType,
       item: { index },
@@ -127,15 +144,27 @@ const TaskList = ({ onLogout, token }) => {
         </TableCell>
         <TableCell>{task.assignee}</TableCell>
         <TableCell
+          className={`name-cell ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
           onMouseEnter={() => setIsHovered(true)}                                                                                             
           onMouseLeave={() => setIsHovered(false)}                                                                                            
-          style={{                                                                                                                            
-            border: isHovered ? '2px solid #1976d2' : '1px solid rgba(224, 224, 224, 1)',                                                                                 
-            transition: 'border 0.2s ease',                                                                                                   
-            cursor: 'pointer'                                                                                                                 
+          onClick={() => {                                                                                                            
+            setEditingTaskId(task._id);                                                                                               
+            setEditingName(task.name);                                                                                                
           }}
         > 
-          {task.name}
+          {editingTaskId === task._id ? (                                                                                             
+            <input                                                                                                                    
+              type="text"                                                                                                             
+              className="name-input"                                                                                                  
+              value={editingName}                                                                                                     
+              onChange={(e) => setEditingName(e.target.value)}                                                                        
+              onBlur={handleNameUpdate}                                                                                               
+              onKeyPress={(e) => e.key === 'Enter' && handleNameUpdate()}                                                             
+              autoFocus                                                                                                               
+            />                                                                                                                        
+          ) : (                                                                                                                       
+            task.name                                                                                                                 
+          )}
         </TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
         <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
@@ -174,10 +203,6 @@ const TaskList = ({ onLogout, token }) => {
     Low: 'priority-low',
   };
 
-  const handleLogout = () => {
-    onLogout();
-  };
-
   return (
     <div className="task-list-container">                                                                                           
       <Button variant="contained" color="primary" onClick={toggleTaskPanel} className="add-task-button"> 
@@ -210,7 +235,16 @@ const TaskList = ({ onLogout, token }) => {
           </TableHead>
           <TableBody>
             {tasks.map((task, index) => (
-              <TaskRow key={task._id} task={task} index={index} />
+              <TaskRow                                                                                                                
+              key={task._id}                                                                                                        
+              task={task}                                                                                                           
+              index={index}                                                                                                         
+              editingTaskId={editingTaskId}                                                                                         
+              setEditingTaskId={setEditingTaskId}                                                                                   
+              editingName={editingName}                                                                                             
+              setEditingName={setEditingName}                                                                                       
+              handleNameUpdate={handleNameUpdate}                                                                                   
+            />
             ))}
           </TableBody>
         </Table>
