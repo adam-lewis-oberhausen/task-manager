@@ -73,11 +73,7 @@ const TaskList = ({ token }) => {
                                                                                                                                       
     // If it's a mock task and name is empty, reload mock tasks                                                                       
     if (editingTaskId.startsWith('mock-') && !editingName.trim()) {                                                                   
-      setTasks([                                                                                                                      
-        { _id: 'mock-1', name: 'e.g Determine project goal' },                                                                                       
-        { _id: 'mock-2', name: 'e.g Schedule kickoff meeting' },                                                                                       
-        { _id: 'mock-3', name: 'e.g. Set final deadline' },                                                                                       
-      ]);                                                                                                                             
+      loadMockTasks();
       setEditingTaskId(null);                                                                                                         
       setEditingName('');                                                                                                             
       return;                                                                                                                         
