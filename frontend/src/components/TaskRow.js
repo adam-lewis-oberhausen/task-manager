@@ -11,7 +11,7 @@ const TaskRow = ({
   setEditingTaskId, 
   editingName, 
   setEditingName, 
-  handleNameUpdate, 
+  handleTaskUpdate,
   toggleCompletion, 
   handleDelete,
   moveTask,
