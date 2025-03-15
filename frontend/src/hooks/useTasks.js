@@ -81,9 +81,9 @@ export const useTasks = (token) => {
         updatedTasks = [...updatedTasks, newTask];
       } else if (taskData._id) {
         // Update existing task
-        await updateTask(taskData._id, taskData, token);
+        const updatedTask = await updateTask(taskData._id, taskData, token);
         updatedTasks = tasks.map(t => 
-          t._id === taskData._id ? { ...t, ...taskData } : t
+          t._id === taskData._id ? updatedTask : t
         );
       } else {
         // Create new task

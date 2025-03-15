@@ -22,17 +22,21 @@ const TaskForm = ({ task, onSave, onCancel, token }) => {
     }
   }, [task]);
 
-  const handleSubmit = (e) => {                                                                                     
-    e.preventDefault();                                                                                             
-    const taskData = {                                                                                              
-      ...task,                                                                                                      
-      name,                                                                                                                                                                                              
-      description,                                                                                                  
-      priority,                                                                                                     
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null,                                                                                                       
-    };                                                                                                              
-    console.log('Submitting task data:', taskData);                                                                 
-    onSave(taskData);                                                                                               
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const taskData = {
+      name,
+      description,
+      priority,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+    };
+    
+    if (task?._id) {
+      taskData._id = task._id;
+    }
+    
+    console.log('Submitting task data:', taskData);
+    onSave(taskData);
   };
 
   return (
