@@ -6,7 +6,7 @@ import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '.
 import TaskForm from './TaskForm';
 import '../styles/TaskList.css';
 
-const ItemType = 'TASK';
+import { ItemType } from '../constants/dndTypes';
 
 const TaskList = ({ token }) => {
   const [tasks, setTasks] = useState([]);

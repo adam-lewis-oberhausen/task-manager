@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
-import { ItemType } from './TaskList';
+import { ItemType } from '../constants/dndTypes';
 
 const TaskRow = ({ 
   task, 
@@ -59,8 +59,7 @@ const TaskRow = ({
           onMouseLeave={() => setIsHovered(false)}                                                                                            
           onClick={() => {                                                                                                            
             setEditingTaskId(task._id);
-            setTasks(task._id.startsWith('mock-') ? [{ _id: task._id, name: task.name}] : tasks);                                                                                             
-            setEditingName(task._id.startsWith('mock-') ? '' : task.name);                                                                                               
+            setEditingName(task._id.startsWith('mock-') ? '' : task.name);
           }}
         > 
           {editingTaskId === task._id ? (                                                                                             
