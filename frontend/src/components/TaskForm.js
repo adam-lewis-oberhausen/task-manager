@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../styles/TaskForm.css';
 
-const TaskForm = ({ task, onSave, onCancel, token }) => {
+const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -101,8 +101,12 @@ TaskForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
 };
 
-TaskForm.defaultProps = {
-  task: null,
+// Use default parameters instead of defaultProps
+const defaultTask = {
+  name: '',
+  description: '',
+  priority: 'Medium',
+  dueDate: ''
 };
 
 export default TaskForm;
