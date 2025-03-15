@@ -104,7 +104,8 @@ const TaskList = ({ token }) => {
                 moveTask={moveTask}
                 isOverdue={isOverdue}
                 priorityColors={priorityColors}
-                handleNameUpdate={handleNameUpdate}
+                handleNameUpdate={handleNameUpdate},
+                startEditing={startEditing}
               />
             ))}
           </TableBody>

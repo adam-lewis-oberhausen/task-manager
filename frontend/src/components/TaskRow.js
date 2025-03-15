@@ -16,7 +16,8 @@ const TaskRow = ({
   handleDelete,
   moveTask,
   isOverdue,
-  priorityColors
+  priorityColors,
+  startEditing
 }) => {
     const [{ isDragging }, ref] = useDrag({
       type: ItemType,
@@ -81,6 +82,7 @@ const TaskRow = ({
           <IconButton color="primary" onClick={() => {
             setEditingTaskId(null);
             setEditingName('');
+            startEditing(task);
           }}>
             <Edit />
           </IconButton>
