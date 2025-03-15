@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { taskRowLogger } from '../utils/logger';
 import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
