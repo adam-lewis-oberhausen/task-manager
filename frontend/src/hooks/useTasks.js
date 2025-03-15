@@ -96,6 +96,8 @@ export const useTasks = (token) => {
         const newTask = await createTask(taskToCreate, token);
         updatedTasks = [...updatedTasks, newTask];
       } else if (taskData._id) {
+        // Remove mock tasks if any real task exists
+        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         // Update existing task
         const taskUpdate = {
           name: taskData.name,
@@ -108,7 +110,8 @@ export const useTasks = (token) => {
           t._id === taskData._id ? { ...t, ...updatedTask } : t
         );
       } else {
-        // Create new task
+        // Create new task and remove mock tasks
+        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         const taskToCreate = {
           name: taskData.name,
           description: taskData.description,
@@ -116,7 +119,7 @@ export const useTasks = (token) => {
           dueDate: taskData.dueDate
         };
         const newTask = await createTask(taskToCreate, token);
-        updatedTasks = [...tasks, newTask];
+        updatedTasks = [...updatedTasks, newTask];
       }
 
       setTasks(updatedTasks);
