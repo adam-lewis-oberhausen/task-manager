@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { taskRowLogger } from '../utils/logger';
 import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
 import { ItemType } from '../constants/dndTypes';
@@ -22,20 +23,38 @@ const TaskRow = ({
     const [, ref] = useDrag({
       type: ItemType,
       item: { index },
-    }, [index, moveTask]);
+      begin: () => {
+        taskRowLogger.debug('Dragging started for task:', task._id);
+      },
+      end: () => {
+        taskRowLogger.debug('Dragging ended for task:', task._id);
+      }
+    }, [index, moveTask, task._id]);
 
     const [, drop] = useDrop({
       accept: ItemType,
       hover: (draggedItem) => {
         if (draggedItem.index !== index) {
+          taskRowLogger.debug('Task hovered over:', task._id, 'by:', draggedItem.index);
           moveTask(draggedItem.index, index);
           draggedItem.index = index;
         }
       },
-    }, [index, moveTask]);
+    }, [index, moveTask, task._id]);
 
     const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+
+    useEffect(() => {
+      taskRowLogger.debug('TaskRow rendered for task:', task._id);
+    }, [task._id]);
+
+    useEffect(() => {
+      taskRowLogger.debug('Editing state changed for task:', task._id, {
+        editingTaskId,
+        editingName
+      });
+    }, [editingTaskId, editingName, task._id]);
 
     return (
       <TableRow
@@ -48,7 +67,13 @@ const TaskRow = ({
           <DragHandle />
         </TableCell>
         <TableCell>
-          <Checkbox checked={task.completed} onChange={() => toggleCompletion(task)} />
+          <Checkbox 
+            checked={task.completed} 
+            onChange={() => {
+              taskRowLogger.debug('Toggling completion for task:', task._id, 'from:', task.completed, 'to:', !task.completed);
+              toggleCompletion(task);
+            }} 
+          />
         </TableCell>
         <TableCell>{task.assignee}</TableCell>
         <TableCell
@@ -58,6 +83,7 @@ const TaskRow = ({
           onClick={(e) => {
             // Only start editing if we're not already editing and the click wasn't on the input
             if (editingTaskId !== task._id && e.target.tagName !== 'INPUT') {
+              taskRowLogger.debug('Starting inline edit for task:', task._id);
               setEditingTaskId(task._id);
               setEditingName(task._id.startsWith('mock-') ? '' : task.name);
             }
@@ -120,6 +146,7 @@ const TaskRow = ({
             color="secondary" 
             onClick={() => {
               if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
+                taskRowLogger.debug('Deleting task:', task._id);
                 handleDelete(task._id);
               }
             }}
