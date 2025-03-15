@@ -72,6 +72,9 @@ export const useTasks = (token) => {
     handleDelete,
     moveTask,
     toggleCompletion,
-    loadMockTasks
+    loadMockTasks,
+    updateTask,
+    createTask,
+    setTasks
   };
 };
