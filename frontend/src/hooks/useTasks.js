@@ -18,7 +18,6 @@ export const useTasks = (token) => {
     const fetchTasks = async () => {
       try {
         logger.debug('Fetching tasks...');
-        logger.debug('Using token:', token);
         const tasks = await getTasks(token);
         logger.debug('Tasks retrieved:', tasks);
         logger.debug('Number of tasks:', tasks.length);
