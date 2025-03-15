@@ -140,7 +140,7 @@ export const useTasks = (token) => {
       logger.error('Error updating task:', error);
       return false;
     }
-  }, [tasks, token, loadMockTasks, logger]);
+  }, [tasks, token, loadMockTasks]);
 
   return {
     tasks,
