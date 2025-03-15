@@ -81,7 +81,6 @@ const TaskRow = ({
           <IconButton color="primary" onClick={() => {
             setEditingTaskId(null);
             setEditingName('');
-            startEditing(task);
           }}>
             <Edit />
           </IconButton>
