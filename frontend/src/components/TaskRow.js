@@ -13,7 +13,6 @@ const TaskRow = ({
   setEditingName, 
   handleNameUpdate, 
   toggleCompletion, 
-  startEditing, 
   handleDelete,
   moveTask,
   isOverdue,
@@ -79,7 +78,11 @@ const TaskRow = ({
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
         <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>
-          <IconButton color="primary" onClick={() => startEditing(task)}>
+          <IconButton color="primary" onClick={() => {
+            setEditingTaskId(null);
+            setEditingName('');
+            startEditing(task);
+          }}>
             <Edit />
           </IconButton>
         </TableCell>

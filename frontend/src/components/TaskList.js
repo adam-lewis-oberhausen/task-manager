@@ -52,25 +52,28 @@ const TaskList = ({ token }) => {
 
   const startEditing = (task) => {
     setEditingTask(task);
+    if (!taskPanelOpen) {
+      setTaskPanelOpen(true);
+    }
   };
 
   return (
     <div className="task-list-container">
       <Button variant="contained" color="primary" onClick={toggleTaskPanel} className="add-task-button">
-        Add Task
+        {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </Button>
 
       <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-        <TaskForm onSave={handleSave} onCancel={handleCancel} token={token}/>
-      </div>
-      
-      {editingTask && (
-        <TaskForm
+        <TaskForm 
           task={editingTask}
-          onSave={handleSave}
-          onCancel={handleCancel}
+          onSave={handleSave} 
+          onCancel={() => {
+            setEditingTask(null);
+            handleCancel();
+          }} 
+          token={token}
         />
-      )}
+      </div>
 
       <TableContainer component={Paper}>
         <Table className="task-table">
@@ -97,7 +100,6 @@ const TaskList = ({ token }) => {
                 editingName={editingName}
                 setEditingName={setEditingName}
                 toggleCompletion={toggleCompletion}
-                startEditing={startEditing}
                 handleDelete={handleDelete}
                 moveTask={moveTask}
                 isOverdue={isOverdue}
