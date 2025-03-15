@@ -57,9 +57,12 @@ const TaskRow = ({
           className={`name-cell ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
           onMouseEnter={() => setIsHovered(true)}                                                                                             
           onMouseLeave={() => setIsHovered(false)}                                                                                            
-          onClick={() => {                                                                                                            
-            setEditingTaskId(task._id);
-            setEditingName(task._id.startsWith('mock-') ? '' : task.name);
+          onClick={(e) => {
+            // Only start editing if we're not already editing and the click wasn't on the input
+            if (editingTaskId !== task._id && e.target.tagName !== 'INPUT') {
+              setEditingTaskId(task._id);
+              setEditingName(task._id.startsWith('mock-') ? '' : task.name);
+            }
           }}
         > 
           {editingTaskId === task._id ? (                                                                                             
@@ -68,7 +71,21 @@ const TaskRow = ({
               className="name-input"                                                                                                  
               value={editingName}                                                                                                     
               onChange={(e) => setEditingName(e.target.value)}                                                                        
-              onBlur={handleTaskUpdate}                                                                                               
+              onBlur={(e) => {
+                // Only update if the name has changed
+                if (editingName.trim() && editingName !== task.name) {
+                  const taskUpdate = {
+                    _id: task._id,
+                    name: editingName,
+                    description: task.description,
+                    priority: task.priority,
+                    dueDate: task.dueDate
+                  };
+                  handleTaskUpdate(taskUpdate);
+                }
+                setEditingTaskId(null);
+                setEditingName('');
+              }}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   const taskUpdate = {
