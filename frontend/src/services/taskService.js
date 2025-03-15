@@ -12,21 +12,31 @@ export const getTasks = async (token) => {
 };
 
 export const createTask = async (task, token) => {
-  const response = await axios.post(BASE_URL, task, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await axios.post(BASE_URL, task, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating task:', error);
+    throw error;
+  }
 };
 
 export const updateTask = async (id, updatedTask, token) => {
-  const response = await axios.patch(`${BASE_URL}/${id}`, updatedTask, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await axios.patch(`${BASE_URL}/${id}`, updatedTask, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating task:', error);
+    throw error;
+  }
 };
 
 export const deleteTask = async (id) => {

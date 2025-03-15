@@ -71,13 +71,16 @@ const TaskRow = ({
               onBlur={handleTaskUpdate}                                                                                               
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  handleTaskUpdate({ 
-                    _id: task._id, 
+                  const taskUpdate = {
+                    _id: task._id,
                     name: editingName,
                     description: task.description,
                     priority: task.priority,
                     dueDate: task.dueDate
-                  });
+                  };
+                  handleTaskUpdate(taskUpdate);
+                  setEditingTaskId(null);
+                  setEditingName('');
                 }
               }}
               autoFocus                                                                                                               

@@ -81,13 +81,25 @@ export const useTasks = (token) => {
         updatedTasks = [...updatedTasks, newTask];
       } else if (taskData._id) {
         // Update existing task
-        const updatedTask = await updateTask(taskData._id, taskData, token);
+        const taskUpdate = {
+          name: taskData.name,
+          description: taskData.description,
+          priority: taskData.priority,
+          dueDate: taskData.dueDate
+        };
+        const updatedTask = await updateTask(taskData._id, taskUpdate, token);
         updatedTasks = tasks.map(t => 
-          t._id === taskData._id ? updatedTask : t
+          t._id === taskData._id ? { ...t, ...updatedTask } : t
         );
       } else {
         // Create new task
-        const newTask = await createTask(taskData, token);
+        const taskToCreate = {
+          name: taskData.name,
+          description: taskData.description,
+          priority: taskData.priority,
+          dueDate: taskData.dueDate
+        };
+        const newTask = await createTask(taskToCreate, token);
         updatedTasks = [...tasks, newTask];
       }
 
