@@ -68,8 +68,8 @@ const TaskRow = ({
               className="name-input"                                                                                                  
               value={editingName}                                                                                                     
               onChange={(e) => setEditingName(e.target.value)}                                                                        
-              onBlur={handleNameUpdate}                                                                                               
-              onKeyPress={(e) => e.key === 'Enter' && handleNameUpdate({ 
+              onBlur={handleTaskUpdate}                                                                                               
+              onKeyPress={(e) => e.key === 'Enter' && handleTaskUpdate({ 
                 _id: task._id, 
                 name: editingName 
               })}
