@@ -51,9 +51,9 @@ export const useTasks = (token) => {
       const updatedTasks = tasks.filter(task => task._id !== id);
       logger.debug('Updated tasks after deletion:', updatedTasks);
       
-      // If we deleted the last real task, reload mock tasks
-      if (updatedTasks.length === 0 && tasks.some(t => !t._id.startsWith('mock-'))) {
-        logger.debug('Deleted last real task, loading mock tasks');
+      // If we deleted all tasks, reload mock tasks
+      if (updatedTasks.length === 0) {
+        logger.debug('Deleted all tasks, loading mock tasks');
         loadMockTasks();
       } else {
         logger.debug('Setting updated tasks');
