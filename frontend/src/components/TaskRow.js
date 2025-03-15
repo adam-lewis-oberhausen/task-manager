@@ -1,4 +1,23 @@
-const TaskRow = ({ task, index, editingTaskId, setEditingTaskId, editingName, setEditingName, handleNameUpdate }) => {
+import React, { useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
+import { Edit, Delete, DragHandle } from '@mui/icons-material';
+
+const TaskRow = ({ 
+  task, 
+  index, 
+  editingTaskId, 
+  setEditingTaskId, 
+  editingName, 
+  setEditingName, 
+  handleNameUpdate, 
+  toggleCompletion, 
+  startEditing, 
+  handleDelete,
+  moveTask,
+  isOverdue,
+  priorityColors
+}) => {
     const [{ isDragging }, ref] = useDrag({
       type: ItemType,
       item: { index },
@@ -72,3 +91,5 @@ const TaskRow = ({ task, index, editingTaskId, setEditingTaskId, editingName, se
       </TableRow>
     );
   };
+  
+export default TaskRow;
