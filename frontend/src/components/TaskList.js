@@ -51,8 +51,6 @@ const TaskList = ({ token }) => {
   };
 
   return (
-
-  return (
     <div className="task-list-container">
       <Button variant="contained" color="primary" onClick={toggleTaskPanel} className="add-task-button">
         Add Task
