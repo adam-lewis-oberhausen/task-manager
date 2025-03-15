@@ -1,10 +1,5 @@
 
-const COMPONENT_LOGGING = {
-  USE_TASKS: process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true',
-  // Add other components here as needed
-};
-
-console.log('Component logging settings:', COMPONENT_LOGGING);
+console.log('REACT_APP_COMPONENT_LOGGING_USE_TASKS:', process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS);
 
 export const tasksLogger = {
   debug: (...args) => {
