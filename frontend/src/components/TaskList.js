@@ -72,6 +72,7 @@ const TaskList = ({ token }) => {
 
       <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
         <TaskForm 
+          key={editingTask?._id || 'new-task'} // Force remount when switching between new/edit
           task={editingTask}
           onSave={handleSave} 
           onCancel={() => {

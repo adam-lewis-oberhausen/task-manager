@@ -8,13 +8,17 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
   const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
 
+  // Reset form when task prop changes
   useEffect(() => {
-    if (task) {
-      setName(task.name);
-      setDescription(task.description);
-      setPriority(task.priority);
-      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
-    } else {
+    setName(task?.name || '');
+    setDescription(task?.description || '');
+    setPriority(task?.priority || 'Medium');
+    setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
+  }, [task]);
+
+  // Clear form when panel opens for new task
+  useEffect(() => {
+    if (!task) {
       setName('');
       setDescription('');
       setPriority('Medium');
