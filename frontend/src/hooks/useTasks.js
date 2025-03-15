@@ -116,6 +116,6 @@ export const useTasks = (token) => {
     updateTask,
     createTask,
     setTasks,
-    handleNameUpdate
+    handleTaskUpdate
   };
 };

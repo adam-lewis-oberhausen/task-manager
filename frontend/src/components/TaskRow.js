@@ -69,7 +69,10 @@ const TaskRow = ({
               value={editingName}                                                                                                     
               onChange={(e) => setEditingName(e.target.value)}                                                                        
               onBlur={handleNameUpdate}                                                                                               
-              onKeyPress={(e) => e.key === 'Enter' && handleNameUpdate()}                                                             
+              onKeyPress={(e) => e.key === 'Enter' && handleTaskUpdate({ 
+                _id: task._id, 
+                name: editingName 
+              })}
               autoFocus                                                                                                               
             />                                                                                                                        
           ) : (                                                                                                                       

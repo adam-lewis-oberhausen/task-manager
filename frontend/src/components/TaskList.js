@@ -30,18 +30,10 @@ const TaskList = ({ token }) => {
   };
 
   const handleSave = async (task) => {
-    try {
-      if (task._id) {
-        await updateTask(task._id, task, token);
-        setTasks(tasks.map(t => (t._id === task._id ? task : t)));
-      } else {
-        const newTask = await createTask(task, token);
-        setTasks([...tasks, newTask]);
-      }
+    const success = await handleTaskUpdate(task);
+    if (success) {
       setTaskPanelOpen(false);
       setEditingTask(null);
-    } catch (error) {
-      console.error('Error saving task:', error);
     }
   };
 
@@ -104,7 +96,7 @@ const TaskList = ({ token }) => {
                 moveTask={moveTask}
                 isOverdue={isOverdue}
                 priorityColors={priorityColors}
-                handleNameUpdate={handleNameUpdate}
+                handleTaskUpdate={handleTaskUpdate}
                 startEditing={startEditing}
               />
             ))}
