@@ -63,6 +63,46 @@ export const useTasks = (token) => {
     }
   }, [tasks]);
 
+  const handleNameUpdate = useCallback(async () => {
+    if (!editingTaskId) return;
+
+    // If it's a mock task and name is empty, reload mock tasks
+    if (editingTaskId.startsWith('mock-') && !editingName.trim()) {
+      loadMockTasks();
+      setEditingTaskId(null);
+      setEditingName('');
+      return;
+    }
+
+    // If it's a mock task and has content, remove other mock tasks
+    if (editingTaskId.startsWith('mock-') && editingName.trim()) {
+      const updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
+      try {
+        const newTask = await createTask({ name: editingName }, token);
+        setTasks([...updatedTasks, newTask]);
+      } catch (error) {
+        console.error('Error creating task:', error);
+      }
+      setEditingTaskId(null);
+      setEditingName('');
+      return;
+    }
+
+    // Handle regular task updates
+    if (editingName.trim()) {
+      try {
+        await updateTask(editingTaskId, { name: editingName }, token);
+        setTasks(tasks.map(t => 
+          t._id === editingTaskId ? { ...t, name: editingName } : t
+        ));
+      } catch (error) {
+        console.error('Error updating task name:', error);
+      }
+    }
+    setEditingTaskId(null);
+    setEditingName('');
+  }, [editingTaskId, editingName, tasks, token, loadMockTasks, updateTask, createTask]);
+
   return {
     tasks,
     editingTaskId,
@@ -75,6 +115,7 @@ export const useTasks = (token) => {
     loadMockTasks,
     updateTask,
     createTask,
-    setTasks
+    setTasks,
+    handleNameUpdate
   };
 };

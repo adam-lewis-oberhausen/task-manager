@@ -18,7 +18,8 @@ const TaskList = ({ token }) => {
     toggleCompletion,
     updateTask,
     createTask,
-    setTasks
+    setTasks,
+    handleNameUpdate
   } = useTasks(token);
 
   const [editingTask, setEditingTask] = useState(null);
@@ -101,6 +102,7 @@ const TaskList = ({ token }) => {
                 moveTask={moveTask}
                 isOverdue={isOverdue}
                 priorityColors={priorityColors}
+                handleNameUpdate={handleNameUpdate}
               />
             ))}
           </TableBody>
