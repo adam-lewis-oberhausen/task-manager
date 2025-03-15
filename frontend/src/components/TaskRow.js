@@ -22,12 +22,14 @@ const TaskRow = ({
 }) => {
     const [, ref] = useDrag({
       type: ItemType,
-      item: { index },
-      begin: () => {
+      item: () => {
         taskRowLogger.debug('Dragging started for task:', task._id);
+        return { index };
       },
-      end: () => {
-        taskRowLogger.debug('Dragging ended for task:', task._id);
+      end: (item, monitor) => {
+        if (monitor.didDrop()) {
+          taskRowLogger.debug('Dragging ended for task:', task._id);
+        }
       }
     }, [index, moveTask, task._id]);
 
