@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
 import { MOCK_TASKS, areAllTasksMock } from '../utils/taskHelpers';
+import { useTasksLogger } from '../utils/logger';
 
 export const useTasks = (token) => {
   const [tasks, setTasks] = useState([]);
@@ -11,22 +12,29 @@ export const useTasks = (token) => {
     setTasks([...MOCK_TASKS]);
   }, []);
 
+  const logger = useTasksLogger;
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
+        logger.debug('Fetching tasks...');
         const tasks = await getTasks(token);
+        logger.debug('Tasks retrieved:', tasks);
+        
         if (tasks.length === 0) {
+          logger.debug('No tasks found, loading mock tasks');
           loadMockTasks();
         } else {
+          logger.debug('Setting tasks:', tasks);
           setTasks(tasks);
         }
       } catch (error) {
-        console.error('Error fetching tasks:', error);
+        logger.error('Error fetching tasks:', error);
       }
     };
 
     fetchTasks();
-  }, [token, loadMockTasks]);
+  }, [token, loadMockTasks, logger]);
 
   const handleDelete = useCallback(async (id) => {
     try {
@@ -44,7 +52,7 @@ export const useTasks = (token) => {
         setTasks(updatedTasks);
       }
     } catch (error) {
-      console.error('Error deleting task:', error);
+      logger.error('Error deleting task:', error);
     }
   }, [tasks, loadMockTasks]);
 
@@ -59,7 +67,7 @@ export const useTasks = (token) => {
     const realTasks = updatedTasks.filter(t => !t._id.startsWith('mock-'));
     if (realTasks.length > 0) {
       updateTaskOrder(realTasks.map((task, index) => ({ _id: task._id, order: index })))
-        .catch(error => console.error('Error updating task order:', error));
+        .catch(error => logger.error('Error updating task order:', error));
     }
   }, [tasks]);
 
@@ -69,7 +77,7 @@ export const useTasks = (token) => {
       await updateTask(task._id, updatedTask);
       setTasks(tasks.map(t => (t._id === task._id ? updatedTask : t)));
     } catch (error) {
-      console.error('Error toggling task completion:', error);
+      logger.error('Error toggling task completion:', error);
     }
   }, [tasks]);
 
@@ -125,7 +133,7 @@ export const useTasks = (token) => {
       setTasks(updatedTasks);
       return true;
     } catch (error) {
-      console.error('Error updating task:', error);
+      logger.error('Error updating task:', error);
       return false;
     }
   }, [tasks, token, loadMockTasks, updateTask, createTask]);
