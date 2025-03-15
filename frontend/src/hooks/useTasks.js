@@ -63,45 +63,41 @@ export const useTasks = (token) => {
     }
   }, [tasks]);
 
-  const handleNameUpdate = useCallback(async () => {
-    if (!editingTaskId) return;
-
-    // If it's a mock task and name is empty, reload mock tasks
-    if (editingTaskId.startsWith('mock-') && !editingName.trim()) {
-      loadMockTasks();
-      setEditingTaskId(null);
-      setEditingName('');
-      return;
-    }
-
-    // If it's a mock task and has content, remove other mock tasks
-    if (editingTaskId.startsWith('mock-') && editingName.trim()) {
-      const updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
-      try {
-        const newTask = await createTask({ name: editingName }, token);
-        setTasks([...updatedTasks, newTask]);
-      } catch (error) {
-        console.error('Error creating task:', error);
+  const handleTaskUpdate = useCallback(async (taskData) => {
+    try {
+      let updatedTasks = [...tasks];
+      
+      // Handle mock task conversion
+      if (taskData._id?.startsWith('mock-')) {
+        if (!taskData.name?.trim()) {
+          // Empty name - reload mock tasks
+          loadMockTasks();
+          return true;
+        }
+        
+        // Convert mock task to real task
+        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
+        const newTask = await createTask(taskData, token);
+        updatedTasks = [...updatedTasks, newTask];
+      } else if (taskData._id) {
+        // Update existing task
+        await updateTask(taskData._id, taskData, token);
+        updatedTasks = tasks.map(t => 
+          t._id === taskData._id ? { ...t, ...taskData } : t
+        );
+      } else {
+        // Create new task
+        const newTask = await createTask(taskData, token);
+        updatedTasks = [...tasks, newTask];
       }
-      setEditingTaskId(null);
-      setEditingName('');
-      return;
-    }
 
-    // Handle regular task updates
-    if (editingName.trim()) {
-      try {
-        await updateTask(editingTaskId, { name: editingName }, token);
-        setTasks(tasks.map(t => 
-          t._id === editingTaskId ? { ...t, name: editingName } : t
-        ));
-      } catch (error) {
-        console.error('Error updating task name:', error);
-      }
+      setTasks(updatedTasks);
+      return true;
+    } catch (error) {
+      console.error('Error updating task:', error);
+      return false;
     }
-    setEditingTaskId(null);
-    setEditingName('');
-  }, [editingTaskId, editingName, tasks, token, loadMockTasks, updateTask, createTask]);
+  }, [tasks, token, loadMockTasks, updateTask, createTask]);
 
   return {
     tasks,
