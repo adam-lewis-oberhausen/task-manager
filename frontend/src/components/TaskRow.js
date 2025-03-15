@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
 import { Edit, Delete, DragHandle } from '@mui/icons-material';
+import { ItemType } from './TaskList';
 
 const TaskRow = ({ 
   task, 
