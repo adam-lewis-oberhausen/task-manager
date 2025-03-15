@@ -75,9 +75,15 @@ export const useTasks = (token) => {
           return true;
         }
         
-        // Convert mock task to real task
+        // Convert mock task to real task - remove _id since it's invalid
         updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
-        const newTask = await createTask(taskData, token);
+        const taskToCreate = {
+          name: taskData.name,
+          description: taskData.description,
+          priority: taskData.priority,
+          dueDate: taskData.dueDate
+        };
+        const newTask = await createTask(taskToCreate, token);
         updatedTasks = [...updatedTasks, newTask];
       } else if (taskData._id) {
         // Update existing task
