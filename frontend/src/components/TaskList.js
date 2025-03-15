@@ -16,9 +16,6 @@ const TaskList = ({ token }) => {
     handleDelete,
     moveTask,
     toggleCompletion,
-    updateTask,
-    createTask,
-    setTasks,
     handleTaskUpdate
   } = useTasks(token);
 

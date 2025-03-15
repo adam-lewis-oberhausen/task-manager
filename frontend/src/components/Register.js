@@ -46,7 +46,7 @@ const Register = ({ setView }) => {
         <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>Register</Button>
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <span>Already have an account? </span>
-          <a href="#" onClick={() => setView('login')}>Login</a>
+          <button className="link-button" onClick={() => setView('login')}>Login</button>
         </div>
       </div>
     </div>

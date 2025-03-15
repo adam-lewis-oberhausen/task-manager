@@ -1,9 +1,3 @@
-const LOG_LEVELS = {
-  DEBUG: 'debug',
-  INFO: 'info',
-  WARN: 'warn',
-  ERROR: 'error'
-};
 
 const COMPONENT_LOGGING = {
   USE_TASKS: process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true',

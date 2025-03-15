@@ -50,7 +50,7 @@ const App = () => {
           <div className="dropdown">
             <button className="dropdown-button">Menu</button>
             <div className="dropdown-content">
-              <a href="#" onClick={handleLogout}>Logout</a>
+              <button className="dropdown-link" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </nav>

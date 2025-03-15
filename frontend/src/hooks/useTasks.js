@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
-import { MOCK_TASKS, areAllTasksMock } from '../utils/taskHelpers';
+import { MOCK_TASKS } from '../utils/taskHelpers';
 import { useTasksLogger } from '../utils/logger';
 
 export const useTasks = (token) => {
@@ -37,6 +37,7 @@ export const useTasks = (token) => {
   }, [token, loadMockTasks, logger]);
 
   const handleDelete = useCallback(async (id) => {
+    const logger = useTasksLogger;
     try {
       // Only call deleteTask for non-mock tasks
       if (!id.startsWith('mock-')) {
@@ -57,6 +58,7 @@ export const useTasks = (token) => {
   }, [tasks, loadMockTasks]);
 
   const moveTask = useCallback((dragIndex, hoverIndex) => {
+    const logger = useTasksLogger;
     const draggedTask = tasks[dragIndex];
     const updatedTasks = [...tasks];
     updatedTasks.splice(dragIndex, 1);
@@ -72,6 +74,7 @@ export const useTasks = (token) => {
   }, [tasks]);
 
   const toggleCompletion = useCallback(async (task) => {
+    const logger = useTasksLogger;
     try {
       const updatedTask = { ...task, completed: !task.completed };
       await updateTask(task._id, updatedTask);
@@ -82,6 +85,7 @@ export const useTasks = (token) => {
   }, [tasks]);
 
   const handleTaskUpdate = useCallback(async (taskData) => {
+    const logger = useTasksLogger;
     try {
       let updatedTasks = [...tasks];
       

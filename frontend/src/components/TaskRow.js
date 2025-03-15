@@ -19,12 +19,12 @@ const TaskRow = ({
   priorityColors,
   startEditing
 }) => {
-    const [{ isDragging }, ref] = useDrag({
+    const [, ref] = useDrag({
       type: ItemType,
       item: { index },
     }, [index, moveTask]);
 
-    const [{ isOver }, drop] = useDrop({
+    const [, drop] = useDrop({
       accept: ItemType,
       hover: (draggedItem) => {
         console.log(`Dragging item from index ${draggedItem.index} to ${index}`);
@@ -36,7 +36,7 @@ const TaskRow = ({
     }, [index, moveTask]);
 
     // console.log(`Rendering TaskRow for task: ${task.name}, index: ${index}`);
-    const [showHandle, setShowHandle] = useState(false);
+    const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     return (

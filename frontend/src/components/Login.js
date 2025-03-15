@@ -38,7 +38,7 @@ const Login = ({ onLogin, setView }) => {
         <Button fullWidth variant="contained" color="primary" onClick={handleLogin}>Login</Button>
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <span>No account yet? </span>
-          <a href="#" onClick={() => setView('register')}>Register</a>
+          <button className="link-button" onClick={() => setView('register')}>Register</button>
         </div>
       </div>
     </div>
