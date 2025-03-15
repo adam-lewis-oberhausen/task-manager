@@ -54,8 +54,13 @@ export const useTasks = (token) => {
     updatedTasks.splice(dragIndex, 1);
     updatedTasks.splice(hoverIndex, 0, draggedTask);
     setTasks(updatedTasks);
-    updateTaskOrder(updatedTasks.map((task, index) => ({ _id: task._id, order: index })))
-      .catch(error => console.error('Error updating task order:', error));
+
+    // Only update order for real tasks
+    const realTasks = updatedTasks.filter(t => !t._id.startsWith('mock-'));
+    if (realTasks.length > 0) {
+      updateTaskOrder(realTasks.map((task, index) => ({ _id: task._id, order: index })))
+        .catch(error => console.error('Error updating task order:', error));
+    }
   }, [tasks]);
 
   const toggleCompletion = useCallback(async (task) => {
