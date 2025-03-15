@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
+import { taskListLogger } from '../utils/logger';
 import '../styles/TaskList.css';
 
 const TaskList = ({ token }) => {
+  taskListLogger.debug('TaskList component rendering with token:', token);
   const {
     tasks,
     editingTaskId,
@@ -22,26 +24,42 @@ const TaskList = ({ token }) => {
   const [editingTask, setEditingTask] = useState(null);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
 
+  useEffect(() => {
+    taskListLogger.debug('Task panel state changed:', taskPanelOpen);
+  }, [taskPanelOpen]);
+
+  useEffect(() => {
+    taskListLogger.debug('Editing task changed:', editingTask);
+  }, [editingTask]);
+
   const toggleTaskPanel = () => {
+    taskListLogger.debug('Toggling task panel');
     setTaskPanelOpen(!taskPanelOpen);
   };
 
   const handleSave = async (task) => {
+    taskListLogger.debug('Saving task:', task);
     const success = await handleTaskUpdate(task);
     if (success) {
+      taskListLogger.debug('Task saved successfully');
       setTaskPanelOpen(false);
       setEditingTask(null);
+    } else {
+      taskListLogger.debug('Task save failed');
     }
   };
 
   const handleCancel = () => {
+    taskListLogger.debug('Canceling task edit');
     setTaskPanelOpen(false);
     setEditingTask(null);
   };
 
   const startEditing = (task) => {
+    taskListLogger.debug('Starting to edit task:', task);
     setEditingTask(task);
     if (!taskPanelOpen) {
+      taskListLogger.debug('Opening task panel for editing');
       setTaskPanelOpen(true);
     }
   };

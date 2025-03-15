@@ -1,23 +1,28 @@
+const createLogger = (componentName) => {
+  const envVar = `REACT_APP_COMPONENT_LOGGING_${componentName.toUpperCase()}`;
+  const isEnabled = process.env[envVar] === 'true';
 
-console.log('REACT_APP_COMPONENT_LOGGING_USE_TASKS:', process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS);
-
-export const tasksLogger = {
-  debug: (...args) => {
-    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
-      console.debug('[USE_TASKS]', ...args);
+  return {
+    debug: (...args) => {
+      if (isEnabled) {
+        console.debug(`[${componentName}]`, ...args);
+      }
+    },
+    info: (...args) => {
+      if (isEnabled) {
+        console.info(`[${componentName}]`, ...args);
+      }
+    },
+    warn: (...args) => {
+      if (isEnabled) {
+        console.warn(`[${componentName}]`, ...args);
+      }
+    },
+    error: (...args) => {
+      console.error(`[${componentName}]`, ...args);
     }
-  },
-  info: (...args) => {
-    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
-      console.info('[USE_TASKS]', ...args);
-    }
-  },
-  warn: (...args) => {
-    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
-      console.warn('[USE_TASKS]', ...args);
-    }
-  },
-  error: (...args) => {
-    console.error('[USE_TASKS]', ...args);
-  }
+  };
 };
+
+export const tasksLogger = createLogger('USE_TASKS');
+export const taskListLogger = createLogger('TASK_LIST');
