@@ -118,7 +118,14 @@ const TaskRow = ({
           </IconButton>
         </TableCell>
         <TableCell>
-          <IconButton color="secondary" onClick={() => handleDelete(task._id)}>
+          <IconButton 
+            color="secondary" 
+            onClick={() => {
+              if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
+                handleDelete(task._id);
+              }
+            }}
+          >
             <Delete />
           </IconButton>
         </TableCell>

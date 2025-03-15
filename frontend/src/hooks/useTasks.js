@@ -30,9 +30,14 @@ export const useTasks = (token) => {
 
   const handleDelete = useCallback(async (id) => {
     try {
-      await deleteTask(id);
+      // Only call deleteTask for non-mock tasks
+      if (!id.startsWith('mock-')) {
+        await deleteTask(id);
+      }
+      
       const updatedTasks = tasks.filter(task => task._id !== id);
       
+      // If we deleted the last real task, reload mock tasks
       if (updatedTasks.length === 0 && tasks.some(t => !t._id.startsWith('mock-'))) {
         loadMockTasks();
       } else {
