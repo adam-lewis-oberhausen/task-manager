@@ -4,6 +4,8 @@ const COMPONENT_LOGGING = {
   // Add other components here as needed
 };
 
+console.log('Component logging settings:', COMPONENT_LOGGING);
+
 const createLogger = (componentName) => {
   return {
     debug: (...args) => {

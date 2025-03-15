@@ -12,7 +12,7 @@ export const useTasks = (token) => {
     setTasks([...MOCK_TASKS]);
   }, []);
 
-  const logger = useTasksLogger;
+  const logger = useTasksLogger();
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -37,7 +37,7 @@ export const useTasks = (token) => {
   }, [token, loadMockTasks, logger]);
 
   const handleDelete = useCallback(async (id) => {
-    const logger = useTasksLogger;
+    const logger = useTasksLogger();
     try {
       // Only call deleteTask for non-mock tasks
       if (!id.startsWith('mock-')) {
