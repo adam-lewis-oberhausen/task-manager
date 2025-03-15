@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -14,13 +14,19 @@ const App = () => {
     setSidePanelOpen(!sidePanelOpen);
   };
 
+  const isMounted = useRef(false);
+
   useEffect(() => {
-    if (token) {
-      console.log('Token detected, setting view to tasks');
-      setView('tasks');
+    if (isMounted.current) {
+      if (token) {
+        console.log('Token detected, setting view to tasks');
+        setView('tasks');
+      } else {
+        console.log('No token detected, setting view to login');
+        setView('login');
+      }
     } else {
-      console.log('No token detected, setting view to login');
-      setView('login');
+      isMounted.current = true;
     }
   }, [token]);
 
