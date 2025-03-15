@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
 import { MOCK_TASKS } from '../utils/taskHelpers';
-import { useTasksLogger } from '../utils/logger';
+import { tasksLogger } from '../utils/logger';
 
 export const useTasks = (token) => {
   const [tasks, setTasks] = useState([]);
@@ -12,7 +12,7 @@ export const useTasks = (token) => {
     setTasks([...MOCK_TASKS]);
   }, []);
 
-  const logger = useTasksLogger();
+  const logger = tasksLogger;
 
   useEffect(() => {
     const fetchTasks = async () => {

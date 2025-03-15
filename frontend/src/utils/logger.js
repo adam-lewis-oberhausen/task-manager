@@ -6,28 +6,23 @@ const COMPONENT_LOGGING = {
 
 console.log('Component logging settings:', COMPONENT_LOGGING);
 
-const createLogger = (componentName) => {
-  return {
-    debug: (...args) => {
-      if (COMPONENT_LOGGING[componentName]) {
-        console.debug(`[${componentName}]`, ...args);
-      }
-    },
-    info: (...args) => {
-      if (COMPONENT_LOGGING[componentName]) {
-        console.info(`[${componentName}]`, ...args);
-      }
-    },
-    warn: (...args) => {
-      if (COMPONENT_LOGGING[componentName]) {
-        console.warn(`[${componentName}]`, ...args);
-      }
-    },
-    error: (...args) => {
-      // Always log errors regardless of logging setting
-      console.error(`[${componentName}]`, ...args);
+export const tasksLogger = {
+  debug: (...args) => {
+    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
+      console.debug('[USE_TASKS]', ...args);
     }
-  };
+  },
+  info: (...args) => {
+    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
+      console.info('[USE_TASKS]', ...args);
+    }
+  },
+  warn: (...args) => {
+    if (process.env.REACT_APP_COMPONENT_LOGGING_USE_TASKS === 'true') {
+      console.warn('[USE_TASKS]', ...args);
+    }
+  },
+  error: (...args) => {
+    console.error('[USE_TASKS]', ...args);
+  }
 };
-
-export const useTasksLogger = createLogger('USE_TASKS');
