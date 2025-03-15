@@ -19,7 +19,7 @@ const TaskList = ({ token }) => {
     updateTask,
     createTask,
     setTasks,
-    handleNameUpdate
+    handleTaskUpdate
   } = useTasks(token);
 
   const [editingTask, setEditingTask] = useState(null);
