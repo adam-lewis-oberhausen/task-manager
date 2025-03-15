@@ -27,7 +27,6 @@ const TaskRow = ({
     const [, drop] = useDrop({
       accept: ItemType,
       hover: (draggedItem) => {
-        console.log(`Dragging item from index ${draggedItem.index} to ${index}`);
         if (draggedItem.index !== index) {
           moveTask(draggedItem.index, index);
           draggedItem.index = index;
@@ -35,7 +34,6 @@ const TaskRow = ({
       },
     }, [index, moveTask]);
 
-    // console.log(`Rendering TaskRow for task: ${task.name}, index: ${index}`);
     const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 

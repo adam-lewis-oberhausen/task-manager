@@ -8,7 +8,7 @@ import { taskListLogger } from '../utils/logger';
 import '../styles/TaskList.css';
 
 const TaskList = ({ token }) => {
-  taskListLogger.debug('TaskList component rendering with token:', token);
+  taskListLogger.debug('TaskList component rendering with token.');
   const {
     tasks,
     editingTaskId,
