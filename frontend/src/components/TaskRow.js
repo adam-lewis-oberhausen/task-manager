@@ -94,12 +94,8 @@ const TaskRow = ({
           onClick={(e) => {
             // Only start editing if we're not already editing and the click wasn't on the input
             if (editingTaskId !== task._id && e.target.tagName !== 'INPUT') {
-              taskRowLogger.debug('Starting inline edit for task:', task._id);
-              setEditingTaskId(task._id);
-              // Clear name if editing a mock task, otherwise use current name
-              const newEditingName = task._id.startsWith('mock-') ? '' : task.name;
-              taskRowLogger.debug('Editing name set to:', newEditingName || '(empty for mock task)');
-              setEditingName(newEditingName);
+              taskRowLogger.debug('Starting edit for task:', task._id);
+              startEditing(task);
             }
           }}
         > 
