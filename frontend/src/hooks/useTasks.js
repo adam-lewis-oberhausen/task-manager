@@ -170,6 +170,10 @@ export const useTasks = (token) => {
     }
   }, [tasks, token, loadMockTasks]);
 
+  const setName = useCallback((name) => {
+    setEditingName(name);
+  }, []);
+
   return {
     tasks,
     editingTaskId,
@@ -184,6 +188,7 @@ export const useTasks = (token) => {
     createTask,
     setTasks,
     handleTaskUpdate,
-    updateTasksOrder
+    updateTasksOrder,
+    setName
   };
 };

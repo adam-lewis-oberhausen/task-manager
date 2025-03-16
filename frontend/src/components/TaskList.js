@@ -21,7 +21,7 @@ const TaskList = ({ token }) => {
     toggleCompletion,
     handleTaskUpdate,
     updateTasksOrder,
-    setName
+    setName,
   } = useTasks(token);
 
   const [editingTask, setEditingTask] = useState(null);
