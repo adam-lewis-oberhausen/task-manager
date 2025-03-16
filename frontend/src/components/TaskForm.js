@@ -73,6 +73,19 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
         />
       </div>
       <div className="form-group">
+        <label htmlFor="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          value={dueDate}
+          onChange={(e) => {
+            taskFormLogger.debug('Due date changed:', e.target.value);
+            setDueDate(e.target.value);
+          }}
+          aria-label="Due Date"
+        />
+      </div>
+      <div className="form-group">
         <label htmlFor="description">Description</label>
         <textarea
           id="description"
@@ -99,19 +112,6 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
         </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="dueDate">Due Date</label>
-        <input
-          id="dueDate"
-          type="date"
-          value={dueDate}
-          onChange={(e) => {
-            taskFormLogger.debug('Due date changed:', e.target.value);
-            setDueDate(e.target.value);
-          }}
-          aria-label="Due Date"
-        />
       </div>
       <button type="submit">Save Task</button>
       <button type="button" onClick={onCancel}>Cancel</button>
