@@ -18,7 +18,8 @@ const TaskRow = ({
   moveTask,
   isOverdue,
   priorityColors,
-  startEditing
+  startEditing,
+  updateTasksOrder
 }) => {
     const [, ref] = useDrag({
       type: ItemType,
@@ -170,4 +171,21 @@ const TaskRow = ({
     );
   };
   
+TaskRow.propTypes = {
+  task: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  editingTaskId: PropTypes.string,
+  setEditingTaskId: PropTypes.func.isRequired,
+  editingName: PropTypes.string,
+  setEditingName: PropTypes.func.isRequired,
+  handleTaskUpdate: PropTypes.func.isRequired,
+  toggleCompletion: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  moveTask: PropTypes.func.isRequired,
+  isOverdue: PropTypes.func.isRequired,
+  priorityColors: PropTypes.object.isRequired,
+  startEditing: PropTypes.func.isRequired,
+  updateTasksOrder: PropTypes.func.isRequired
+};
+
 export default React.memo(TaskRow);
