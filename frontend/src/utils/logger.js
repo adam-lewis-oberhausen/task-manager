@@ -27,3 +27,4 @@ const createLogger = (componentName) => {
 export const tasksLogger = createLogger('USE_TASKS');
 export const taskListLogger = createLogger('TASK_LIST');
 export const taskRowLogger = createLogger('TASK_ROW');
+export const taskFormLogger = createLogger('TASK_FORM');

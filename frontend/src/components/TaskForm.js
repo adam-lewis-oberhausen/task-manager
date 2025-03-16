@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { taskFormLogger } from '../utils/logger';
 import '../styles/TaskForm.css';
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
@@ -10,6 +11,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
 
   // Reset form when task prop changes
   useEffect(() => {
+    taskFormLogger.debug('Task prop changed, resetting form:', task);
     setName(task?.name || '');
     setDescription(task?.description || '');
     setPriority(task?.priority || 'Medium');
@@ -39,7 +41,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
       taskData._id = task._id;
     }
     
-    console.log('Submitting task data:', taskData);
+    taskFormLogger.debug('Submitting task data:', taskData);
     onSave(taskData);
   };
 
@@ -51,7 +53,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
           id="name"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            taskFormLogger.debug('Name changed:', e.target.value);
+            setName(e.target.value);
+          }}
           required
           aria-label="Name"
         />
@@ -61,7 +66,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
         <textarea
           id="description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            taskFormLogger.debug('Description changed:', e.target.value);
+            setDescription(e.target.value);
+          }}
           aria-label="Description"
         ></textarea>
       </div>
@@ -70,7 +78,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
         <select
           id="priority"
           value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          onChange={(e) => {
+            taskFormLogger.debug('Priority changed:', e.target.value);
+            setPriority(e.target.value);
+          }}
           aria-label="Priority"
         >
           <option value="High">High</option>
@@ -84,7 +95,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
           id="dueDate"
           type="date"
           value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
+          onChange={(e) => {
+            taskFormLogger.debug('Due date changed:', e.target.value);
+            setDueDate(e.target.value);
+          }}
           aria-label="Due Date"
         />
       </div>
