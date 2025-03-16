@@ -18,12 +18,20 @@
 
 .task-form .form-group input,
 .task-form .form-group select,
-.task-form .form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+.task-form .form-group .ql-container {
+  border-radius: 0 0 4px 4px;
+  border-color: #ccc;
+}
+
+.task-form .form-group .ql-toolbar {
+  border-radius: 4px 4px 0 0;
+  border-color: #ccc;
+}
+
+.task-form .form-group .ql-editor {
+  min-height: 150px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .task-form button {

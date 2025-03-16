@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { taskFormLogger } from '../utils/logger';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import '../styles/TaskForm.css';
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
@@ -87,15 +89,34 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       </div>
       <div className="form-group">
         <label htmlFor="description">Description</label>
-        <textarea
+        <ReactQuill
           id="description"
           value={description}
-          onChange={(e) => {
-            taskFormLogger.debug('Description changed:', e.target.value);
-            setDescription(e.target.value);
+          onChange={(value) => {
+            taskFormLogger.debug('Description changed:', value);
+            setDescription(value);
+          }}
+          modules={{
+            toolbar: [
+              [{ 'header': [1, 2, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ['link', 'image'],
+              ['clean']
+            ]
+          }}
+          formats={[
+            'header',
+            'bold', 'italic', 'underline', 'strike',
+            'list', 'bullet',
+            'link', 'image'
+          ]}
+          style={{ 
+            height: '200px',
+            marginBottom: '40px'
           }}
           aria-label="Description"
-        ></textarea>
+        />
       </div>
       <div className="form-group">
         <label htmlFor="priority">Priority</label>
