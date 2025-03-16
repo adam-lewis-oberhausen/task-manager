@@ -119,7 +119,14 @@ const TaskRow = ({
               type="text"
               className="name-input"
               value={editingName}
-              onChange={(e) => setEditingName(e.target.value)}
+              onChange={(e) => {
+                const newName = e.target.value;
+                setEditingName(newName);
+                // If the task panel is open for this task, update the form
+                if (editingTaskId === task._id) {
+                  setName(newName);
+                }
+              }}
               onBlur={(e) => {
                 // Only update if the name has changed
                 if (editingName.trim() && editingName !== task.name) {

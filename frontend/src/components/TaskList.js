@@ -80,6 +80,8 @@ const TaskList = ({ token }) => {
           }}
           editingTaskId={editingTaskId}
           setEditingName={setEditingName}
+          editingName={editingName}
+          setEditingTaskId={setEditingTaskId}
           onSave={handleSave} 
           onCancel={() => {
             setEditingTask(null);

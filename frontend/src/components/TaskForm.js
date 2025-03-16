@@ -4,7 +4,7 @@ import { taskFormLogger } from '../utils/logger';
 import '../styles/TaskForm.css';
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(task?.name || '');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
@@ -12,11 +12,17 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   // Reset form when task prop changes
   useEffect(() => {
     taskFormLogger.debug('Task prop changed, resetting form:', task);
-    setName(task?.name || '');
+    const newName = task?.name || '';
+    setName(newName);
     setDescription(task?.description || '');
     setPriority(task?.priority || 'Medium');
     setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
-  }, [task]);
+    
+    // If this is the same task being edited inline, sync the name
+    if (editingTaskId === task?._id) {
+      setEditingName(newName);
+    }
+  }, [task, editingTaskId, setEditingName]);
 
   // Clear form when panel opens for new task
   useEffect(() => {
