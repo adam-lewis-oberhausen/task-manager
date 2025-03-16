@@ -204,7 +204,8 @@ TaskRow.propTypes = {
   isOverdue: PropTypes.func.isRequired,
   priorityColors: PropTypes.object.isRequired,
   startEditing: PropTypes.func.isRequired,
-  updateTasksOrder: PropTypes.func.isRequired
+  updateTasksOrder: PropTypes.func.isRequired,
+  setName: PropTypes.func.isRequired
 };
 
 export default React.memo(TaskRow);
