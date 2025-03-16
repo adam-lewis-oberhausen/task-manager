@@ -8,7 +8,7 @@ import { taskListLogger } from '../utils/logger';
 import '../styles/TaskList.css';
 
 const TaskList = ({ token }) => {
-  taskListLogger.debug('TaskList component rendering with token.');
+  taskListLogger.info('TaskList component rendering with token.');
   const {
     tasks,
     editingTaskId,
@@ -38,14 +38,14 @@ const TaskList = ({ token }) => {
   };
 
   const handleSave = async (task) => {
-    taskListLogger.debug('Saving task:', task);
+    taskListLogger.info('Saving task:', task);
     const success = await handleTaskUpdate(task);
     if (success) {
-      taskListLogger.debug('Task saved successfully');
+      taskListLogger.info('Task saved successfully');
       setTaskPanelOpen(false);
       setEditingTask(null);
     } else {
-      taskListLogger.debug('Task save failed');
+      taskListLogger.warn('Task save failed');
     }
   };
 

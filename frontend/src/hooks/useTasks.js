@@ -17,13 +17,13 @@ export const useTasks = (token) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        logger.debug('Fetching tasks...');
+        logger.info('Fetching tasks...');
         const tasks = await getTasks(token);
         logger.debug('Tasks retrieved:', tasks);
         logger.debug('Number of tasks:', tasks.length);
         
         if (tasks.length === 0) {
-          logger.debug('No tasks found, loading mock tasks');
+          logger.info('No tasks found, loading mock tasks');
           loadMockTasks();
         } else {
           logger.debug('Setting tasks:', tasks);
@@ -39,7 +39,7 @@ export const useTasks = (token) => {
 
   const handleDelete = useCallback(async (id) => {
     try {
-      logger.debug('Deleting task with id:', id);
+      logger.info('Deleting task with id:', id);
       // Only call deleteTask for non-mock tasks
       if (!id.startsWith('mock-')) {
         logger.debug('Deleting real task');
@@ -53,7 +53,7 @@ export const useTasks = (token) => {
       
       // If we deleted all tasks, reload mock tasks
       if (updatedTasks.length === 0) {
-        logger.debug('Deleted all tasks, loading mock tasks');
+        logger.info('Deleted all tasks, loading mock tasks');
         loadMockTasks();
       } else {
         logger.debug('Setting updated tasks');

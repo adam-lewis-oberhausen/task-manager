@@ -41,7 +41,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
       taskData._id = task._id;
     }
     
-    taskFormLogger.debug('Submitting task data:', taskData);
+    taskFormLogger.info('Submitting task data:', taskData);
     onSave(taskData);
   };
 

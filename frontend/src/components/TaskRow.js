@@ -23,7 +23,7 @@ const TaskRow = ({
     const [, ref] = useDrag({
       type: ItemType,
       item: () => {
-        taskRowLogger.debug('Dragging started for task:', task._id);
+        taskRowLogger.info('Dragging started for task:', task._id);
         return { index };
       },
       end: (item, monitor) => {
