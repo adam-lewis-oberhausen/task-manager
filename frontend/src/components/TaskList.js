@@ -124,7 +124,6 @@ const TaskList = ({ token }) => {
                 startEditing={startEditing}
                 updateTasksOrder={updateTasksOrder}
                 setName={setName}
-                setName={setName}
               />
             ))}
           </TableBody>
