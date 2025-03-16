@@ -89,22 +89,37 @@ const TaskRow = ({
         <TableCell>{task.assignee}</TableCell>
         <TableCell
           className={`name-cell ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
-          onMouseEnter={() => setIsHovered(true)}                                                                                             
-          onMouseLeave={() => setIsHovered(false)}                                                                                            
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           onClick={(e) => {
-            // Only start editing if we're not already editing and the click wasn't on the input
-            if (editingTaskId !== task._id && e.target.tagName !== 'INPUT') {
-              taskRowLogger.debug('Starting edit for task:', task._id);
-              startEditing(task);
+            // If clicking directly on the input, focus it
+            if (e.target.tagName === 'INPUT') {
+              e.target.focus();
+              return;
             }
+            
+            // If already editing this task, just focus the input
+            if (editingTaskId === task._id) {
+              const input = e.currentTarget.querySelector('input');
+              if (input) {
+                input.focus();
+              }
+              return;
+            }
+            
+            // Otherwise open task panel and start inline edit
+            taskRowLogger.debug('Starting edit for task:', task._id);
+            startEditing(task);
+            setEditingTaskId(task._id);
+            setEditingName(task._id.startsWith('mock-') ? '' : task.name);
           }}
         > 
-          {editingTaskId === task._id ? (                                                                                             
-            <input                                                                                                                    
-              type="text"                                                                                                             
-              className="name-input"                                                                                                  
-              value={editingName}                                                                                                     
-              onChange={(e) => setEditingName(e.target.value)}                                                                        
+          {editingTaskId === task._id ? (
+            <input
+              type="text"
+              className="name-input"
+              value={editingName}
+              onChange={(e) => setEditingName(e.target.value)}
               onBlur={(e) => {
                 // Only update if the name has changed
                 if (editingName.trim() && editingName !== task.name) {
@@ -134,10 +149,10 @@ const TaskRow = ({
                   setEditingName('');
                 }
               }}
-              autoFocus                                                                                                               
-            />                                                                                                                        
-          ) : (                                                                                                                       
-            task.name                                                                                                                 
+              autoFocus
+            />
+          ) : (
+            task.name
           )}
         </TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
