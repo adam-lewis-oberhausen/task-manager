@@ -131,8 +131,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           <option value="Low">Low</option>
         </select>
       </div>
-      <button type="submit">Save Task</button>
-      <button type="button" onClick={onCancel}>Cancel</button>
+      <div className="button-group">
+        <button type="submit">Save Task</button>
+        <button type="button" onClick={onCancel}>Cancel</button>
+      </div>
     </form>
   );
 };
