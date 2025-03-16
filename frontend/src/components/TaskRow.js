@@ -20,7 +20,8 @@ const TaskRow = ({
   isOverdue,
   priorityColors,
   startEditing,
-  updateTasksOrder
+  updateTasksOrder,
+  setName
 }) => {
     const [, ref] = useDrag({
       type: ItemType,

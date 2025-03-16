@@ -125,13 +125,7 @@ const TaskList = ({ token }) => {
                 handleTaskUpdate={handleTaskUpdate}
                 startEditing={startEditing}
                 updateTasksOrder={updateTasksOrder}
-                setName={(name) => {
-                  setEditingName(name);
-                  // Also update the form if it's open for this task
-                  if (editingTask?._id === editingTaskId) {
-                    setEditingTask(prev => ({...prev, name}));
-                  }
-                }}
+                setName={setName}
               />
             ))}
           </TableBody>
