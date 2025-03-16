@@ -65,24 +65,29 @@ export const useTasks = (token) => {
   }, [tasks, loadMockTasks]);
 
   const moveTask = useCallback((dragIndex, hoverIndex) => {
-    logger.debug(`Moving task from index ${dragIndex} to ${hoverIndex}`);
-    const draggedTask = tasks[dragIndex];
-    logger.debug('Dragged task:', draggedTask);
-    
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(dragIndex, 1);
-    updatedTasks.splice(hoverIndex, 0, draggedTask);
-    logger.debug('Updated tasks after move:', updatedTasks);
-    setTasks(updatedTasks);
+    // Only log if we're actually moving the task to a new position
+    if (dragIndex !== hoverIndex) {
+      logger.debug(`Moving task from index ${dragIndex} to ${hoverIndex}`);
+      
+      const draggedTask = tasks[dragIndex];
+      const updatedTasks = [...tasks];
+      updatedTasks.splice(dragIndex, 1);
+      updatedTasks.splice(hoverIndex, 0, draggedTask);
+      
+      // Only update state if the position actually changed
+      if (tasks[dragIndex]._id !== updatedTasks[hoverIndex]._id) {
+        setTasks(updatedTasks);
+      }
+    }
+  }, [tasks]);
 
-    // Only update order for real tasks
-    const realTasks = updatedTasks.filter(t => !t._id.startsWith('mock-'));
-    logger.debug('Real tasks for order update:', realTasks);
+  // Separate function for final order update
+  const updateTasksOrder = useCallback(async () => {
+    const realTasks = tasks.filter(t => !t._id.startsWith('mock-'));
     if (realTasks.length > 0) {
       const orderUpdates = realTasks.map((task, index) => ({ _id: task._id, order: index }));
-      logger.debug('Updating task order with:', orderUpdates);
-      updateTaskOrder(orderUpdates)
-        .catch(error => logger.error('Error updating task order:', error));
+      logger.debug('Final task order:', orderUpdates);
+      await updateTaskOrder(orderUpdates);
     }
   }, [tasks]);
 

@@ -37,12 +37,17 @@ const TaskRow = ({
       accept: ItemType,
       hover: (draggedItem) => {
         if (draggedItem.index !== index) {
+          // Only log if we're actually moving to a new position
           taskRowLogger.debug('Task hovered over:', task._id, 'by:', draggedItem.index);
           moveTask(draggedItem.index, index);
           draggedItem.index = index;
         }
       },
-    }, [index, moveTask, task._id]);
+      drop: () => {
+        // Update order when drop is complete
+        updateTasksOrder();
+      }
+    }, [index, moveTask, task._id, updateTasksOrder]);
 
     const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
