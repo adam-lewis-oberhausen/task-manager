@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
@@ -19,7 +20,8 @@ const TaskList = ({ token }) => {
     moveTask,
     toggleCompletion,
     handleTaskUpdate,
-    updateTasksOrder
+    updateTasksOrder,
+    setName
   } = useTasks(token);
 
   const [editingTask, setEditingTask] = useState(null);
