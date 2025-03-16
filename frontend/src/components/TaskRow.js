@@ -52,10 +52,12 @@ const TaskRow = ({
     }, [task._id]);
 
     useEffect(() => {
-      taskRowLogger.debug('Editing state changed for task:', task._id, {
-        editingTaskId,
-        editingName
-      });
+      if (editingTaskId === task._id) {
+        taskRowLogger.debug('Editing state changed for task:', task._id, {
+          editingTaskId,
+          editingName: editingName || '(empty for mock task)'
+        });
+      }
     }, [editingTaskId, editingName, task._id]);
 
     return (
@@ -87,7 +89,10 @@ const TaskRow = ({
             if (editingTaskId !== task._id && e.target.tagName !== 'INPUT') {
               taskRowLogger.debug('Starting inline edit for task:', task._id);
               setEditingTaskId(task._id);
-              setEditingName(task._id.startsWith('mock-') ? '' : task.name);
+              // Clear name if editing a mock task, otherwise use current name
+              const newEditingName = task._id.startsWith('mock-') ? '' : task.name;
+              taskRowLogger.debug('Editing name set to:', newEditingName || '(empty for mock task)');
+              setEditingName(newEditingName);
             }
           }}
         > 
@@ -160,4 +165,4 @@ const TaskRow = ({
     );
   };
   
-export default TaskRow;
+export default React.memo(TaskRow);
