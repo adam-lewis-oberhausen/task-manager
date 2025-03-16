@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useDrag, useDrop } from 'react-dnd';
 import { taskRowLogger } from '../utils/logger';
 import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
