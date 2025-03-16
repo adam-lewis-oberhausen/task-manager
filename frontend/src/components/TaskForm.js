@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { taskFormLogger } from '../utils/logger';
 import '../styles/TaskForm.css';
 
-const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
+const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -54,8 +54,13 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token }) => {
           type="text"
           value={name}
           onChange={(e) => {
-            taskFormLogger.debug('Name changed:', e.target.value);
-            setName(e.target.value);
+            const newName = e.target.value;
+            taskFormLogger.debug('Name changed:', newName);
+            setName(newName);
+            // If this is the same task being edited inline, sync the name
+            if (editingTaskId === task?._id) {
+              setEditingName(newName);
+            }
           }}
           required
           aria-label="Name"
@@ -117,6 +122,8 @@ TaskForm.propTypes = {
   }),
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  editingTaskId: PropTypes.string,
+  setEditingName: PropTypes.func
 };
 
 // Use default parameters instead of defaultProps
