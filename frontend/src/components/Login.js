@@ -32,8 +32,20 @@ const Login = ({ onLogin, setView }) => {
     <div className="login-container">                                                                                                 
       <div className="login-box">                                                                                                     
         <h2 className="login-title">Login</h2>
-        <TextField fullWidth margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input
+          className="login-input"
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         {error && <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>{error}</div>}
         <Button fullWidth variant="contained" color="primary" onClick={handleLogin}>Login</Button>
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
