@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
+import styles from './ui/Table.module.css';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
