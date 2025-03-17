@@ -107,9 +107,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           }}
           formats={[
             'header',
-            'bold', 'italic', 'underline', 'strike',
-            'list', 'bullet',
-            'link', 'image'
+            'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
           ]}
           className="ql-editor-container"
           aria-label="Description"
