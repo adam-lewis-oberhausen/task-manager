@@ -75,7 +75,6 @@ const App = () => {
       </div>
       </div>
     </div>
-    </DndContext>
   );
 };
 

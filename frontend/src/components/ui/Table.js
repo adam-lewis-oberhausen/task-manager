@@ -1,8 +1,8 @@
 import React from 'react';
-import '../styles/Table.css';
+import './Table.module.css';
 
 const Table = ({ children }) => (
-  <table className="custom-table">
+  <table className={styles.customTable}>
     {children}
   </table>
 );

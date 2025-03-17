@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Checkbox.css';
+import './Checkbox.module.css';
 
 const Checkbox = ({ checked, onChange }) => {
   return (
@@ -9,7 +9,7 @@ const Checkbox = ({ checked, onChange }) => {
         checked={checked}
         onChange={onChange}
       />
-      <span className="checkmark"></span>
+      <span className={styles.Checkbox}></span>
     </label>
   );
 };
