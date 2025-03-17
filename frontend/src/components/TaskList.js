@@ -96,13 +96,13 @@ const TaskList = ({ token }) => {
       <Table className="custom-table">
           <TableHead>
             <TableRow>
-              <TableCell>Complete</TableCell>
-              <TableCell>Assignee</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Due Date</TableCell>
-              <TableCell>Priority</TableCell>
-              <TableCell>Edit</TableCell>
-              <TableCell>Delete</TableCell>
+              <TableCell label="Complete">Complete</TableCell>
+              <TableCell label="Assignee">Assignee</TableCell>
+              <TableCell label="Name">Name</TableCell>
+              <TableCell label="Due Date">Due Date</TableCell>
+              <TableCell label="Priority">Priority</TableCell>
+              <TableCell label="Edit">Edit</TableCell>
+              <TableCell label="Delete">Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

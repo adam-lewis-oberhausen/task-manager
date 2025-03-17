@@ -1,38 +1,72 @@
-* {                                                                                                                                                                
-    border: 1px solid red !important;                                                                                                                                
+.customTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: #ffffff;
+  table-layout: fixed;
+}
+
+.tableHead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tableRow {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tableRow:hover {
+  background-color: #f8f9fa;
+}
+
+.tableCell {
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+.tableCellHeader {
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .customTable {
+    display: block;
+    width: 100%;
   }
 
-.customTable {                                                                                                                                                        
-    width: 100%;                                                                                                                                                        
-    border-collapse: collapse;                                                                                                                                          
-    margin: 20px 0;                                                                                                                                                     
-    background: #ffffff;                                                                                                                                                  
-  }                                                                                                                                                                     
-                                                                                                                                                                        
-.tableHead {                                                                                                                                                          
-    background-color: #ffffff;                                                                                                                                         
-}                                                                                                                                                                     
-                                                                                                                                                                    
-.tableRow {                                                                                                                                                           
-    transition: all 0.2s ease;
-    height: auto;                                                                                                                                         
-}                                                                                                                                                                     
-                                                                                                                                                                    
-.tableRow:hover {                                                                                                                                                     
-    position: relative;                                                                                                                                                 
-    outline: 1px solid #00a6ff80;                                                                                                                                       
-    outline-offset: -1px;                                                                                                                                               
-    box-shadow: 0 0 0 3px #00a6ff20;                                                                                                                                    
-    z-index: 1;                                                                                                                                                         
-}                                                                                                                                                                     
-                                                                                                                                                                    
-.tableCell {                                                                                                                                                          
-    padding: 8px 12px;                                                                                                                                                  
-    border: 1px solid #b4b4b4;                                                                                                                                          
-    white-space: nowrap;                                                                                                                                                
-    vertical-align: middle;                                                                                                                                             
-}                                                                                                                                                                     
-                                                                                                                                                                    
-.tableCellHeader {                                                                                                                                                    
-    font-weight: 600;                                                                                                                                                   
+  .tableHead {
+    display: none;
+  }
+
+  .tableRow {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+  }
+
+  .tableCell {
+    display: block;
+    text-align: right;
+    padding: 8px;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .tableCell::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #6c757d;
+  }
+
+  .tableCell:last-child {
+    border-bottom: 0;
+  }
 }

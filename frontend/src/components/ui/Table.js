@@ -21,8 +21,10 @@ const TableRow = ({ children, className = '' }) => (
   <tr className={`table-row ${className}`}>{children}</tr>
 );
 
-const TableCell = ({ children, className = '' }) => (
-  <td className={`table-cell ${className}`}>{children}</td>
+const TableCell = ({ children, className = '', label = '' }) => (
+  <td className={`${styles.tableCell} ${className}`} data-label={label}>
+    {children}
+  </td>
 );
 
 export { Table, TableHead, TableBody, TableRow, TableCell };
