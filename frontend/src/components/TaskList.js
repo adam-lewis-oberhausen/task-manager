@@ -96,14 +96,14 @@ const TaskList = ({ token }) => {
       <Table>
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell label="Complete">Complete</TableCell>
-              <TableCell label="Assignee">Assignee</TableCell>
-              <TableCell label="Name">Name</TableCell>
-              <TableCell label="Due Date">Due Date</TableCell>
-              <TableCell label="Priority">Priority</TableCell>
-              <TableCell label="Edit">Edit</TableCell>
-              <TableCell label="Delete">Delete</TableCell>
+              <TableCell className={styles.tableCellHeader}></TableCell>
+              <TableCell className={styles.tableCellHeader}>Complete</TableCell>
+              <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
+              <TableCell className={styles.tableCellHeader}>Name</TableCell>
+              <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
+              <TableCell className={styles.tableCellHeader}>Priority</TableCell>
+              <TableCell className={styles.tableCellHeader}>Edit</TableCell>
+              <TableCell className={styles.tableCellHeader}>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

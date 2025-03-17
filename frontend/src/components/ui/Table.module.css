@@ -81,42 +81,36 @@
   font-weight: 600;
   padding: 12px;
   text-align: left;
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  white-space: nowrap;
 }
 
 /* Responsive table styles */
 @media (max-width: 768px) {
   .customTable {
-    display: block;
     width: 100%;
+    overflow-x: auto;
+    display: block;
   }
 
   .tableHead {
-    display: none;
+    display: table-header-group;
   }
 
   .tableRow {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+    display: table-row;
   }
 
   .tableCell {
-    display: block;
-    text-align: right;
-    padding: 8px;
-    border-bottom: 1px solid #dee2e6;
+    display: table-cell;
+    white-space: nowrap;
+    min-width: 120px;
   }
 
   .tableCell::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #6c757d;
-  }
-
-  .tableCell:last-child {
-    border-bottom: 0;
+    content: none;
   }
 }

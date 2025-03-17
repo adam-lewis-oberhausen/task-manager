@@ -9,7 +9,7 @@ const Table = ({ children }) => (
 
 const TableHead = ({ children }) => (
   <thead className={styles.tableHead}>
-    <tr className={styles.tableRow}>{children}</tr>
+    {children}
   </thead>
 );
 
