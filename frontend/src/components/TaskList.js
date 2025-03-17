@@ -93,8 +93,7 @@ const TaskList = ({ token }) => {
         />
       </div>
 
-      <TableContainer component={Paper}>
-        <Table className="task-table">
+      <Table className="task-table">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
@@ -130,7 +129,6 @@ const TaskList = ({ token }) => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
     </div>
   );
 };
