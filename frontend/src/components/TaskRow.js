@@ -83,7 +83,7 @@ const TaskRow = ({
         <TableCell className={styles.tableCell}>
           <DragHandleIcon />
         </TableCell>
-        <TableCell className={styles.tableCell}>
+        <TableCell className={`${styles.tableCell} ${styles.checkboxCell}`}>
           <Checkbox 
             checked={task.completed} 
             onChange={() => {
