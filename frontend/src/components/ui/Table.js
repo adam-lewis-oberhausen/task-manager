@@ -8,8 +8,8 @@ const Table = ({ children }) => (
 );
 
 const TableHead = ({ children }) => (
-  <thead>
-    <tr>{children}</tr>
+  <thead className={styles.tableHead}>
+    <tr className={styles.tableRow}>{children}</tr>
   </thead>
 );
 
