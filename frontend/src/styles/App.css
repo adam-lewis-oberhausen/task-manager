@@ -1,10 +1,12 @@
-body {                                                                                                                                
-  margin: 0;                                                                                                                          
-  padding: 0;                                                                                                                         
-  font-family: Arial, sans-serif;                                                                                                     
-  background-color: #f5f5f5;                                                                                                          
-  overflow-x: hidden;                                                                                                                 
-}                                                                                                                                     
+@import url('https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Cousine', monospace;
+  background-color: #f5f5f5;
+  overflow-x: hidden;
+}
                                                                                                                                       
 #root {                                                                                                                               
   min-height: 100vh;                                                                                                                  

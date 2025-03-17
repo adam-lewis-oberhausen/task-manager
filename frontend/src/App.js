@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import DndContext from './context/DndContext';
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -74,6 +75,7 @@ const App = () => {
       </div>
       </div>
     </div>
+    </DndContext>
   );
 };
 
