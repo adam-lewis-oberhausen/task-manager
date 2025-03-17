@@ -80,7 +80,7 @@ const TaskRow = ({
         onMouseLeave={() => setShowHandle(false)}
       >
         <TableCell>
-          <DragHandle />
+          <DragHandleIcon />
         </TableCell>
         <TableCell>
           <Checkbox 
@@ -170,17 +170,16 @@ const TaskRow = ({
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
         <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
         <TableCell>
-          <IconButton color="primary" onClick={() => {
+          <Button onClick={() => {
             setEditingTaskId(null);
             setEditingName('');
             startEditing(task);
           }}>
-            <Edit />
-          </IconButton>
+            <EditIcon />
+          </Button>
         </TableCell>
         <TableCell>
-          <IconButton 
-            color="secondary" 
+          <Button 
             onClick={() => {
               if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
                 taskRowLogger.debug('Deleting task:', task._id);
@@ -188,8 +187,8 @@ const TaskRow = ({
               }
             }}
           >
-            <Delete />
-          </IconButton>
+            <DeleteIcon />
+          </Button>
         </TableCell>
       </TableRow>
     );
