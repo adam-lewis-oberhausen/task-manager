@@ -12,6 +12,7 @@
   text-align: left;
   vertical-align: middle;
   word-break: break-word;
+  border: 1px solid #b4b4b4;
 }
 
 /* Set specific column widths */
@@ -22,19 +23,9 @@
 
 .customTable th:nth-child(2),
 .customTable td:nth-child(2) {
-  width: 80px; /* Complete checkbox */
-  padding: 0;
+  width: 80px; /* Complete Checkbox */
   text-align: center;
-  border-right: none;
-  height: 100%; /* Ensure full height */
-}
-
-.checkboxCell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; /* Ensure full height */
-  min-height: 48px; /* Match typical row height */
+  cursor: pointer;
 }
 
 .customTable th:nth-child(3),
@@ -61,21 +52,21 @@
 .customTable th:nth-child(7),
 .customTable td:nth-child(7) {
   width: 80px; /* Edit */
+  text-align: center;
 }
 
 .customTable th:nth-child(8),
 .customTable td:nth-child(8) {
   width: 80px; /* Delete */
+  text-align: center;
 }
 
 .tableHead {
   background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
 }
 
 .tableRow {
   transition: all 0.2s ease;
-  border-bottom: 1px solid #dee2e6;
 }
 
 .tableRow:hover {
@@ -93,10 +84,10 @@
   font-weight: 600;
   padding: 12px;
   text-align: left;
-  background-color: #f8f9fa;
+  /* background-color: #f8f9fa; */
   position: sticky;
   top: 0;
-  z-index: 1;
+  /* z-index: -1; */
   white-space: nowrap;
 }
 

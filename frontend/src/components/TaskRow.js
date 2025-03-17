@@ -5,11 +5,12 @@ import { taskRowLogger } from '../utils/logger';
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';
-import styles from './ui/Table.module.css';
 import { ReactComponent as EditIcon } from '../assets/edit.svg';
 import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import { ItemType } from '../constants/dndTypes';
+import styles from './ui/Table.module.css';
+import stylesCheckBox from './ui/Checkbox.module.css';
 
 const TaskRow = ({ 
   task, 
@@ -83,7 +84,7 @@ const TaskRow = ({
         <TableCell className={styles.tableCell}>
           <DragHandleIcon />
         </TableCell>
-        <TableCell className={`${styles.tableCell} ${styles.checkboxCell}`}>
+        <TableCell className={`${styles.tableCell} ${stylesCheckBox.checkboxCell}`}>
           <Checkbox 
             checked={task.completed} 
             onChange={() => {
@@ -93,8 +94,7 @@ const TaskRow = ({
           />
         </TableCell>
         <TableCell className={styles.tableCell}>{task.assignee}</TableCell>
-        <TableCell className={styles.tableCell}
-          className={`name-cell ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
+        <TableCell className={`${styles.tableCell} ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={(e) => {
