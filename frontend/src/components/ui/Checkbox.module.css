@@ -1,8 +1,12 @@
 .checkbox-container {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     cursor: pointer;
     user-select: none;
+    height: 100%;
+    width: 100%;
   }
   
   .checkbox-container input {
