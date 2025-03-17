@@ -15,8 +15,8 @@
 .task-table {                                                                                                                         
   width: 100%;                                                                                                                        
   margin: 20px 0;                                                                                                                     
-  border-collapse: collapse;                                                                                                          
-  background: white;                                                                                                                  
+  border-collapse: collapse;
+  background: white;                                                                                                           
 }                                                                                                                                     
 
 .task-table th, .task-table td {
@@ -50,12 +50,19 @@
                                                                                                                                       
 .task-table .name-cell.hovered,
 .task-table .name-input:focus,
-.task-table tr:hover  {                                                                                                      
-  outline: none;
-  border: 2px solid #00a6ff80;
-  box-shadow: 0 0 0 3px #00a6ff20;                                                                                                         
+.add-task-button:hover {
+  border: 1px solid #00a6ff80;
+  box-shadow: 0 0 3px 3px #00a6ff20;
 }
-                                                                                                                                      
+
+.task-table .task-row:hover {                                                                                                                                         
+  position: relative;                                                                                                                                                 
+  outline: 1px solid #00a6ff80;                                                                                                                                         
+  outline-offset: -1px; /* Makes it appear inside the row */                                                                                                          
+  box-shadow: 0 0 0 3px #00a6ff20;                                                                                                                                    
+  z-index: 1; /* Brings the row forward */                                                                                                                            
+} 
+
 .task-table .name-cell.editing {                                                                                                      
   padding: 4px;                                                                                                                       
 }                                                                                                                                     
@@ -68,4 +75,16 @@
   font-family: inherit;                                                                                                               
   box-sizing: border-box;
   margin: 0;
+}
+
+.add-task-button {
+  background-color: #ffffff;
+  padding: 12px 24px;
+  color: #000000;
+  border: 1px solid #b4b4b4;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  flex: 1;
 }

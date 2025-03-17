@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
@@ -69,9 +69,9 @@ const TaskList = ({ token }) => {
 
   return (
     <div className="task-list-container">
-      <Button variant="contained" color="primary" onClick={toggleTaskPanel} className="add-task-button">
+      <button onClick={toggleTaskPanel} className="add-task-button">
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
-      </Button>
+      </button>
 
       <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
         <TaskForm 
@@ -97,7 +97,7 @@ const TaskList = ({ token }) => {
         <Table className="task-table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ border: 'none' }}></TableCell>
+              <TableCell></TableCell>
               <TableCell>Complete</TableCell>
               <TableCell>Assignee</TableCell>
               <TableCell>Name</TableCell>
