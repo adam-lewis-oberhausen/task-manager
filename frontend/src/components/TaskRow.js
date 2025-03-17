@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDrag, useDrop } from 'react-dnd';
 import { taskRowLogger } from '../utils/logger';
-import { TableRow, TableCell, Checkbox, IconButton } from '@mui/material';
-import { Edit, Delete, DragHandle } from '@mui/icons-material';
+import Checkbox from './ui/Checkbox';
+import Button from './ui/Button';
+import { TableRow, TableCell } from './ui/Table';
+import { ReactComponent as EditIcon } from '../assets/edit.svg';
+import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
+import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import { ItemType } from '../constants/dndTypes';
 
 const TaskRow = ({ 
