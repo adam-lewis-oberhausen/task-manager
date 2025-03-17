@@ -5,6 +5,7 @@ import { taskRowLogger } from '../utils/logger';
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';
+import styles from './ui/Table.module.css';
 import { ReactComponent as EditIcon } from '../assets/edit.svg';
 import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
@@ -79,10 +80,10 @@ const TaskRow = ({
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
       >
-        <TableCell>
+        <TableCell className={styles.tableCell}>
           <DragHandleIcon />
         </TableCell>
-        <TableCell>
+        <TableCell className={styles.tableCell}>
           <Checkbox 
             checked={task.completed} 
             onChange={() => {
@@ -91,8 +92,8 @@ const TaskRow = ({
             }} 
           />
         </TableCell>
-        <TableCell>{task.assignee}</TableCell>
-        <TableCell
+        <TableCell className={styles.tableCell}>{task.assignee}</TableCell>
+        <TableCell className={styles.tableCell}
           className={`name-cell ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -168,8 +169,8 @@ const TaskRow = ({
           )}
         </TableCell>
         <TableCell>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}</TableCell>
-        <TableCell className={priorityColors[task.priority]}>{task.priority}</TableCell>
-        <TableCell>
+        <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`}>{task.priority}</TableCell>
+        <TableCell className={styles.tableCell}>
           <Button onClick={() => {
             setEditingTaskId(null);
             setEditingName('');
@@ -178,7 +179,7 @@ const TaskRow = ({
             <EditIcon />
           </Button>
         </TableCell>
-        <TableCell>
+        <TableCell className={styles.tableCell}>
           <Button 
             onClick={() => {
               if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {

@@ -23,6 +23,15 @@
 .customTable th:nth-child(2),
 .customTable td:nth-child(2) {
   width: 80px; /* Complete checkbox */
+  padding: 0;
+  text-align: center;
+  border-right: none;
+}
+
+.checkboxCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .customTable th:nth-child(3),
