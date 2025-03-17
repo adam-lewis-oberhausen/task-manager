@@ -3,7 +3,57 @@
   border-collapse: collapse;
   margin: 20px 0;
   background: #ffffff;
-  table-layout: fixed;
+  table-layout: auto;
+}
+
+.customTable th,
+.customTable td {
+  padding: 12px;
+  text-align: left;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+/* Set specific column widths */
+.customTable th:nth-child(1),
+.customTable td:nth-child(1) {
+  width: 50px; /* Drag handle */
+}
+
+.customTable th:nth-child(2),
+.customTable td:nth-child(2) {
+  width: 80px; /* Complete checkbox */
+}
+
+.customTable th:nth-child(3),
+.customTable td:nth-child(3) {
+  width: 120px; /* Assignee */
+}
+
+.customTable th:nth-child(4),
+.customTable td:nth-child(4) {
+  width: auto; /* Name - takes remaining space */
+  min-width: 200px;
+}
+
+.customTable th:nth-child(5),
+.customTable td:nth-child(5) {
+  width: 120px; /* Due Date */
+}
+
+.customTable th:nth-child(6),
+.customTable td:nth-child(6) {
+  width: 100px; /* Priority */
+}
+
+.customTable th:nth-child(7),
+.customTable td:nth-child(7) {
+  width: 80px; /* Edit */
+}
+
+.customTable th:nth-child(8),
+.customTable td:nth-child(8) {
+  width: 80px; /* Delete */
 }
 
 .tableHead {

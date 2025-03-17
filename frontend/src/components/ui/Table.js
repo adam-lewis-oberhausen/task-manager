@@ -18,7 +18,7 @@ const TableBody = ({ children }) => (
 );
 
 const TableRow = ({ children, className = '' }) => (
-  <tr className={`table-row ${className}`}>{children}</tr>
+  <tr className={`${styles.tableRow} ${className}`}>{children}</tr>
 );
 
 const TableCell = ({ children, className = '', label = '' }) => (

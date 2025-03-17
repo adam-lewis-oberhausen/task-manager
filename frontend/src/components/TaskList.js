@@ -93,7 +93,7 @@ const TaskList = ({ token }) => {
         />
       </div>
 
-      <Table className="custom-table">
+      <Table>
           <TableHead>
             <TableRow>
               <TableCell label="Complete">Complete</TableCell>
