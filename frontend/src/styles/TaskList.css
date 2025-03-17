@@ -1,7 +1,11 @@
+/* * {                                                                                                                                                                
+  border: 1px solid red !important;                                                                                                                                
+}  */
+
 .task-list-container {
+  border: 1px solid #b4b4b4;
   padding: 20px;
   background: white;
-  border-radius: 8px;
 }
 
 .MuiPaper-root {
@@ -14,32 +18,15 @@
   border-collapse: collapse;                                                                                                          
   background: white;                                                                                                                  
 }                                                                                                                                     
-                                                                                                                                      
-.add-task-button {                                                                                                                    
-  margin: 10px 0;                                                                                                                     
-  padding: 10px 20px;                                                                                                                 
-} 
 
 .task-table th, .task-table td {
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #b4b4b4;
   white-space: nowrap;
 }
 
 .task-table th:nth-child(4), .task-table td:nth-child(4) {
   width: 100%;
-}
-
-.priority-high {
-  color: red;
-}
-
-.priority-medium {
-  color: orange;
-}
-
-.priority-low {
-  color: green;
 }
 
 .overdue {
@@ -48,23 +35,26 @@
 
 .completed {
   text-decoration: line-through;
-  background-color: #f0f0f0;
+  background-color: #dbfff0;
 }
 
-.task-table tr:hover {
-  background-color: #f5f5f5;
+.task-table td:first-child {
+  cursor: pointer;
 }
 
 .task-table .name-cell {                                                                                                              
   transition: all 0.2s ease;                                                                                                          
-  cursor: pointer;                                                                                                                    
-  border: 1px solid rgba(224, 224, 224, 1);                                                                                           
+  cursor: pointer;                                                                                                                                                                                                              
   padding: 8px;                                                                                                                       
 }                                                                                                                                   
                                                                                                                                       
-.task-table .name-cell.hovered {                                                                                                      
-  border: 2px solid #1976d2;                                                                                                          
-}                                                                                                                                     
+.task-table .name-cell.hovered,
+.task-table .name-input:focus,
+.task-table tr:hover  {                                                                                                      
+  outline: none;
+  border: 2px solid #00a6ff80;
+  box-shadow: 0 0 0 3px #00a6ff20;                                                                                                         
+}
                                                                                                                                       
 .task-table .name-cell.editing {                                                                                                      
   padding: 4px;                                                                                                                       
@@ -72,17 +62,10 @@
                                                                                                                                       
 .task-table .name-input {                                                                                                             
   width: 100%;                                                                     
-  padding: 4px;                                                                                                                   
-  border: 1px solid #ddd;                                                                                                             
-  border-radius: 4px;                                                                                                                 
+  padding: 4px;                                                                                                                 
+  border-radius: 0px;                                                                                                                 
   font-size: inherit;                                                                                                                 
   font-family: inherit;                                                                                                               
-  box-sizing: border-box;                                                                                                             
-  margin: 0;                                                                                                                          
-}                                                                                                                                    
-                                                                                                                                      
-.task-table .name-input:focus {                                                                                                       
-  outline: none;                                                                                                                      
-  border-color: #1976d2;                                                                                                              
-  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);                                                                                      
+  box-sizing: border-box;
+  margin: 0;
 }

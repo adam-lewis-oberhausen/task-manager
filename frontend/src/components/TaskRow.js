@@ -75,7 +75,7 @@ const TaskRow = ({
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
       >
-        <TableCell style={{ border: 'none' }}>
+        <TableCell>
           <DragHandle />
         </TableCell>
         <TableCell>

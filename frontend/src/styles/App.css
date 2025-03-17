@@ -2,7 +2,7 @@ body {
   margin: 0;                                                                                                                          
   padding: 0;                                                                                                                         
   font-family: Arial, sans-serif;                                                                                                     
-  background-color: #f4f4f9;                                                                                                          
+  background-color: #f5f5f5;                                                                                                          
   overflow-x: hidden;                                                                                                                 
 }                                                                                                                                     
                                                                                                                                       
@@ -62,10 +62,10 @@ body {
   display: none;
   position: absolute;
   right: 0;
-  background-color: #f9f9f9;
-  min-width: 160px;
+  background-color: #ffffff;
+  min-width: 100px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  z-index: 2;
 }
 
 .dropdown-link {
@@ -81,21 +81,7 @@ body {
 }
 
 .dropdown-link:hover {
-  background-color: #f1f1f1;
-}
-
-.link-button {
-  background: none;
-  border: none;
-  color: #1976d2;
-  padding: 0;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: inherit;
-}
-
-.link-button:hover {
-  color: #115293;
+  background-color: #f5f5f5;
 }
 
 .dropdown:hover .dropdown-content {
@@ -104,21 +90,15 @@ body {
 
 .side-panel {
   position: fixed;
-  top: 50px; /* Adjust based on navbar height */
+  top: 50px;
   left: 0;
   width: 250px;
-  height: calc(100% - 50px); /* Adjust based on navbar height */
+  height: calc(100% - 50px);
   background-color: #f4f4f4;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 20px;
 }
-
-/* .content {
-  flex-grow: 1;
-  transition: margin-left 0.3s;
-  width: calc(100% - 300px);
-} */
 
 .shifted {
   margin-left: 300px; /* Width of the side panel */
@@ -133,10 +113,18 @@ body {
   background-color: #d0d0d0;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   transition: right 0.3s ease;
-  z-index: 1000;
+  z-index: 1;
   padding: 20px;
 }
 
+ /* Add mobile-specific styles */                                                                                                                                      
+@media (max-width: 768px) {
+  .task-panel {
+    width: 100%;
+    padding: 0px;
+  }
+}
+
 .task-panel.open {
-  right: 0; /* Slide in */
+  right: 0;
 }
