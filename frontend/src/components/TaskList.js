@@ -96,6 +96,7 @@ const TaskList = ({ token }) => {
       <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell label="Complete">Complete</TableCell>
               <TableCell label="Assignee">Assignee</TableCell>
               <TableCell label="Name">Name</TableCell>
