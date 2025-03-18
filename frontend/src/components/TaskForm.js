@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { taskFormLogger } from '../utils/logger';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import '../styles/TaskForm.css';
+import styles from './ui/TaskForm.module.css';
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
   const [name, setName] = useState(task?.name || '');
@@ -54,9 +54,9 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="task-form">
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.formGroup}>
+        <label htmlFor="name" className={styles.label}>Name</label>
         <input
           id="name"
           type="text"
@@ -72,10 +72,11 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           }}
           required
           aria-label="Name"
+          className={styles.input}
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="dueDate">Due Date</label>
+      <div className={styles.formGroup}>
+        <label htmlFor="dueDate" className={styles.label}>Due Date</label>
         <input
           id="dueDate"
           type="date"
@@ -85,10 +86,11 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
             setDueDate(e.target.value);
           }}
           aria-label="Due Date"
+          className={`${styles.input} ${styles.dateInput}`}
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="description">Description</label>
+      <div className={styles.formGroup}>
+        <label htmlFor="description" className={styles.label}>Description</label>
         <ReactQuill
           id="description"
           value={description}
@@ -109,12 +111,12 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
             'header',
             'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
           ]}
-          className="ql-editor-container"
+          className={styles.quillEditor}
           aria-label="Description"
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="priority">Priority</label>
+      <div className={styles.formGroup}>
+        <label htmlFor="priority" className={styles.label}>Priority</label>
         <select
           id="priority"
           value={priority}
@@ -123,15 +125,16 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
             setPriority(e.target.value);
           }}
           aria-label="Priority"
+          className={`${styles.input} ${styles.select}`}
         >
           <option value="High">High</option>
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
         </select>
       </div>
-      <div className="button-group">
-        <button type="submit">Save Task</button>
-        <button type="button" onClick={onCancel}>Cancel</button>
+      <div className={styles.buttonGroup}>
+        <button type="submit" className={styles.button}>Save Task</button>
+        <button type="button" className={styles.button} onClick={onCancel}>Cancel</button>
       </div>
     </form>
   );
