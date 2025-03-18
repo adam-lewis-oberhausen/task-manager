@@ -85,7 +85,7 @@
 
 .nameCellHovered,
 .nameInput:focus {
-  border: 1px solid #00a6ff80;
+  border: 30px solid #00a6ff80;
   box-shadow: 0 0 3px 3px #00a6ff20;
 }
 

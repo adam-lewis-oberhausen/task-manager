@@ -98,8 +98,19 @@ const TaskRow = ({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={(e) => {
+            taskRowLogger.debug('Name cell clicked for task:', task._id);
+
+            // Ensure we have a valid event target
+            if (!e || !e.currentTarget) {
+              taskRowLogger.warn('Invalid click event:', e);
+              return;
+            }
+
             // Prevent double triggering when clicking the input
-            if (e.target.tagName === 'INPUT') return;
+            if (e.target.tagName === 'INPUT') {
+              taskRowLogger.debug('Click was on input, ignoring');
+              return;
+            };
             
             // If not already editing, start editing
             if (editingTaskId !== task._id) {
@@ -109,15 +120,24 @@ const TaskRow = ({
               setEditingName(task._id.startsWith('mock-') ? '' : task.name);
             }
             
-            // Focus the input after a short delay to allow state to update
-            setTimeout(() => {
-              const input = e.currentTarget.querySelector('input');
-              if (input) {
-                input.focus();
-                input.select();
-              }
-            }, 50);
-          }}
+            // Focus the input after a short delay to allow state to update                                                                  
+            setTimeout(() => {                                                                                                               
+            try {                                                                                                                          
+              const cell = e.currentTarget;                                                                                                
+              if (cell) {                                                                                                                  
+                const input = cell.querySelector('input');                                                                                 
+                if (input) {                                                                                                               
+                  input.focus();                                                                                                           
+                  input.select();                                                                                                          
+                } else {                                                                                                                   
+                  taskRowLogger.warn('Input element not found in cell');                                                                   
+                }                                                                                                                          
+              }                                                                                                                            
+            } catch (error) {                                                                                                              
+              taskRowLogger.error('Error focusing input:', error);                                                                         
+            }                                                                                                                              
+          }, 50);                                                                                                                          
+        }}
         > 
           {editingTaskId === task._id ? (
             <input

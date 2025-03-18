@@ -8,7 +8,6 @@ import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { taskListLogger } from '../utils/logger';
-import '../styles/TaskList.css';
 
 const TaskList = ({ token }) => {
   taskListLogger.info('TaskList component rendering with token.');
