@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 import styles from './ui/Table.module.css';
 import TaskRow from './TaskRow';
@@ -69,7 +68,7 @@ const TaskList = ({ token }) => {
   };
 
   return (
-    <div className="task-list-container">
+    <div className={styles.customTable}>
       <button onClick={toggleTaskPanel} className="add-task-button">
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </button>

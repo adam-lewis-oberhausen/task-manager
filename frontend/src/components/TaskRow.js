@@ -77,15 +77,15 @@ const TaskRow = ({
     return (
       <TableRow
         ref={(node) => ref(drop(node))}
-        className={`task-row ${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
+        className={`${styles.tableRow} ${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
       >
         <TableCell className={styles.tableCell}>
           <DragHandleIcon />
         </TableCell>
-        <TableCell className={`${styles.tableCell} ${stylesCheckBox.checkboxCell}`}>
-          <Checkbox 
+        <TableCell className={`${styles.tableCell}`}>
+          <Checkbox
             checked={task.completed} 
             onChange={() => {
               taskRowLogger.debug('Toggling completion for task:', task._id, 'from:', task.completed, 'to:', !task.completed);
