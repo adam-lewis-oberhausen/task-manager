@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDrag, useDrop } from 'react-dnd';
 import { taskRowLogger } from '../utils/logger';
@@ -59,7 +59,7 @@ const TaskRow = ({
 
     const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const inputRef = useRef(null); 
 
     useEffect(() => {
       taskRowLogger.debug('TaskRow rendered for task:', task._id);
@@ -106,8 +106,15 @@ const TaskRow = ({
             }                                                                                                                
                                                                                                                               
             setIsHovered(true);                                                                                              
-            setEditingTaskId(task._id);                                                                                      
-            setEditingName(task.name); 
+            
+            // Only set editing state if we're not already focused on an input                                                         
+            if (!document.activeElement.classList.contains(styles.nameInput)) {                                                        
+              setEditingTaskId(task._id);                                                                                              
+              setEditingName(task.name);
+              taskRowLogger.debug('Setting editing state for task:', task._id);                                                                                              
+            } else {
+              taskRowLogger.debug('Keeping editing state for task:', task._id);                                                                                              
+            }
           }}                                                                                                                               
           onMouseLeave={(e) => {                                                                                              
             // taskRowLogger.debug('The mouse has left the name cell for task:', task._id);                                     
@@ -116,10 +123,15 @@ const TaskRow = ({
             const relatedTarget = e.relatedTarget;                                                                       
             if (!relatedTarget || !relatedTarget.closest('td')) {                                                            
               setIsHovered(false);                                                                                           
-              if (editingTaskId === task._id && !document.activeElement.classList.contains('nameInput')) {                   
-                setEditingTaskId(null);                                                                                      
-                setEditingName('');                                                                                          
-              }                                                                                                              
+            // Only clear editing state if we're not focused on the input                                                            
+            if (editingTaskId === task._id &&                                                                                        
+              !document.activeElement.classList.contains(styles.nameInput)) {
+                taskRowLogger.debug('Clearing editing state for task:', task._id);                                                      
+                setEditingTaskId(null);                                                                                                
+                setEditingName('');                                                                                                    
+              } else {
+                taskRowLogger.debug('Keeping editing state for task:', task._id);                                                                 
+              }                                                                                                         
             }                                                                                                                
           }}  
           onClick={(e) => {
@@ -170,28 +182,24 @@ const TaskRow = ({
               type="text"
               className={`${styles.nameInput} ${(isHovered || editingTaskId === task._id) ? '' : 'hidden'}`}
               value={editingName}
-              ref={(input) => {                                                                                                          
-                // Automatically focus and select text when input is rendered                                                            
-                if (input && editingTaskId === task._id) {                                                                               
-                  input.focus();                                                                                                         
-                  input.select();                                                                                                        
-                }                                                                                                                        
-              }}
+              ref={inputRef}
               onClick={(e) => {                                                                                                          
                 e.stopPropagation();                                                                                                     
                 startEditing(task);                                                                                                      
-                setName(editingName);                                                                                                    
-                // Focus and select text on click                                                                                        
+                setName(editingName);                                                                                       
                 e.target.focus();                                                                                                        
                 e.target.select();                                                                                                       
               }}
               onChange={(e) => {
                 const newName = e.target.value;
                 setEditingName(newName);
-                // If the task panel is open for this task, update the form
                 if (editingTaskId === task._id) {
                   setName(newName);
                 }
+              }}
+              onFocus={() => {                                                                                                                                                                                               
+                setEditingTaskId(task._id);                                                                                              
+                setEditingName(task.name);                                                                                               
               }}
               onBlur={(e) => {
                 // Only update if the name has changed and isn't empty
