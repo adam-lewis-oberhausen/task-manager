@@ -66,14 +66,24 @@ const TaskRow = ({
           }} 
         />
       </TableCell>
-      <TableCell className={styles.tableCell}>{task.assignee}</TableCell>
-      <TableCell className={styles.tableCell}>
+      <TableCell className={styles.tableCell}
+      onClick={() => startEditing(task)}
+      >
+        {task.assignee}
+      </TableCell>
+      <TableCell className={styles.tableCell}
+        onClick={() => startEditing(task)}
+      >        
         {task.name}
       </TableCell>
-      <TableCell className={styles.tableCell}>
+      <TableCell className={styles.tableCell}
+        onClick={() => startEditing(task)}
+      >
         {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
       </TableCell>
-      <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`}>
+      <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`} 
+        onClick={() => startEditing(task)}
+      >
         {task.priority}
       </TableCell>
       <TableCell className={styles.tableCell}>
@@ -88,8 +98,9 @@ const TaskRow = ({
             handleDelete(task._id);
           }
         }}>
-          <DeleteIcon />
+          <DeleteIcon />         
         </Button>
+        
       </TableCell>
     </TableRow>
   );

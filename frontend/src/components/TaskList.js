@@ -72,9 +72,9 @@ const TaskList = ({ token }) => {
 
   return (
     <div>
-      <button onClick={toggleTaskPanel} className={stylesButton.button}>
+      <Button onClick={toggleTaskPanel} className={stylesButton.button}>
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
-      </button>
+      </Button>
         <div className={styles.customTable}>
         <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
           <TaskForm 
