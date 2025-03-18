@@ -94,7 +94,7 @@ const TaskRow = ({
           />
         </TableCell>
         <TableCell className={styles.tableCell}>{task.assignee}</TableCell>
-        <TableCell className={`${styles.tableCell} ${isHovered ? 'hovered' : ''} ${editingTaskId === task._id ? 'editing' : ''}`}
+        <TableCell className={`${styles.tableCell} ${isHovered ? styles.nameCellHovered : ''} ${editingTaskId === task._id ? styles.nameCellEditing : ''}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={(e) => {
@@ -123,7 +123,7 @@ const TaskRow = ({
           {editingTaskId === task._id ? (
             <input
               type="text"
-              className="name-input"
+              className={styles.nameInput}
               value={editingName}
               onChange={(e) => {
                 const newName = e.target.value;
