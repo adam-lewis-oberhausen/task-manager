@@ -10,7 +10,6 @@ import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import { ItemType } from '../constants/dndTypes';
 import styles from './ui/Table.module.css';
-import stylesCheckBox from './ui/Checkbox.module.css';
 
 const TaskRow = ({ 
   task, 
@@ -60,6 +59,7 @@ const TaskRow = ({
 
     const [, setShowHandle] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
       taskRowLogger.debug('TaskRow rendered for task:', task._id);
@@ -95,8 +95,33 @@ const TaskRow = ({
         </TableCell>
         <TableCell className={styles.tableCell}>{task.assignee}</TableCell>
         <TableCell className={`${styles.tableCell} ${isHovered ? styles.nameCellHovered : ''} ${editingTaskId === task._id ? styles.nameCellEditing : ''}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+           onMouseEnter={(e) => {
+            // taskRowLogger.debug('Mouse enter event:', e);
+            // taskRowLogger.debug('The mouse has entered the name cell for task:', task._id);                                                                                                            
+            
+            // Clear any existing editing state first                                                                        
+            if (editingTaskId && editingTaskId !== task._id) {                                                               
+              setEditingTaskId(null);                                                                                        
+              setEditingName('');                                                                                            
+            }                                                                                                                
+                                                                                                                              
+            setIsHovered(true);                                                                                              
+            setEditingTaskId(task._id);                                                                                      
+            setEditingName(task.name); 
+          }}                                                                                                                               
+          onMouseLeave={(e) => {                                                                                              
+            // taskRowLogger.debug('The mouse has left the name cell for task:', task._id);                                     
+                                                                                                                             
+            // Only clear state if we're not moving to another task cell                                                     
+            const relatedTarget = e.relatedTarget;                                                                       
+            if (!relatedTarget || !relatedTarget.closest('td')) {                                                            
+              setIsHovered(false);                                                                                           
+              if (editingTaskId === task._id && !document.activeElement.classList.contains('nameInput')) {                   
+                setEditingTaskId(null);                                                                                      
+                setEditingName('');                                                                                          
+              }                                                                                                              
+            }                                                                                                                
+          }}  
           onClick={(e) => {
             taskRowLogger.debug('Name cell clicked for task:', task._id);
 
@@ -105,12 +130,13 @@ const TaskRow = ({
               taskRowLogger.warn('Invalid click event:', e);
               return;
             }
-
-            // Prevent double triggering when clicking the input
-            if (e.target.tagName === 'INPUT') {
-              taskRowLogger.debug('Click was on input, ignoring');
-              return;
-            };
+                                                                                                                              
+             // If clicking on the input, just focus it                                                                       
+             if (e.target.tagName === 'INPUT') {                                                                              
+              e.target.focus();                                                                                              
+              e.target.select();                                                                                             
+              return;                                                                                                        
+            }  
             
             // If not already editing, start editing
             if (editingTaskId !== task._id) {
@@ -142,8 +168,23 @@ const TaskRow = ({
           {editingTaskId === task._id ? (
             <input
               type="text"
-              className={styles.nameInput}
+              className={`${styles.nameInput} ${(isHovered || editingTaskId === task._id) ? '' : 'hidden'}`}
               value={editingName}
+              ref={(input) => {                                                                                                          
+                // Automatically focus and select text when input is rendered                                                            
+                if (input && editingTaskId === task._id) {                                                                               
+                  input.focus();                                                                                                         
+                  input.select();                                                                                                        
+                }                                                                                                                        
+              }}
+              onClick={(e) => {                                                                                                          
+                e.stopPropagation();                                                                                                     
+                startEditing(task);                                                                                                      
+                setName(editingName);                                                                                                    
+                // Focus and select text on click                                                                                        
+                e.target.focus();                                                                                                        
+                e.target.select();                                                                                                       
+              }}
               onChange={(e) => {
                 const newName = e.target.value;
                 setEditingName(newName);

@@ -83,34 +83,39 @@
   /* cursor: pointer; */
 }
 
-.nameCellHovered,
-.nameInput:focus {
-  border: 1px solid #00a6ff80;
-  box-shadow: 0 0 3px 3px #00a6ff20;
-  cursor: text;
-}
+.nameCellHovered {                                                                                                                         
+    border: 1px solid #00a6ff80;                                                                                                             
+    box-shadow: 0 0 3px 3px #00a6ff20;                                                                                                       
+    cursor: text;                                                                                                                            
+} 
+
+.nameCellHovered .nameInput {                                                                                                              
+    display: block;                                                                                                                          
+} 
 
 .nameCellEditing {
   padding: 4px;
 }
 
-.nameInput {
-  width: 100%;
-  padding: 4px;
-  border-radius: 0px;
-  font-size: inherit;
-  font-family: inherit;
-  box-sizing: border-box;
-  margin: 0;
-  border: 1px solid #00a6ff80;
-  background: transparent;
-  outline: none;
-}
+.nameInput {                                                                                                                               
+    display: none;                                                                                                                           
+    width: 100%;                                                                                                                             
+    padding: 4px;                                                                                                                            
+    border-radius: 0px;                                                                                                                      
+    font-size: inherit;                                                                                                                      
+    font-family: inherit;                                                                                                                    
+    box-sizing: border-box;                                                                                                                  
+    margin: 0;                                                                                                                               
+    border: 1px solid #00a6ff80;                                                                                                             
+    background: transparent;                                                                                                                 
+    outline: none;                                                                                                                           
+} 
 
-.nameInput:focus{
-  border-color: #00a6ff;
-  background: white;
-  box-shadow: 0 0 3px 3px #00a6ff20;
+.nameInput:focus {                                                                                                                         
+    display: block;                                                                                                                          
+    border-color: #00a6ff;                                                                                                                   
+    background: white;                                                                                                                       
+    box-shadow: 0 0 3px 3px #00a6ff20;                                                                                                       
 }
 
 .completedRow {

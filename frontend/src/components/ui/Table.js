@@ -21,11 +21,13 @@ const TableRow = ({ children, className = '' }) => (
   <tr className={`${styles.tableRow} ${className}`}>{children}</tr>
 );
 
-const TableCell = ({ children, className = '', label = '', onClick }) => (
+const TableCell = ({ children, className = '', label = '', onClick, onMouseEnter, onMouseLeave }) => (
   <td 
     className={`${styles.tableCell} ${className}`}
     data-label={label}
     onClick={onClick}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
     {children}
   </td>

@@ -62,6 +62,8 @@ const TaskList = ({ token }) => {
   const startEditing = (task) => {
     taskListLogger.debug('Starting to edit task:', task);
     setEditingTask(task);
+    setEditingTaskId(task._id);
+    setEditingName(task.name);
     if (!taskPanelOpen) {
       taskListLogger.debug('Opening task panel for editing');
       setTaskPanelOpen(true);
