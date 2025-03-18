@@ -98,26 +98,25 @@ const TaskRow = ({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={(e) => {
-            // If clicking directly on the input, focus it
-            if (e.target.tagName === 'INPUT') {
-              e.target.focus();
-              return;
+            // Prevent double triggering when clicking the input
+            if (e.target.tagName === 'INPUT') return;
+            
+            // If not already editing, start editing
+            if (editingTaskId !== task._id) {
+              taskRowLogger.debug('Starting edit for task:', task._id);
+              startEditing(task);
+              setEditingTaskId(task._id);
+              setEditingName(task._id.startsWith('mock-') ? '' : task.name);
             }
             
-            // If already editing this task, just focus the input
-            if (editingTaskId === task._id) {
+            // Focus the input after a short delay to allow state to update
+            setTimeout(() => {
               const input = e.currentTarget.querySelector('input');
               if (input) {
                 input.focus();
+                input.select();
               }
-              return;
-            }
-            
-            // Otherwise open task panel and start inline edit
-            taskRowLogger.debug('Starting edit for task:', task._id);
-            startEditing(task);
-            setEditingTaskId(task._id);
-            setEditingName(task._id.startsWith('mock-') ? '' : task.name);
+            }, 50);
           }}
         > 
           {editingTaskId === task._id ? (
@@ -134,7 +133,7 @@ const TaskRow = ({
                 }
               }}
               onBlur={(e) => {
-                // Only update if the name has changed
+                // Only update if the name has changed and isn't empty
                 if (editingName.trim() && editingName !== task.name) {
                   const taskUpdate = {
                     _id: task._id,
@@ -145,8 +144,11 @@ const TaskRow = ({
                   };
                   handleTaskUpdate(taskUpdate);
                 }
-                setEditingTaskId(null);
-                setEditingName('');
+                // Only clear editing state if we're not clicking on another cell
+                if (!e.relatedTarget || !e.relatedTarget.closest('td')) {
+                  setEditingTaskId(null);
+                  setEditingName('');
+                }
               }}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
