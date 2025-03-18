@@ -18,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/workspaces', require('./routes/workspaces'));
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
