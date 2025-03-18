@@ -19,6 +19,7 @@
 .customTable th:nth-child(1),
 .customTable td:nth-child(1) {
   width: 50px; /* Drag handle */
+  text-align: center;
   cursor: grab;
 }
 

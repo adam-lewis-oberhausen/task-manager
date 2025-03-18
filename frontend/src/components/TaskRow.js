@@ -10,6 +10,7 @@ import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import { ItemType } from '../constants/dndTypes';
 import styles from './ui/Table.module.css';
+import stylesButton from './ui/Button.module.css';
 
 const TaskRow = ({ 
   task, 
@@ -55,7 +56,10 @@ const TaskRow = ({
       className={`${styles.tableRow} ${isOverdue(task.dueDate) ? styles.overdueRow : ''} ${task.completed ? styles.completedRow : ''}`}
     >
       <TableCell className={styles.tableCell}>
-        <Button icon={DragHandleIcon}>
+        <Button 
+          icon={DragHandleIcon}
+          className={`${stylesButton.iconOnly} ${stylesButton.dragHandle}`}
+        >
         </Button>
       </TableCell>
       <TableCell className={styles.tableCell}>
@@ -88,16 +92,23 @@ const TaskRow = ({
         {task.priority}
       </TableCell>
       <TableCell className={styles.tableCell}>
-        <Button onClick={() => startEditing(task)} icon={EditIcon}>
+        <Button 
+          onClick={() => startEditing(task)}
+          icon={EditIcon} 
+          className={`${stylesButton.iconOnly} ${stylesButton.editButton}`}
+        >
         </Button>
       </TableCell>
       <TableCell className={styles.tableCell}>
-        <Button onClick={() => {
-          if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
-            taskRowLogger.debug('Deleting task:', task._id);
-            handleDelete(task._id);
-          }
-        }} icon={DeleteIcon}>        
+        <Button 
+          onClick={() => {
+            if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
+              taskRowLogger.debug('Deleting task:', task._id);
+              handleDelete(task._id);
+            }
+          }} 
+          icon={DeleteIcon}
+          className={`${stylesButton.iconOnly} ${stylesButton.deleteButton}`}>        
         </Button>        
       </TableCell>
     </TableRow>

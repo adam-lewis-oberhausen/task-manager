@@ -3,6 +3,7 @@ import DndContext from './context/DndContext';
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
+import Navbar from './components/ui/Navbar';
 import './styles/App.css';
 
 const App = () => {
@@ -45,16 +46,10 @@ const App = () => {
   return (
     <div>
       {token && (
-        <nav className="navbar">
-          <button className="toggle-button" onClick={toggleSidePanel}>☰</button>
-          <input type="text" className="search-input" placeholder="Search tasks..." />
-          <div className="dropdown">
-            <button className="dropdown-button">Menu</button>
-            <div className="dropdown-content">
-              <button className="dropdown-link" onClick={handleLogout}>Logout</button>
-            </div>
-          </div>
-        </nav>
+        <Navbar 
+          onToggleSidePanel={toggleSidePanel} 
+          onLogout={handleLogout} 
+        />
       )}
       <div style={{ display: 'flex' }}>
       <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>

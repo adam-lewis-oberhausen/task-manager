@@ -1,35 +1,51 @@
-                                                                                                                    
-.button {                                                                                                          
-    background-color: #ffffff;                                                                                     
-    padding: 8px 16px;                                                                                             
-    color: #000000;                                                                                                
-    border: 1px solid #b4b4b4;                                                                                     
-    cursor: pointer;                                                                                               
-    font-size: 14px;                                                                                               
-    font-weight: 500;                                                                                              
-    transition: all 0.2s ease;                                                                                     
-    font-family: 'Cousine', monospace;                                                                             
-    display: inline-flex;                                                                                          
-    align-items: center;                                                                                           
-    justify-content: center;                                                                                       
-    gap: 8px;                                                                                                      
-}
-  
-  .button:hover {
-    border-color: #00a6ff80;
-    box-shadow: 0 0 0 3px #00a6ff20;
+
+.button {
+    background-color: #ffffff;
+    padding: 8px 16px;
+    color: #000000;
+    border: 1px solid #b4b4b4;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: 'Cousine', monospace;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.iconWrapper {                                                                                                     
-    display: flex;                                                                                                 
-    align-items: center;                                                                                           
-    justify-content: center;                                                                                       
-    width: 20px;                                                                                                   
-    height: 20px;                                                                                                  
-}                                                                                                                  
-                                                                                                                
-.icon {                                                                                                            
-    width: 100%;                                                                                                   
-    height: 100%;                                                                                                  
-    fill: currentColor;                                                                                           
+.button:hover {
+    outline: 3px solid #00a6ff80;
+    outline-offset: -3px;
+    transition: none;
+}
+
+.button.iconOnly {
+    padding: 4px;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.button.iconOnly:hover {
+    outline: none;
+}
+
+.button.dragHandle {
+    cursor: grab;
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.icon {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
 }

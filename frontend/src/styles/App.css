@@ -93,7 +93,7 @@ body {
 
 .side-panel {
   position: fixed;
-  top: 50px;
+  top: 61px;
   left: 0;
   width: 250px;
   height: calc(100% - 50px);
@@ -109,7 +109,7 @@ body {
 
 .task-panel {
   position: fixed;
-  top: 50px;
+  top: 61px;
   right: -100%;
   width: 50%;
   height: 100%;
