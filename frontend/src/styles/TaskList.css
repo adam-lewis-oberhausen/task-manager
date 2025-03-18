@@ -33,41 +33,6 @@
   background-color: #ffe6e6;
 } */
 
-/* .task-table td:first-child {
-  cursor: pointer;
-} */
-
-.task-table .name-cell {                                                                                                              
-  transition: all 0.2s ease;                                                                                                          
-  cursor: pointer;                                                                                                                                                                                                              
-  padding: 8px;                                                                                                                       
-}                                                                                                                                   
-                                                                                                                                      
-.task-table .name-cell.hovered,
-.task-table .name-input:focus,
-.add-task-button:hover {
-  border: 1px solid #00a6ff80;
-  box-shadow: 0 0 3px 3px #00a6ff20;
-}
-
-/* .task-table .task-row:hover {                                                                                                                                         
-  position: relative;                                                                                                                                                 
-  outline: 1px solid #00a6ff80;                                                                                                                                         
-  outline-offset: -1px;                                                                                                         
-  box-shadow: 0 0 0 3px #00a6ff20;                                                                                                                                    
-  z-index: 1;                                                                                                                           
-}  */
-
-.task-table .name-cell.editing {                                                                                                      
-  padding: 4px;                                                                                                                       
-}                                                                                                                                     
-                                                                                                                                      
-.task-table .name-input {                                                                                                             
-  width: 100%;                                                                     
-  padding: 4px;                                                                                                                 
-  border-radius: 0px;                                                                                                                 
-  font-size: inherit;                                                                                                                 
-  font-family: inherit;                                                                                                               
   box-sizing: border-box;
   margin: 0;
 }
