@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { taskFormLogger } from '../utils/logger';
 import ReactQuill from 'react-quill';
@@ -10,6 +10,23 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
+  const quillRef = useRef(null);
+
+  useEffect(() => {                                                                                                                          
+    if (quillRef.current) {                                                                                                                  
+      const editor = quillRef.current.getEditor();
+      const container = editor.container;
+
+      editor.root.style.fontFamily = "'Cousine', monospace";
+      
+        // Force editor to fill container                                                                                                      
+        container.style.height = '100%';                                                                                                       
+        editor.root.style.height = '100%';                                                                                                     
+        editor.root.style.minHeight = '300px';
+        editor.root.style.maxHeight = '300px';                                                                                                
+        editor.root.style.overflow = 'auto';
+    }                                                                                                                                        
+  }, []);
 
   // Reset form when task prop changes
   useEffect(() => {
@@ -90,30 +107,31 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
         />
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="description" className={styles.label}>Description</label>
-        <ReactQuill
-          id="description"
-          value={description}
-          onChange={(value) => {
-            taskFormLogger.debug('Description changed:', value);
-            setDescription(value);
-          }}
-          modules={{
-            toolbar: [
-              [{ 'header': [1, 2, false] }],
-              ['bold', 'italic', 'underline', 'strike'],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link', 'image'],
-              ['clean']
-            ]
-          }}
-          formats={[
-            'header',
-            'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
-          ]}
-          className={styles.quillEditor}
-          aria-label="Description"
-        />
+        <label htmlFor="description" className={styles.label}>Description</label>                                                                                            
+          <ReactQuill                                                                                                                        
+            ref={quillRef}                                                                                                                   
+            id="description"                                                                                                                 
+            value={description}                                                                                                              
+            onChange={(value) => {                                                                                                           
+              taskFormLogger.debug('Description changed:', value);                                                                           
+              setDescription(value);                                                                                                         
+            }}                                                                                                                               
+            modules={{                                                                                                                       
+              toolbar: [                                                                                                                     
+                [{ 'header': [1, 2, false] }],                                                                                               
+                ['bold', 'italic', 'underline', 'strike'],                                                                                   
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],                                                                                
+                ['link', 'image'],                                                                                                           
+                ['clean']                                                                                                                    
+              ]                                                                                                                              
+            }}                                                                                                                               
+            formats={[                                                                                                                       
+              'header',                                                                                                                      
+              'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'                                                     
+            ]}                                                                                                                               
+            theme="snow"                                                                                                                     
+            aria-label="Description"                                                                                                         
+          />
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="priority" className={styles.label}>Priority</label>
