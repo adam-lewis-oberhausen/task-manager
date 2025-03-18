@@ -17,14 +17,13 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       const editor = quillRef.current.getEditor();
       const container = editor.container;
 
+      container.style.height = '100%';
       editor.root.style.fontFamily = "'Cousine', monospace";
-      
-        // Force editor to fill container                                                                                                      
-        container.style.height = '100%';                                                                                                       
-        editor.root.style.height = '100%';                                                                                                     
-        editor.root.style.minHeight = '300px';
-        editor.root.style.maxHeight = '300px';                                                                                                
-        editor.root.style.overflow = 'auto';
+      editor.root.style.fontSize = '16px';                                                                                                             
+      editor.root.style.height = '100%';                                                                                                     
+      editor.root.style.minHeight = '300px';
+      editor.root.style.maxHeight = '300px';                                                                                                
+      editor.root.style.overflow = 'auto';
     }                                                                                                                                        
   }, []);
 

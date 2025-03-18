@@ -69,67 +69,67 @@ const TaskList = ({ token }) => {
   };
 
   return (
-    <div className={styles.customTable}>
+    <div>
       <button onClick={toggleTaskPanel} className={stylesButton.button}>
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </button>
-
-      <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-        <TaskForm 
-          key={editingTask?._id || 'new-task'} // Force remount when switching between new/edit
-          task={{
-            ...editingTask,
-            name: editingTaskId === editingTask?._id ? editingName : editingTask?.name
-          }}
-          editingTaskId={editingTaskId}
-          setEditingName={setEditingName}
-          editingName={editingName}
-          setEditingTaskId={setEditingTaskId}
-          onSave={handleSave} 
-          onCancel={() => {
-            setEditingTask(null);
-            handleCancel();
-          }} 
-          token={token}
-        />
+        <div className={styles.customTable}>
+        <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
+          <TaskForm 
+            key={editingTask?._id || 'new-task'} // Force remount when switching between new/edit
+            task={{
+              ...editingTask,
+              name: editingTaskId === editingTask?._id ? editingName : editingTask?.name
+            }}
+            editingTaskId={editingTaskId}
+            setEditingName={setEditingName}
+            editingName={editingName}
+            setEditingTaskId={setEditingTaskId}
+            onSave={handleSave} 
+            onCancel={() => {
+              setEditingTask(null);
+              handleCancel();
+            }} 
+            token={token}
+          />
+        </div>
+        <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className={styles.tableCellHeader}></TableCell>
+                <TableCell className={styles.tableCellHeader}>Complete</TableCell>
+                <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
+                <TableCell className={styles.tableCellHeader}>Name</TableCell>
+                <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
+                <TableCell className={styles.tableCellHeader}>Priority</TableCell>
+                <TableCell className={styles.tableCellHeader}>Edit</TableCell>
+                <TableCell className={styles.tableCellHeader}>Delete</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tasks.map((task, index) => (
+                <TaskRow
+                  key={task._id}
+                  task={task}
+                  index={index}
+                  editingTaskId={editingTaskId}
+                  setEditingTaskId={setEditingTaskId}
+                  editingName={editingName}
+                  setEditingName={setEditingName}
+                  toggleCompletion={toggleCompletion}
+                  handleDelete={handleDelete}
+                  moveTask={moveTask}
+                  isOverdue={isOverdue}
+                  priorityColors={priorityColors}
+                  handleTaskUpdate={handleTaskUpdate}
+                  startEditing={startEditing}
+                  updateTasksOrder={updateTasksOrder}
+                  setName={setName}
+                />
+              ))}
+            </TableBody>
+          </Table>
       </div>
-
-      <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className={styles.tableCellHeader}></TableCell>
-              <TableCell className={styles.tableCellHeader}>Complete</TableCell>
-              <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
-              <TableCell className={styles.tableCellHeader}>Name</TableCell>
-              <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
-              <TableCell className={styles.tableCellHeader}>Priority</TableCell>
-              <TableCell className={styles.tableCellHeader}>Edit</TableCell>
-              <TableCell className={styles.tableCellHeader}>Delete</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tasks.map((task, index) => (
-              <TaskRow
-                key={task._id}
-                task={task}
-                index={index}
-                editingTaskId={editingTaskId}
-                setEditingTaskId={setEditingTaskId}
-                editingName={editingName}
-                setEditingName={setEditingName}
-                toggleCompletion={toggleCompletion}
-                handleDelete={handleDelete}
-                moveTask={moveTask}
-                isOverdue={isOverdue}
-                priorityColors={priorityColors}
-                handleTaskUpdate={handleTaskUpdate}
-                startEditing={startEditing}
-                updateTasksOrder={updateTasksOrder}
-                setName={setName}
-              />
-            ))}
-          </TableBody>
-        </Table>
     </div>
   );
 };
