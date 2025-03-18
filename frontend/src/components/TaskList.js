@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 import styles from './ui/Table.module.css';
+import Button from './ui/Button';
+import stylesButton from './ui/Button.module.css';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
@@ -69,7 +71,7 @@ const TaskList = ({ token }) => {
 
   return (
     <div className={styles.customTable}>
-      <button onClick={toggleTaskPanel} className="add-task-button">
+      <button onClick={toggleTaskPanel} className={stylesButton.button}>
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </button>
 

@@ -2,40 +2,40 @@
   border: 1px solid red !important;                                                                                                                                
 }  */
 
-.task-list-container {
+/* .task-list-container {
   border: 1px solid #b4b4b4;
   padding: 20px;
   background: white;
-}
+} */
 
-.MuiPaper-root {
+/* .MuiPaper-root {
   box-shadow: none !important;
-}
+} */
 
-.task-table {                                                                                                                         
+/* .task-table {                                                                                                                         
   width: 100%;                                                                                                                        
   margin: 20px 0;                                                                                                                     
   border-collapse: collapse;
   background: white;                                                                                                           
-}                                                                                                                                     
+}                                                                                                                                      */
 
-.task-table th, .task-table td {
+/* .task-table th, .task-table td {
   padding: 8px 12px;
   border: 1px solid #b4b4b4;
   white-space: nowrap;
-}
+} */
 
-.task-table th:nth-child(4), .task-table td:nth-child(4) {
+/* .task-table th:nth-child(4), .task-table td:nth-child(4) {
   width: 100%;
-}
+} */
 
-.overdue {
+/* .overdue {
   background-color: #ffe6e6;
-}
+} */
 
-.task-table td:first-child {
+/* .task-table td:first-child {
   cursor: pointer;
-}
+} */
 
 .task-table .name-cell {                                                                                                              
   transition: all 0.2s ease;                                                                                                          
@@ -50,13 +50,13 @@
   box-shadow: 0 0 3px 3px #00a6ff20;
 }
 
-.task-table .task-row:hover {                                                                                                                                         
+/* .task-table .task-row:hover {                                                                                                                                         
   position: relative;                                                                                                                                                 
   outline: 1px solid #00a6ff80;                                                                                                                                         
   outline-offset: -1px;                                                                                                         
   box-shadow: 0 0 0 3px #00a6ff20;                                                                                                                                    
   z-index: 1;                                                                                                                           
-} 
+}  */
 
 .task-table .name-cell.editing {                                                                                                      
   padding: 4px;                                                                                                                       
