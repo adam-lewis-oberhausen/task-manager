@@ -41,7 +41,7 @@ describe('Auth Endpoints', () => {
         password: 'weak',
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toMatch(/Password must be at least 8 characters long/);
+    expect(res.body.error).toMatch(/Password must be at least 8 characters long/);
   });
 
   it('should fail to register with duplicate email', async () => {

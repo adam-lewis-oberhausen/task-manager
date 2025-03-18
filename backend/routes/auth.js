@@ -18,7 +18,9 @@ router.post('/register', async (req, res) => {
     // Validate password complexity
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-      return res.status(400).send('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character');
+      return res.status(400).send({ 
+        error: 'Password must be at least 8 characters long and include an uppercase letter, a number, and a special character'
+      });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ email, password: hashedPassword });
