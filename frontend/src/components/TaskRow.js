@@ -77,7 +77,7 @@ const TaskRow = ({
     return (
       <TableRow
         ref={(node) => ref(drop(node))}
-        className={`${styles.tableRow} ${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? 'completed' : ''}`}
+        className={`${styles.tableRow} ${isOverdue(task.dueDate) ? 'overdue' : ''} ${task.completed ? styles.completedRow : ''}`}
         onMouseEnter={() => setShowHandle(true)}
         onMouseLeave={() => setShowHandle(false)}
       >

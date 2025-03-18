@@ -33,11 +33,6 @@
   background-color: #ffe6e6;
 }
 
-.completed {
-  text-decoration: line-through;
-  background-color: #dbfff0;
-}
-
 .task-table td:first-child {
   cursor: pointer;
 }

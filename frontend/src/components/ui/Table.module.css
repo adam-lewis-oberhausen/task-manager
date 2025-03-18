@@ -81,6 +81,11 @@
   word-break: break-word;
 }
 
+.completedRow {
+  text-decoration: line-through;
+  background-color: #dbfff0;
+}
+
 .tableCellHeader {
   font-weight: 600;
   padding: 12px;
