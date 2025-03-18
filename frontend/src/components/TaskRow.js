@@ -55,7 +55,8 @@ const TaskRow = ({
       className={`${styles.tableRow} ${isOverdue(task.dueDate) ? styles.overdueRow : ''} ${task.completed ? styles.completedRow : ''}`}
     >
       <TableCell className={styles.tableCell}>
-        <DragHandleIcon />
+        <Button icon={DragHandleIcon}>
+        </Button>
       </TableCell>
       <TableCell className={styles.tableCell}>
         <Checkbox
@@ -87,8 +88,7 @@ const TaskRow = ({
         {task.priority}
       </TableCell>
       <TableCell className={styles.tableCell}>
-        <Button onClick={() => startEditing(task)}>
-          <EditIcon />
+        <Button onClick={() => startEditing(task)} icon={EditIcon}>
         </Button>
       </TableCell>
       <TableCell className={styles.tableCell}>
@@ -97,10 +97,8 @@ const TaskRow = ({
             taskRowLogger.debug('Deleting task:', task._id);
             handleDelete(task._id);
           }
-        }}>
-          <DeleteIcon />         
-        </Button>
-        
+        }} icon={DeleteIcon}>        
+        </Button>        
       </TableCell>
     </TableRow>
   );
