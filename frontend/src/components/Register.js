@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
 import axios from '../services/axiosConfig';
-import '../styles/Register.css';
+import Form from './ui/Form';
+import Input from './ui/Input';
+import Button from './ui/Button';
+import styles from './ui/Form.module.css';
 
 const Register = ({ setView }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const [error, setError] = useState('');
 
   const handleRegister = async () => {
@@ -21,35 +22,51 @@ const Register = ({ setView }) => {
       setError('Please enter a password.');
       return;
     }
+
     try {
-      console.log('Attempting to register with:', { username, password });
-      const response = await axios.post('/api/auth/register', { email: username, password });
-      console.log('Registration response:', response);
+      await axios.post('/api/auth/register', { 
+        email: username, 
+        password 
+      });
       setView('login');
     } catch (error) {
-      console.error('Error registering:', error.response || error.message);
-      if (error.response && error.response.data) {
-        setError(error.response.data);
-      } else {
-        setError('Registration failed');
-      }
+      setError(error.response?.data || 'Registration failed');
     }
   };
 
   return (
-    <div className="register-container">                                                                                              
-      <div className="register-box">                                                                                                  
-        <h2 className="register-title">Register</h2> 
-        <TextField fullWidth margin="normal" label="Email" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <TextField fullWidth margin="normal" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        {error && <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>{error}</div>}
-        <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>Register</Button>
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
-          <span>Already have an account? </span>
-          <button className="link-button" onClick={() => setView('login')}>Login</button>
-        </div>
+    <Form className={styles.form}>
+      <h2 className={styles.title}>Register</h2>
+      <div className={styles.formGroup}>
+        <Input
+          type="email"
+          placeholder="Email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       </div>
-    </div>
+      <div className={styles.formGroup}>
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      {error && <div className={styles.error}>{error}</div>}
+      <div className={styles.actions}>
+        <Button onClick={handleRegister}>Register</Button>
+      </div>
+      <div className={styles.link}>
+        Already have an account?{' '}
+        <button
+          className={styles.linkButton}
+          onClick={() => setView('login')}
+        >
+          Login
+        </button>
+      </div>
+    </Form>
   );
 };
 
