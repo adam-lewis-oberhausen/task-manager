@@ -44,7 +44,7 @@ router.get('/', auth, checkProjectAccess, async (req, res) => {
     if (req.project) {
       filter.project = req.project._id;
     }
-    
+
     const tasks = await Task.find(filter).sort({ order: 1, priority: -1, dueDate: 1 });
     res.json(tasks);
   } catch (err) {
@@ -52,7 +52,7 @@ router.get('/', auth, checkProjectAccess, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-  
+
 // Update task order
 router.patch('/order', async (req, res) => {
   const { orderUpdates } = req.body; // Array of { _id, order } objects
@@ -78,7 +78,7 @@ router.post('/', auth, checkProjectAccess, async (req, res) => {
       owner: req.userId,
       project: req.project._id
     });
-    
+
     await task.save();
     res.status(201).json(task);
   } catch (error) {
@@ -92,7 +92,7 @@ router.post('/', auth, checkProjectAccess, async (req, res) => {
     }
     // Unexpected error - log as error
     console.error('Unexpected error saving task:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: 'Internal server error', message: error.message });
   }
 });
 
@@ -103,11 +103,11 @@ router.get('/:id', auth, async (req, res) => {
       _id: req.params.id,
       owner: req.userId
     }).populate('project');
-    
+
     if (!task) {
       return res.status(404).json({ error: 'Task not found or access denied' });
     }
-    
+
     // Verify project access
     const hasAccess = await Project.exists({
       _id: task.project,
@@ -121,11 +121,11 @@ router.get('/:id', auth, async (req, res) => {
         }).select('_id') }}
       ]
     });
-    
+
     if (!hasAccess) {
       return res.status(403).json({ error: 'Access to task denied' });
     }
-    
+
     res.json(task);
   } catch (error) {
     res.status(500).send(error);

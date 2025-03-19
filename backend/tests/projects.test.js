@@ -70,7 +70,7 @@ describe('Project API', () => {
       email: TEST_EMAIL('other'),
       password: TEST_PASSWORD
     });
-    
+
     const otherWorkspace = await Workspace.create({
       name: 'Other Workspace',
       owner: otherUser._id,
@@ -100,7 +100,7 @@ describe('Project API', () => {
       .expect(200);
 
     expect(response.body.name).toBe('Test Project');
-    expect(response.body.workspace).toBe(testWorkspace._id.toString());
+    expect(response.body.workspace._id).toBe(testWorkspace._id.toString());
   });
 
   test('Get project - unauthorized', async () => {
@@ -109,7 +109,7 @@ describe('Project API', () => {
       email: TEST_EMAIL('other'),
       password: TEST_PASSWORD
     });
-    
+
     const otherWorkspace = await Workspace.create({
       name: 'Other Workspace',
       owner: otherUser._id,

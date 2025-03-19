@@ -2,6 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const { app } = require('../index');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // Test constants
 const TEST_PASSWORD = 'ValidPass123!';
@@ -23,7 +24,7 @@ beforeAll(async () => {
 afterAll(async () => {
   // Clean up test data
   await User.deleteMany({});
-  
+
   // Close connections
   await mongoose.connection.close();
   testServer.close();
@@ -59,7 +60,7 @@ describe('Auth Endpoints', () => {
     });
 
     it('should fail to register with duplicate email', async () => {
-      const email = TEST_EMAIL('3');
+      const email = TEST_EMAIL('2');
       // Create initial user
       await request(app)
         .post('/api/auth/register')
