@@ -131,11 +131,12 @@ describe('Project API', () => {
 
   test('Create project - success', async () => {
     const response = await request(app)
-      .post('/projects')
+      .post('/api/projects')
       .set('Authorization', `Bearer ${testToken}`)
       .send({
         name: 'Test Project',
-        workspace: testWorkspace._id
+        workspace: testWorkspace._id,
+        members: [{ user: testUser._id, role: 'admin' }]
       })
       .expect(201);
 
@@ -151,11 +152,12 @@ describe('Project API', () => {
     });
 
     await request(app)
-      .post('/projects')
+      .post('/api/projects')
       .set('Authorization', `Bearer ${testToken}`)
       .send({
         name: 'Test Project',
-        workspace: otherWorkspace._id
+        workspace: otherWorkspace._id,
+        members: [{ user: testUser._id, role: 'admin' }]
       })
       .expect(403);
   });
@@ -168,7 +170,7 @@ describe('Project API', () => {
     });
 
     const response = await request(app)
-      .get(`/projects/${project._id}`)
+      .get(`/api/projects/${project._id}`)
       .set('Authorization', `Bearer ${testToken}`)
       .expect(200);
 
@@ -183,7 +185,7 @@ describe('Project API', () => {
     });
 
     await request(app)
-      .get(`/projects/${project._id}`)
+      .get(`/api/projects/${project._id}`)
       .set('Authorization', `Bearer ${testToken}`)
       .expect(403);
   });
