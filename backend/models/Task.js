@@ -10,6 +10,11 @@ const taskSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
+  },
   description: {
     type: String,
   },
@@ -30,5 +35,10 @@ const taskSchema = new mongoose.Schema({
     default: 0,
   },
 });
+
+// Indexes for faster queries
+taskSchema.index({ project: 1 });
+taskSchema.index({ owner: 1 });
+taskSchema.index({ dueDate: 1 });
 
 module.exports = mongoose.model('Task', taskSchema);

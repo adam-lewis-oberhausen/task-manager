@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/workspaces', require('./routes/workspaces'));
+app.use('/api/projects', require('./routes/projects'));
 
 const PORT = process.env.PORT || 5000;
 let server;

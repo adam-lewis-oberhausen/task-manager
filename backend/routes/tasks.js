@@ -1,14 +1,51 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
+const Project = require('../models/Project');
+const Workspace = require('../models/Workspace');
 
 const auth = require('../middleware/auth');
 
-// Get all tasks for the authenticated user
-router.get('/', auth, async (req, res) => {
+// Middleware to check project access
+const checkProjectAccess = async (req, res, next) => {
   try {
-    console.log('Retrieving tasks for user:', req.userId); 
-    const tasks = await Task.find({ owner: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
+    const projectId = req.body.project || req.query.project;
+    if (!projectId) return next();
+
+    // Check both project membership and workspace membership
+    const project = await Project.findOne({
+      _id: projectId,
+      $or: [
+        { 'members.user': req.userId },
+        { workspace: { $in: await Workspace.find({
+          $or: [
+            { owner: req.userId },
+            { 'members.user': req.userId }
+          ]
+        }).select('_id') }}
+      ]
+    });
+
+    if (!project) {
+      return res.status(403).json({ error: 'Access to project denied' });
+    }
+
+    req.project = project;
+    next();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all tasks for the authenticated user
+router.get('/', auth, checkProjectAccess, async (req, res) => {
+  try {
+    const filter = { owner: req.userId };
+    if (req.project) {
+      filter.project = req.project._id;
+    }
+    
+    const tasks = await Task.find(filter).sort({ order: 1, priority: -1, dueDate: 1 });
     res.json(tasks);
   } catch (err) {
     console.error('Error fetching tasks:', err);
@@ -34,16 +71,16 @@ router.patch('/order', async (req, res) => {
   }
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, checkProjectAccess, async (req, res) => {
   try {
-    console.log('Received task data:', req.body);
     const task = new Task({
       ...req.body,
-      owner: req.userId
+      owner: req.userId,
+      project: req.project._id
     });
     
     await task.save();
-    res.status(201).send(task);
+    res.status(201).json(task);
   } catch (error) {
     if (error.name === 'ValidationError') {
       // Expected validation error - don't log as error
@@ -65,12 +102,31 @@ router.get('/:id', auth, async (req, res) => {
     const task = await Task.findOne({
       _id: req.params.id,
       owner: req.userId
-    });
+    }).populate('project');
     
     if (!task) {
-      return res.status(404).send({ error: 'Task not found or access denied' });
+      return res.status(404).json({ error: 'Task not found or access denied' });
     }
-    res.send(task);
+    
+    // Verify project access
+    const hasAccess = await Project.exists({
+      _id: task.project,
+      $or: [
+        { 'members.user': req.userId },
+        { workspace: { $in: await Workspace.find({
+          $or: [
+            { owner: req.userId },
+            { 'members.user': req.userId }
+          ]
+        }).select('_id') }}
+      ]
+    });
+    
+    if (!hasAccess) {
+      return res.status(403).json({ error: 'Access to task denied' });
+    }
+    
+    res.json(task);
   } catch (error) {
     res.status(500).send(error);
   }
