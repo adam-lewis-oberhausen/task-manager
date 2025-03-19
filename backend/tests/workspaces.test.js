@@ -5,14 +5,14 @@ const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const jwt = require('jsonwebtoken');
 let testServer;
+let authToken;
+let testUser;
+let testToken;
 
 beforeAll(async () => {
   // Start test server on a different port
   testServer = app.listen(5001);
 });
-
-let testUser;
-let testToken;
 
 beforeEach(async () => {
   // Connect to the test database
@@ -127,14 +127,6 @@ describe('Workspace API', () => {
     expect(deletedWorkspace).toBeNull();
   });
 });
-const request = require('supertest');
-const mongoose = require('mongoose');
-const { app } = require('../index');
-const Workspace = require('../models/Workspace');
-const User = require('../models/User');
-
-let testServer;
-let authToken;
 
 beforeAll(async () => {
   // Start test server on a random available port
@@ -151,7 +143,7 @@ beforeAll(async () => {
     password: 'ValidPass123!'
   });
   await user.save();
-  
+
   const loginRes = await request(app)
     .post('/api/auth/login')
     .send({
@@ -165,7 +157,7 @@ afterAll(async () => {
   // Clean up test data
   await Workspace.deleteMany({});
   await User.deleteMany({});
-  
+
   // Close connections
   await mongoose.connection.close();
   testServer.close();
