@@ -101,7 +101,9 @@ describe('Project API', () => {
       .expect(200);
 
     expect(response.body.name).toBe('Test Project');
+    expect(response.body.workspace).toBeDefined();
     expect(response.body.workspace._id).toBe(testWorkspace._id.toString());
+    expect(response.body.workspace.name).toBe(testWorkspace.name);
   });
 
   test('Get project - unauthorized', async () => {

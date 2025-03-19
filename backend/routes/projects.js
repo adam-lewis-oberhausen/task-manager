@@ -56,10 +56,14 @@ router.get('/:id', auth, async (req, res) => {
           ]
         }).select('_id') }}
       ]
-    }).populate('workspace');
+    })
+    .populate({
+      path: 'workspace',
+      select: '_id name'
+    });
     
     if (!project) {
-      return res.status(404).json({ error: 'Project not found or access denied' });
+      return res.status(403).json({ error: 'Project not found or access denied' });
     }
     
     res.json(project);
