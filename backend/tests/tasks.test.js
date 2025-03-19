@@ -56,7 +56,8 @@ describe('Task API', () => {
       name: 'Test Task',
       description: 'Test Description',
       priority: 'Medium',
-      dueDate: new Date().toISOString()
+      dueDate: new Date().toISOString(),
+      owner: testUser._id
     };
 
     const response = await request(app)
@@ -67,7 +68,7 @@ describe('Task API', () => {
 
     expect(response.body.name).toBe(taskData.name);
     expect(response.body.description).toBe(taskData.description);
-    expect(response.body.owner.toString()).toBe(testUser._id.toString());
+    expect(response.body.owner).toBe(testUser._id.toString());
   });
 
   test('Fail to create task with invalid data', async () => {

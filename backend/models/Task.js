@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   name: {
     type: String,
+    required: true,
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   description: {
     type: String,

@@ -34,17 +34,27 @@ router.patch('/order', async (req, res) => {
   }
 });
 
-router.post('/', auth, async (req, res) => {                                                                      
-  try {                                                                                                           
-    console.log('Received task data:', req.body);                                                                 
-    const task = new Task({ ...req.body, createdBy: req.userId });                                                     
-    await task.save();                                                                                            
-    res.status(201).send(task);                                                                                   
-  } catch (error) {                                                                                               
-    console.error('Error saving task:', error);                                                                   
-    res.status(400).send(error);                                                                                  
-  }                                                                                                               
-});  
+router.post('/', auth, async (req, res) => {
+  try {
+    console.log('Received task data:', req.body);
+    const task = new Task({
+      ...req.body,
+      owner: req.userId
+    });
+    
+    await task.save();
+    res.status(201).send(task);
+  } catch (error) {
+    console.error('Error saving task:', error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).send({
+        error: 'Validation failed',
+        details: error.errors
+      });
+    }
+    res.status(500).send('Internal server error');
+  }
+});
 
 // Read a single task by id
 router.get('/:id', async (req, res) => {
