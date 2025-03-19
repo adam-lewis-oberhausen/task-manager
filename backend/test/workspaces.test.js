@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 let testUser;
 let testToken;
 
-beforeAll(async () => {
+beforeEach(async () => {
   // Connect to the test database
   const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
   await mongoose.connect(mongoUri, {
@@ -16,9 +16,10 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   });
 
-  // Create a test user
+  // Create a unique test user for each test
+  const uniqueEmail = `test${Date.now()}@workspace.com`;
   testUser = new User({
-    email: 'test@workspace.com',
+    email: uniqueEmail,
     password: 'Test123!'
   });
   await testUser.save();
@@ -27,10 +28,11 @@ beforeAll(async () => {
   testToken = jwt.sign({ userId: testUser._id }, process.env.JWT_SECRET);
 });
 
-afterAll(async () => {
-  // Clean up test data
-  //await User.deleteMany({});
-  //await Workspace.deleteMany({});
+afterEach(async () => {
+  // Clean up test data after each test
+  await User.deleteMany({});
+  await Workspace.deleteMany({});
+  await mongoose.connection.close();
 });
 
 describe('Workspace API', () => {
@@ -66,8 +68,9 @@ describe('Workspace API', () => {
   });
 
   test('Get single workspace', async () => {
+    const workspaceName = `Test Workspace ${Date.now()}`;
     const workspace = new Workspace({
-      name: 'Test Workspace',
+      name: workspaceName,
       owner: testUser._id,
       members: [{ user: testUser._id, role: 'admin' }]
     });
