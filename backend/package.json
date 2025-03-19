@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --coverage",
-    "test:ci": "jest --ci --coverage",
+    "test": "jest --watchAll --coverage --testPathPattern=tests/",
+    "test:ci": "jest --ci --coverage --testPathPattern=tests/",
     "test:setup": "echo 'Using cloud MongoDB instance'",
     "test:teardown": "echo 'No teardown needed for cloud MongoDB'"
   },

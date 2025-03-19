@@ -1,6 +1,9 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { app, server } = require('../index');
+const User = require('../models/User');
+const Workspace = require('../models/Workspace');
+const jwt = require('jsonwebtoken');
 let testServer;
 
 beforeAll(async () => {
