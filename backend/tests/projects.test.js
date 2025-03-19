@@ -1,17 +1,24 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const { app } = require('../index');
 const Project = require('../models/Project');
 const Workspace = require('../models/Workspace');
 const User = require('../models/User');
-const { TEST_EMAIL, TEST_PASSWORD } = require('./auth.test');
+
+// Define test constants
+const TEST_PASSWORD = 'ValidPass123!';
+const TEST_EMAIL = (suffix) => `test${suffix}@example.com`;
 
 describe('Project API', () => {
   let testUser, testWorkspace, testToken;
 
   beforeAll(async () => {
     // Connect to test database
-    await mongoose.connect(process.env.MONGO_URI_TEST || process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI_TEST || process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
   });
 
   beforeEach(async () => {
@@ -40,6 +47,85 @@ describe('Project API', () => {
 
   afterAll(async () => {
     await mongoose.connection.close();
+  });
+
+  test('Create project - success', async () => {
+    const response = await request(app)
+      .post('/api/projects')
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({
+        name: 'Test Project',
+        workspace: testWorkspace._id
+      })
+      .expect(201);
+
+    expect(response.body.name).toBe('Test Project');
+    expect(response.body.workspace).toBe(testWorkspace._id.toString());
+    expect(response.body.members[0].user).toBe(testUser._id.toString());
+  });
+
+  test('Create project - unauthorized workspace', async () => {
+    // Create another user and workspace
+    const otherUser = await User.create({
+      email: TEST_EMAIL('other'),
+      password: TEST_PASSWORD
+    });
+    
+    const otherWorkspace = await Workspace.create({
+      name: 'Other Workspace',
+      owner: otherUser._id,
+      members: [{ user: otherUser._id, role: 'admin' }]
+    });
+
+    await request(app)
+      .post('/api/projects')
+      .set('Authorization', `Bearer ${testToken}`)
+      .send({
+        name: 'Test Project',
+        workspace: otherWorkspace._id
+      })
+      .expect(403);
+  });
+
+  test('Get project - success', async () => {
+    const project = await Project.create({
+      name: 'Test Project',
+      workspace: testWorkspace._id,
+      members: [{ user: testUser._id, role: 'member' }]
+    });
+
+    const response = await request(app)
+      .get(`/api/projects/${project._id}`)
+      .set('Authorization', `Bearer ${testToken}`)
+      .expect(200);
+
+    expect(response.body.name).toBe('Test Project');
+    expect(response.body.workspace).toBe(testWorkspace._id.toString());
+  });
+
+  test('Get project - unauthorized', async () => {
+    // Create another user and workspace
+    const otherUser = await User.create({
+      email: TEST_EMAIL('other'),
+      password: TEST_PASSWORD
+    });
+    
+    const otherWorkspace = await Workspace.create({
+      name: 'Other Workspace',
+      owner: otherUser._id,
+      members: [{ user: otherUser._id, role: 'admin' }]
+    });
+
+    const project = await Project.create({
+      name: 'Test Project',
+      workspace: otherWorkspace._id,
+      members: [{ user: otherUser._id, role: 'member' }]
+    });
+
+    await request(app)
+      .get(`/api/projects/${project._id}`)
+      .set('Authorization', `Bearer ${testToken}`)
+      .expect(403);
   });
 
   test('Create project - success', async () => {
