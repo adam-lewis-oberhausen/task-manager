@@ -6,6 +6,7 @@ let testServer;
 beforeAll(async () => {
   // Start test server on a different port
   testServer = app.listen(5002);
+});
 const User = require('../models/User');
 
 describe('Auth Endpoints', () => {
