@@ -62,12 +62,17 @@ describe('Workspace API', () => {
   test('Get all workspaces for user', async () => {
     // Create a test workspace
     const workspaceName = `Test Workspace ${Date.now()}`;
-    const workspace = new Workspace({
+    const workspace = await Workspace.create({
       name: workspaceName,
       owner: testUser._id,
       members: [{ user: testUser._id, role: 'admin' }]
     });
-    await workspace.save();
+
+    // Verify workspace was created
+    const foundWorkspace = await Workspace.findById(workspace._id);
+    if (!foundWorkspace) {
+      throw new Error('Workspace not found in database');
+    }
 
     const response = await request(app)
       .get('/api/workspaces')

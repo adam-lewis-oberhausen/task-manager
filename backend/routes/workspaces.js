@@ -47,7 +47,7 @@ router.get('/:id', auth, async (req, res) => {
         { owner: req.userId },
         { 'members.user': req.userId }
       ]
-    })
+    }, null, { lean: true })
     .populate({
       path: 'owner',
       select: '_id email'
