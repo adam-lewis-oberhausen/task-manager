@@ -13,26 +13,31 @@ const Register = ({ setView }) => {
   const handleRegister = async () => {
     setError('');
 
+    // Normalize inputs
+    const normalizedEmail = username.trim().toLowerCase();
+    const normalizedPassword = password.trim();
+
     // Validate email
-    if (!username || !/\S+@\S+\.\S+/.test(username)) {
+    if (!normalizedEmail || !/\S+@\S+\.\S+/.test(normalizedEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
+
     // Validate password complexity
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordRegex.test(password)) {
+    if (!passwordRegex.test(normalizedPassword)) {
       setError('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.');
       return;
     }
 
     try {
       await axios.post('/api/auth/register', {
-        email: username,
-        password
+        email: normalizedEmail,
+        password: normalizedPassword
       });
       setView('login');
     } catch (error) {
-      setError(error.response?.data || 'Registration failed');
+      setError(error.response?.data?.error || 'Registration failed');
     }
   };
 
@@ -55,7 +60,11 @@ const Register = ({ setView }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {error && <div className={styles.error}>{error}</div>}
+      {error && (
+        <div className={styles.error}>
+          {typeof error === 'object' ? error.error : error}
+        </div>
+      )}
       <div className={styles.actions}>
         <Button onClick={handleRegister}>Register</Button>
       </div>

@@ -8,7 +8,10 @@ const router = express.Router();
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    // Normalize inputs
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password?.trim();
+
     // Check if email is already in use
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -37,8 +40,9 @@ router.post('/register', async (req, res) => {
         error: 'Password must be at least 8 characters long and include an uppercase letter, a number, and a special character'
       });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashedPassword });
+
+    console.log('Creating new user with email:', email);
+    const user = new User({ email, password });
     await user.save();
     res.status(201).send(user);
   } catch (error) {

@@ -13,14 +13,18 @@ const Login = ({ onLogin, setView }) => {
   const handleLogin = async () => {
     setError('');
     try {
+      const normalizedEmail = username.trim().toLowerCase();
+      const normalizedPassword = password.trim();
+
       const response = await axios.post('/api/auth/login', {
-        email: username.trim(),
-        password
+        email: normalizedEmail,
+        password: normalizedPassword
       });
+
       setError('Login successful!');
       onLogin(response.data.token);
     } catch (error) {
-      setError(error.response?.data || 'Login failed');
+      setError(error.response?.data?.error || 'Login failed');
     }
   };
 
@@ -43,7 +47,11 @@ const Login = ({ onLogin, setView }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {error && <div className={styles.error}>{error}</div>}
+      {error && (
+        <div className={styles.error}>
+          {typeof error === 'object' ? error.error : error}
+        </div>
+      )}
       <div className={styles.actions}>
         <Button onClick={handleLogin}>Login</Button>
       </div>
