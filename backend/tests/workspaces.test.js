@@ -6,6 +6,11 @@ const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const jwt = require('jsonwebtoken');
 
+// Define test constants
+const TEST_PASSWORD = 'ValidPass123!';
+const TEST_EMAIL = (suffix) => `test_workspaces_email_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `test_workspaces_workspace_${suffix}`;
+
 let testServer;
 let testToken;
 let testUser;
@@ -22,8 +27,8 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   // Create a unique test user for each test
-  const uniqueEmail = `test${Date.now()}@workspace.com`;
-  const hashedPassword = await bcrypt.hash('Test123!', 10);
+  const uniqueEmail = TEST_EMAIL(Date.now());
+  const hashedPassword = await bcrypt.hash(TEST_PASSWORD, 10);
   testUser = new User({
     email: uniqueEmail,
     password: hashedPassword
@@ -36,8 +41,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clean up test data after each test
-  await User.deleteMany({});
-  await Workspace.deleteMany({});
+  await User.deleteMany({ email: /^test_workspaces/ });
+  await Workspace.deleteMany({ name: /^test_workspaces/ });
 });
 
 afterAll(async () => {
@@ -48,7 +53,7 @@ afterAll(async () => {
 
 describe('Workspace API', () => {
   test('Create a new workspace', async () => {
-    const workspaceName = `Test Workspace ${Date.now()}`;
+    const workspaceName = TEST_WORKSPACE(Date.now());
     const response = await request(app)
       .post('/api/workspaces')
       .set('Authorization', `Bearer ${testToken}`)
@@ -61,7 +66,7 @@ describe('Workspace API', () => {
 
   test('Get all workspaces for user', async () => {
     // Create a test workspace
-    const workspaceName = `Test Workspace ${Date.now()}`;
+    const workspaceName = TEST_WORKSPACE(Date.now());
     const workspace = await Workspace.create({
       name: workspaceName,
       owner: testUser._id,
@@ -84,7 +89,7 @@ describe('Workspace API', () => {
   });
 
   test('Get single workspace', async () => {
-    const workspaceName = `Test Workspace ${Date.now()}`;
+    const workspaceName = TEST_WORKSPACE(Date.now());
     const workspace = new Workspace({
       name: workspaceName,
       owner: testUser._id,
@@ -101,8 +106,9 @@ describe('Workspace API', () => {
   });
 
   test('Update workspace', async () => {
+    const workspaceName = TEST_WORKSPACE(Date.now());
     const workspace = new Workspace({
-      name: 'Test Workspace',
+      name: workspaceName,
       owner: testUser._id,
       members: [{ user: testUser._id, role: 'admin' }]
     });
@@ -111,15 +117,15 @@ describe('Workspace API', () => {
     const response = await request(app)
       .patch(`/api/workspaces/${workspace._id}`)
       .set('Authorization', `Bearer ${testToken}`)
-      .send({ name: 'Updated Workspace' })
+      .send({ name: workspaceName + '_updated' })
       .expect(200);
 
-    expect(response.body.name).toBe('Updated Workspace');
+    expect(response.body.name).toBe(workspaceName + '_updated');
   });
 
   test('Delete workspace', async () => {
     const workspace = new Workspace({
-      name: 'Test Workspace',
+      name: TEST_WORKSPACE(Date.now()),
       owner: testUser._id,
       members: [{ user: testUser._id, role: 'admin' }]
     });

@@ -100,21 +100,15 @@ router.post('/', auth, checkProjectAccess, async (req, res) => {
   }
 });
 
-// Read a single task by id
 router.get('/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findOne({
-      _id: req.params.id,
-      owner: req.userId
-    })
-    .populate('project')
-    .populate('owner');
+    const task = await Task.findById(req.params.id).populate('project').populate('owner');
 
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    // Verify project access
+    // Check if user has access
     const hasAccess = await Project.exists({
       _id: task.project,
       $or: [
@@ -134,13 +128,14 @@ router.get('/:id', auth, async (req, res) => {
 
     res.json({
       ...task.toObject(),
-      project: task.project._id // Return just the ID
+      project: task.project._id
     });
   } catch (error) {
     console.error('Error getting task:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // Update a task by id
 router.patch('/:id', async (req, res) => {

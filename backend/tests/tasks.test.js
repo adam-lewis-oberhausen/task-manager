@@ -10,7 +10,10 @@ const jwt = require('jsonwebtoken');
 
 // Test constants
 const TEST_PASSWORD = 'ValidPass123!';
-const TEST_EMAIL = (suffix) => `test${suffix}@example.com`;
+const TEST_EMAIL = (suffix) => `test_tasks_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `test_tasks_workspace_${suffix}`;
+const TEST_PROJECT = (suffix) => `test_tasks_project_${suffix}`;
+const TEST_TASK = (suffix) => `test_tasks_${suffix}`;
 
 let testServer;
 let testToken;
@@ -43,7 +46,7 @@ beforeEach(async () => {
 
   // Create a test workspace
   testWorkspace = new Workspace({
-    name: 'Test Workspace',
+    name: TEST_WORKSPACE(Date.now()),
     owner: testUser._id,
     members: [{ user: testUser._id, role: 'admin' }]
   });
@@ -51,7 +54,7 @@ beforeEach(async () => {
 
   // Create a test project
   testProject = new Project({
-    name: 'Test Project',
+    name: TEST_PROJECT(Date.now()),
     workspace: testWorkspace._id,
     members: [{ user: testUser._id, role: 'admin' }]
   });
@@ -63,8 +66,9 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clean up test data after each test
-  await User.deleteMany({});
-  await Task.deleteMany({});
+  await Task.deleteMany({ name: /^test_tasks/ });
+  await Project.deleteMany({ name: /^test_tasks/ });
+  await Workspace.deleteMany({ name: /^test_tasks/ });
 });
 
 afterAll(async () => {
@@ -76,7 +80,7 @@ afterAll(async () => {
 describe('Task API', () => {
   test('Create a new task', async () => {
     const taskData = {
-      name: 'Test Task',
+      name: TEST_TASK(Date.now()),
       description: 'Test Description',
       priority: 'Medium',
       dueDate: new Date().toISOString(),
@@ -103,7 +107,7 @@ describe('Task API', () => {
     const response = await request(app)
       .post('/api/tasks')
       .set('Authorization', `Bearer ${testToken}`)
-      .send({}) // Empty data
+      .send({ project: testProject._id })
       .expect(400);
 
     expect(response.body).toHaveProperty('error');
@@ -112,14 +116,14 @@ describe('Task API', () => {
   test('Get all tasks for user', async () => {
     // Create test tasks
     const task1 = new Task({
-      name: 'Task 1',
+      name: TEST_TASK(Date.now()),
       owner: testUser._id,
       project: testProject._id,
       description: 'Description 1',
       priority: 'Medium'
     });
     const task2 = new Task({
-      name: 'Task 2',
+      name: TEST_TASK(Date.now()),
       owner: testUser._id,
       project: testProject._id,
       description: 'Description 2',
@@ -138,8 +142,9 @@ describe('Task API', () => {
   });
 
   test('Get single task', async () => {
+    const testTaskName = TEST_TASK(Date.now());
     const task = new Task({
-      name: 'Test Task',
+      name: testTaskName,
       owner: testUser._id,
       project: testProject._id
     });
@@ -150,32 +155,35 @@ describe('Task API', () => {
       .set('Authorization', `Bearer ${testToken}`)
       .expect(200);
 
-    expect(response.body.name).toBe('Test Task');
+    expect(response.body.name).toBe(testTaskName);
     expect(response.body.project).toBe(testProject._id.toString());
-    expect(response.body.owner).toBe(testUser._id.toString());
+    expect(response.body.owner._id).toBe(testUser._id.toString());
   });
 
   test('Update task', async () => {
+    const originalTaskName = TEST_TASK('original');
     const task = new Task({
-      name: 'Original Task',
+      name: originalTaskName,
       owner: testUser._id,
       project: testProject._id
     });
     await task.save();
 
+    const updatedTaskName = TEST_TASK('updated');
     const response = await request(app)
       .patch(`/api/tasks/${task._id}`)
       .set('Authorization', `Bearer ${testToken}`)
-      .send({ name: 'Updated Task' })
+      .send({ name: updatedTaskName })
       .expect(200);
 
-    expect(response.body.name).toBe('Updated Task');
+    expect(response.body.name).toBe(updatedTaskName);
     expect(response.body.project).toBe(testProject._id.toString());
   });
 
   test('Delete task', async () => {
+    const testTaskName = TEST_TASK('delete');
     const task = new Task({
-      name: 'Task to Delete',
+      name: testTaskName,
       owner: testUser._id,
       project: testProject._id
     });
@@ -194,21 +202,21 @@ describe('Task API', () => {
   test('Fail to access other user\'s task', async () => {
     // Create another user
     const otherUser = new User({
-      email: TEST_EMAIL('other'),
+      email: TEST_EMAIL(Date.now()),
       password: await bcrypt.hash(TEST_PASSWORD, 10)
     });
     await otherUser.save();
 
     // Create another workspace and project
     const otherWorkspace = new Workspace({
-      name: 'Other Workspace',
+      name: TEST_WORKSPACE('other'),
       owner: otherUser._id,
       members: [{ user: otherUser._id, role: 'admin' }]
     });
     await otherWorkspace.save();
 
     const otherProject = new Project({
-      name: 'Other Project',
+      name: TEST_PROJECT('other'),
       workspace: otherWorkspace._id,
       members: [{ user: otherUser._id, role: 'admin' }]
     });
@@ -216,7 +224,7 @@ describe('Task API', () => {
 
     // Create task for other user
     const task = new Task({
-      name: 'Other User Task',
+      name: TEST_TASK('other'),
       owner: otherUser._id,
       project: otherProject._id
     });
