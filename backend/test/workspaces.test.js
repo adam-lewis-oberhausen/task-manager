@@ -35,20 +35,22 @@ afterAll(async () => {
 
 describe('Workspace API', () => {
   test('Create a new workspace', async () => {
+    const workspaceName = `Test Workspace ${Date.now()}`;
     const response = await request(app)
       .post('/api/workspaces')
       .set('Authorization', `Bearer ${testToken}`)
-      .send({ name: 'Test Workspace' })
+      .send({ name: workspaceName })
       .expect(201);
 
-    expect(response.body.name).toBe('Test Workspace');
+    expect(response.body.name).toBe(workspaceName);
     expect(response.body.owner.toString()).toBe(testUser._id.toString());
   });
 
   test('Get all workspaces for user', async () => {
     // Create a test workspace
+    const workspaceName = `Test Workspace ${Date.now()}`;
     const workspace = new Workspace({
-      name: 'Test Workspace',
+      name: workspaceName,
       owner: testUser._id,
       members: [{ user: testUser._id, role: 'admin' }]
     });
@@ -60,7 +62,7 @@ describe('Workspace API', () => {
       .expect(200);
 
     expect(response.body.length).toBe(1);
-    expect(response.body[0].name).toBe('Test Workspace');
+    expect(response.body[0].name).toBe(workspaceName);
   });
 
   test('Get single workspace', async () => {
@@ -76,7 +78,7 @@ describe('Workspace API', () => {
       .set('Authorization', `Bearer ${testToken}`)
       .expect(200);
 
-    expect(response.body.name).toBe('Test Workspace');
+    expect(response.body.name).toBe(workspaceName);
   });
 
   test('Update workspace', async () => {
