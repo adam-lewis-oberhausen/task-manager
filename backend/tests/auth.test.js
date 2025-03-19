@@ -62,6 +62,6 @@ describe('Auth Endpoints', () => {
         password: 'AnotherPass123!',
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toMatch(/Email is already in use/);
+    expect(res.body.error).toMatch(/Email is already in use/);
   });
 });

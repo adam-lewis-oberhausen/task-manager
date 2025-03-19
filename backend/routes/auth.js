@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
     // Check if email is already in use
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).send('Email is already in use');
+      return res.status(400).send({ error: 'Email is already in use' });
     }
 
     // Validate password complexity
