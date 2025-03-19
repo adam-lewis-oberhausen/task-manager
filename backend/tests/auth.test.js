@@ -81,6 +81,7 @@ describe('Auth Endpoints', () => {
           password: TEST_PASSWORD,
         });
       expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('error');
       expect(res.body.error).toMatch(/Invalid email format/);
     });
 
@@ -92,6 +93,7 @@ describe('Auth Endpoints', () => {
           password: '',
         });
       expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('error');
       expect(res.body.error).toMatch(/Email and password are required/);
     });
   });
@@ -126,7 +128,8 @@ describe('Auth Endpoints', () => {
           password: 'wrongpassword',
         });
       expect(res.statusCode).toEqual(401);
-      expect(res.body).toMatch(/Invalid username or password/);
+      expect(res.body).toHaveProperty('error');
+      expect(res.body.error).toMatch(/Invalid username or password/);
     });
 
     it('should fail to login with non-existent email', async () => {

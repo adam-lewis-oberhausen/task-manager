@@ -15,6 +15,21 @@ router.post('/register', async (req, res) => {
       return res.status(400).send({ error: 'Email is already in use' });
     }
 
+    // Validate email format
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).send({ 
+        error: 'Invalid email format'
+      });
+    }
+
+    // Validate required fields
+    if (!email || !password) {
+      return res.status(400).send({ 
+        error: 'Email and password are required'
+      });
+    }
+
     // Validate password complexity
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -39,14 +54,14 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });    
     if (!user) {
       console.log('User not found');
-      return res.status(401).send('Invalid username or password');
+      return res.status(401).send({ error: 'Invalid username or password' });
     } else {
       console.log('User found:', user);
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       console.log('Invalid credentials');
-      return res.status(401).send('Invalid username or password');
+      return res.status(401).send({ error: 'Invalid username or password' });
     } else {
       console.log('Password matches');
     }
