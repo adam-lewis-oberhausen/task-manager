@@ -25,23 +25,27 @@ afterAll(async () => {
 });
 
 describe('Auth Endpoints', () => {
+  beforeEach(async () => {
+    // Clean up test data before each test
+    await User.deleteMany({});
+  });
 
   it('should register a new user with valid credentials', async () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({
-        email: 'test@example.com',
+        email: 'test1@example.com',
         password: 'ValidPass123!',
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('email', 'test@example.com');
+    expect(res.body).toHaveProperty('email', 'test1@example.com');
   });
 
   it('should fail to register with invalid password', async () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({
-        email: 'test@example.com',
+        email: 'test2@example.com',
         password: 'weak',
       });
     expect(res.statusCode).toEqual(400);
@@ -53,7 +57,7 @@ describe('Auth Endpoints', () => {
     await request(app)
       .post('/api/auth/register')
       .send({
-        email: 'test@example.com',
+        email: 'test3@example.com',
         password: 'ValidPass123!',
       });
 
@@ -61,7 +65,7 @@ describe('Auth Endpoints', () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({
-        email: 'test@example.com',
+        email: 'test3@example.com',
         password: 'AnotherPass123!',
       });
     expect(res.statusCode).toEqual(400);
