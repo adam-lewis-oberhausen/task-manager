@@ -60,7 +60,7 @@ describe('Project API', () => {
       .expect(201);
 
     expect(response.body.name).toBe('Test Project');
-    expect(response.body.workspace).toBe(testWorkspace._id.toString());
+    expect(response.body.workspace.toString()).toBe(testWorkspace._id.toString());
     expect(response.body.members[0].user).toBe(testUser._id.toString());
   });
 

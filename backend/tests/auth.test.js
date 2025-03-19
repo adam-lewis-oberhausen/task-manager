@@ -100,13 +100,12 @@ describe('Auth Endpoints', () => {
 
   describe('Login', () => {
     beforeEach(async () => {
-      // Create a test user
-      await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: TEST_EMAIL('login'),
-          password: TEST_PASSWORD,
-        });
+      // Create a test user directly in the database
+      const hashedPassword = await bcrypt.hash(TEST_PASSWORD, 10);
+      await User.create({
+        email: TEST_EMAIL('login'),
+        password: hashedPassword
+      });
     });
 
     it('should login with valid credentials', async () => {
