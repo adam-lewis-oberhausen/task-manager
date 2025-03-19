@@ -3,6 +3,7 @@ import axios from '../services/axiosConfig';
 import Form from './ui/Form';
 import Input from './ui/Input';
 import Button from './ui/Button';
+import styles from './ui/Form.module.css';
 
 const Login = ({ onLogin, setView }) => {
   const [username, setUsername] = useState('');
@@ -25,8 +26,8 @@ const Login = ({ onLogin, setView }) => {
 
   return (
     <Form>
-      <h2 className="title">Login</h2>
-      <div className="formGroup">
+      <h2 className={styles.title}>Login</h2>
+      <div className={styles.formGroup}>
         <Input
           type="text"
           placeholder="Email"
@@ -34,7 +35,7 @@ const Login = ({ onLogin, setView }) => {
           onChange={(e) => setUsername(e.target.value)}
         />
       </div>
-      <div className="formGroup">
+      <div className={styles.formGroup}>
         <Input
           type="password"
           placeholder="Password"
@@ -42,14 +43,14 @@ const Login = ({ onLogin, setView }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {error && <div className="error">{error}</div>}
-      <div className="actions">
+      {error && <div className={styles.error}>{error}</div>}
+      <div className={styles.actions}>
         <Button onClick={handleLogin}>Login</Button>
       </div>
-      <div className="link">
+      <div className={styles.link}>
         No account yet?{' '}
         <button 
-          className="linkButton"
+          className={styles.linkButton}
           onClick={() => setView('register')}
         >
           Register
