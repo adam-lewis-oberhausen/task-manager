@@ -7,10 +7,7 @@ describe('Auth Endpoints', () => {
   beforeAll(async () => {
     // Connect to the test database
     const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(mongoUri);
   });
 
   afterEach(async () => {

@@ -1,6 +1,8 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../index');
+// Use a different port for testing
+app.set('port', process.env.PORT || 5001);
 const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const jwt = require('jsonwebtoken');
@@ -11,10 +13,7 @@ let testToken;
 beforeEach(async () => {
   // Connect to the test database
   const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(mongoUri);
 
   // Create a unique test user for each test
   const uniqueEmail = `test${Date.now()}@workspace.com`;

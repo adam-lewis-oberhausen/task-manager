@@ -12,9 +12,11 @@ app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI, { 
+  serverSelectionTimeoutMS: 5000 
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log('MongoDB connection error:', err));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
