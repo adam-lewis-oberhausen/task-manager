@@ -101,15 +101,29 @@ describe('Auth Endpoints', () => {
 
   describe('Login', () => {
     beforeEach(async () => {
-      // Create a test user directly in the database
+      // Create a test user with properly hashed password
       const user = new User({
         email: TEST_EMAIL('login'),
         password: TEST_PASSWORD
       });
       await user.save();
+      
+      // Verify the user was created with hashed password
+      const createdUser = await User.findOne({ email: TEST_EMAIL('login') });
+      expect(createdUser).toBeTruthy();
+      expect(createdUser.password).not.toBe(TEST_PASSWORD); // Should be hashed
     });
 
     it('should login with valid credentials', async () => {
+      // Verify test user exists
+      const testUser = await User.findOne({ email: TEST_EMAIL('login') });
+      expect(testUser).toBeTruthy();
+      
+      // Verify password is properly hashed
+      const isPasswordValid = await testUser.comparePassword(TEST_PASSWORD);
+      expect(isPasswordValid).toBe(true);
+      
+      // Attempt login
       const res = await request(app)
         .post('/api/auth/login')
         .send({

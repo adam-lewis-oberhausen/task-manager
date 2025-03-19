@@ -57,13 +57,12 @@ router.post('/login', async (req, res) => {
       return res.status(401).send({ error: 'Invalid username or password' });
     }
     console.log('User found:', user.email);
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await user.comparePassword(password);
     if (!passwordMatch) {
-      console.log('Invalid credentials');
+      console.log('Password does not match');
       return res.status(401).send({ error: 'Invalid username or password' });
-    } else {
-      console.log('Password matches');
     }
+    console.log('Password matches');
     try {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
       console.log('Login successful, token generated');
