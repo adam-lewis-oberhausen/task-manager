@@ -86,13 +86,17 @@ describe('Task API', () => {
     const response = await request(app)
       .post('/api/tasks')
       .set('Authorization', `Bearer ${testToken}`)
-      .send(taskData)
+      .send({
+        ...taskData,
+        project: testProject._id
+      })
       .expect(201);
 
     expect(response.body.name).toBe(taskData.name);
     expect(response.body.description).toBe(taskData.description);
     expect(response.body.project).toBe(testProject._id.toString());
     expect(response.body.owner).toBe(testUser._id.toString());
+    expect(response.body).toHaveProperty('_id');
   });
 
   test('Fail to create task with invalid data', async () => {
@@ -148,6 +152,7 @@ describe('Task API', () => {
 
     expect(response.body.name).toBe('Test Task');
     expect(response.body.project).toBe(testProject._id.toString());
+    expect(response.body.owner).toBe(testUser._id.toString());
   });
 
   test('Update task', async () => {

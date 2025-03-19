@@ -24,7 +24,9 @@ const checkProjectAccess = async (req, res, next) => {
           ]
         }).select('_id') }}
       ]
-    });
+    })
+    .populate('workspace')
+    .populate('members.user');
 
     if (!project) {
       return res.status(403).json({ error: 'Access to project denied' });
@@ -33,7 +35,8 @@ const checkProjectAccess = async (req, res, next) => {
     req.project = project;
     next();
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Project access check error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -73,26 +76,27 @@ router.patch('/order', async (req, res) => {
 
 router.post('/', auth, checkProjectAccess, async (req, res) => {
   try {
+    if (!req.project) {
+      return res.status(403).json({ error: 'Project access denied' });
+    }
+
     const task = new Task({
       ...req.body,
       owner: req.userId,
       project: req.project._id
     });
 
-    await task.save();
-    res.status(201).json(task);
+    const savedTask = await task.save();
+    res.status(201).json(savedTask);
   } catch (error) {
     if (error.name === 'ValidationError') {
-      // Expected validation error - don't log as error
-      console.log('Task validation failed:', error.errors);
-      return res.status(400).send({
+      return res.status(400).json({
         error: 'Validation failed',
         details: error.errors
       });
     }
-    // Unexpected error - log as error
-    console.error('Unexpected error saving task:', error);
-    res.status(500).send({ error: 'Internal server error', message: error.message });
+    console.error('Error creating task:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -102,10 +106,12 @@ router.get('/:id', auth, async (req, res) => {
     const task = await Task.findOne({
       _id: req.params.id,
       owner: req.userId
-    }).populate('project');
+    })
+    .populate('project')
+    .populate('owner');
 
     if (!task) {
-      return res.status(404).json({ error: 'Task not found or access denied' });
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     // Verify project access
@@ -126,9 +132,13 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(403).json({ error: 'Access to task denied' });
     }
 
-    res.json(task);
+    res.json({
+      ...task.toObject(),
+      project: task.project._id // Return just the ID
+    });
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Error getting task:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
