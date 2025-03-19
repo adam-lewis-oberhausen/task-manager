@@ -45,14 +45,17 @@ router.post('/', auth, async (req, res) => {
     await task.save();
     res.status(201).send(task);
   } catch (error) {
-    console.error('Error saving task:', error);
     if (error.name === 'ValidationError') {
+      // Expected validation error - don't log as error
+      console.log('Task validation failed:', error.errors);
       return res.status(400).send({
         error: 'Validation failed',
         details: error.errors
       });
     }
-    res.status(500).send('Internal server error');
+    // Unexpected error - log as error
+    console.error('Unexpected error saving task:', error);
+    res.status(500).send({ error: 'Internal server error' });
   }
 });
 
