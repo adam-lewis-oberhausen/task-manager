@@ -1,8 +1,11 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../index');
-// Use a different port for testing
-app.set('port', process.env.PORT || 5001);
+const { app, server } = require('../index');
+let testServer;
+
+beforeAll(async () => {
+  // Start test server on a different port
+  testServer = app.listen(5001);
 const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const jwt = require('jsonwebtoken');
@@ -31,7 +34,12 @@ afterEach(async () => {
   // Clean up test data after each test
   await User.deleteMany({});
   await Workspace.deleteMany({});
+});
+
+afterAll(async () => {
+  // Close connections
   await mongoose.connection.close();
+  testServer.close();
 });
 
 describe('Workspace API', () => {

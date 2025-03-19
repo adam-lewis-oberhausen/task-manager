@@ -1,6 +1,11 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../index');
+const { app, server } = require('../index');
+let testServer;
+
+beforeAll(async () => {
+  // Start test server on a different port
+  testServer = app.listen(5002);
 const User = require('../models/User');
 
 describe('Auth Endpoints', () => {
@@ -16,8 +21,9 @@ describe('Auth Endpoints', () => {
   });
 
   afterAll(async () => {
-    // Close the database connection
+    // Close connections
     await mongoose.connection.close();
+    testServer.close();
   });
 
   it('should register a new user with valid credentials', async () => {
