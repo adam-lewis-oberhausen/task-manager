@@ -85,11 +85,15 @@ describe('Task API', () => {
     // Create test tasks
     const task1 = new Task({
       name: 'Task 1',
-      owner: testUser._id
+      owner: testUser._id,
+      description: 'Description 1',
+      priority: 'Medium'
     });
     const task2 = new Task({
       name: 'Task 2',
-      owner: testUser._id
+      owner: testUser._id,
+      description: 'Description 2',
+      priority: 'High'
     });
     await Promise.all([task1.save(), task2.save()]);
 

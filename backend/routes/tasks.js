@@ -7,8 +7,8 @@ const auth = require('../middleware/auth');
 // Get all tasks for the authenticated user
 router.get('/', auth, async (req, res) => {
   try {
-    console.log('Retreiving tasks for user:', req.userId); 
-    const tasks = await Task.find({ createdBy: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
+    console.log('Retrieving tasks for user:', req.userId); 
+    const tasks = await Task.find({ owner: req.userId }).sort({ order: 1, priority: -1, dueDate: 1 });
     res.json(tasks);
   } catch (err) {
     console.error('Error fetching tasks:', err);
@@ -57,11 +57,15 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Read a single task by id
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.userId
+    });
+    
     if (!task) {
-      return res.status(404).send();
+      return res.status(404).send({ error: 'Task not found or access denied' });
     }
     res.send(task);
   } catch (error) {
