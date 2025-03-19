@@ -13,9 +13,9 @@ const Login = ({ onLogin, setView }) => {
   const handleLogin = async () => {
     setError('');
     try {
-      const response = await axios.post('/api/auth/login', { 
-        email: username.trim(), 
-        password 
+      const response = await axios.post('/api/auth/login', {
+        email: username.trim(),
+        password
       });
       setError('Login successful!');
       onLogin(response.data.token);
@@ -25,7 +25,7 @@ const Login = ({ onLogin, setView }) => {
   };
 
   return (
-    <Form>
+    <Form className={styles.form}>
       <h2 className={styles.title}>Login</h2>
       <div className={styles.formGroup}>
         <Input
@@ -49,7 +49,7 @@ const Login = ({ onLogin, setView }) => {
       </div>
       <div className={styles.link}>
         No account yet?{' '}
-        <button 
+        <button
           className={styles.linkButton}
           onClick={() => setView('register')}
         >

@@ -1,5 +1,4 @@
 .input {
-    width: 100%;
     padding: 8px 12px;
     border: 1px solid #b4b4b4;
     font-family: 'Cousine', monospace;
@@ -7,7 +6,10 @@
     color: #333;
     background-color: #fff;
     transition: all 0.2s ease;
-  }
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+}
 
 .input:hover {
     outline: 3px solid #00a6ff80;
