@@ -47,6 +47,14 @@ router.get('/:id', auth, async (req, res) => {
         { owner: req.userId },
         { 'members.user': req.userId }
       ]
+    })
+    .populate({
+      path: 'owner',
+      select: '_id email'
+    })
+    .populate({
+      path: 'members.user',
+      select: '_id email'
     });
     
     if (!workspace) {
