@@ -102,11 +102,11 @@ describe('Auth Endpoints', () => {
   describe('Login', () => {
     beforeEach(async () => {
       // Create a test user directly in the database
-      const hashedPassword = await bcrypt.hash(TEST_PASSWORD, 10);
-      await User.create({
+      const user = new User({
         email: TEST_EMAIL('login'),
-        password: hashedPassword
+        password: TEST_PASSWORD
       });
+      await user.save();
     });
 
     it('should login with valid credentials', async () => {

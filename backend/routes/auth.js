@@ -51,13 +51,12 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('Login attempt with email:', email);
-    const user = await User.findOne({ email });    
+    const user = await User.findOne({ email });
     if (!user) {
-      console.log('User not found');
+      console.log('User not found for email:', email);
       return res.status(401).send({ error: 'Invalid username or password' });
-    } else {
-      console.log('User found:', user);
     }
+    console.log('User found:', user.email);
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       console.log('Invalid credentials');
