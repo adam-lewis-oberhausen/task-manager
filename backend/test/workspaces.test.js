@@ -29,8 +29,8 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Clean up test data
-  await User.deleteMany({});
-  await Workspace.deleteMany({});
+  //await User.deleteMany({});
+  //await Workspace.deleteMany({});
 });
 
 describe('Workspace API', () => {
