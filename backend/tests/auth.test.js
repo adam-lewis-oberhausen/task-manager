@@ -60,7 +60,7 @@ describe('Auth Endpoints', () => {
     });
 
     it('should fail to register with duplicate email', async () => {
-      const email = TEST_EMAIL('2');
+      const email = TEST_EMAIL('3');
       // Create initial user
       await request(app)
         .post('/api/auth/register')

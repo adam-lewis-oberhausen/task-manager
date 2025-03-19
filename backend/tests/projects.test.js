@@ -55,7 +55,8 @@ describe('Project API', () => {
       .set('Authorization', `Bearer ${testToken}`)
       .send({
         name: 'Test Project',
-        workspace: testWorkspace._id
+        workspace: testWorkspace._id,
+        members: [{ user: testUser._id, role: 'admin' }]
       })
       .expect(201);
 
