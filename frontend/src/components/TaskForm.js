@@ -4,6 +4,8 @@ import { taskFormLogger } from '../utils/logger';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ui/TaskForm.module.css';
+import Button from './ui/Button';
+// import stylesButton from './ui/Button.module.css';
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
   const [name, setName] = useState(task?.name || '');
@@ -12,19 +14,19 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   const [dueDate, setDueDate] = useState('');
   const quillRef = useRef(null);
 
-  useEffect(() => {                                                                                                                          
-    if (quillRef.current) {                                                                                                                  
+  useEffect(() => {
+    if (quillRef.current) {
       const editor = quillRef.current.getEditor();
       const container = editor.container;
 
       container.style.height = '100%';
       editor.root.style.fontFamily = "'Cousine', monospace";
-      editor.root.style.fontSize = '16px';                                                                                                             
-      editor.root.style.height = '100%';                                                                                                     
+      editor.root.style.fontSize = '16px';
+      editor.root.style.height = '100%';
       editor.root.style.minHeight = '300px';
-      editor.root.style.maxHeight = '300px';                                                                                                
+      editor.root.style.maxHeight = '300px';
       editor.root.style.overflow = 'auto';
-    }                                                                                                                                        
+    }
   }, []);
 
   // Reset form when task prop changes
@@ -35,7 +37,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
     setDescription(task?.description || '');
     setPriority(task?.priority || 'Medium');
     setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
-    
+
     // If this is the same task being edited inline, sync the name
     if (editingTaskId === task?._id) {
       setEditingName(newName);
@@ -60,11 +62,11 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
     };
-    
+
     if (task?._id) {
       taskData._id = task._id;
     }
-    
+
     taskFormLogger.info('Submitting task data:', taskData);
     onSave(taskData);
   };
@@ -106,30 +108,30 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
         />
       </div>
       <div className={styles.formGroup}>
-        <label htmlFor="description" className={styles.label}>Description</label>                                                                                            
-          <ReactQuill                                                                                                                        
-            ref={quillRef}                                                                                                                   
-            id="description"                                                                                                                 
-            value={description}                                                                                                              
-            onChange={(value) => {                                                                                                           
-              taskFormLogger.debug('Description changed:', value);                                                                           
-              setDescription(value);                                                                                                         
-            }}                                                                                                                               
-            modules={{                                                                                                                       
-              toolbar: [                                                                                                                     
-                [{ 'header': [1, 2, false] }],                                                                                               
-                ['bold', 'italic', 'underline', 'strike'],                                                                                   
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],                                                                                
-                ['link', 'image'],                                                                                                           
-                ['clean']                                                                                                                    
-              ]                                                                                                                              
-            }}                                                                                                                               
-            formats={[                                                                                                                       
-              'header',                                                                                                                      
-              'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'                                                     
-            ]}                                                                                                                               
-            theme="snow"                                                                                                                     
-            aria-label="Description"                                                                                                         
+        <label htmlFor="description" className={styles.label}>Description</label>
+          <ReactQuill
+            ref={quillRef}
+            id="description"
+            value={description}
+            onChange={(value) => {
+              taskFormLogger.debug('Description changed:', value);
+              setDescription(value);
+            }}
+            modules={{
+              toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+              ]
+            }}
+            formats={[
+              'header',
+              'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
+            ]}
+            theme="snow"
+            aria-label="Description"
           />
       </div>
       <div className={styles.formGroup}>
@@ -150,8 +152,8 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
         </select>
       </div>
       <div className={styles.buttonGroup}>
-        <button type="submit" className={styles.button}>Save Task</button>
-        <button type="button" className={styles.button} onClick={onCancel}>Cancel</button>
+        <Button type="submit" className={styles.button}>Save Task</Button>
+        <Button type="button" className={styles.button} onClick={onCancel}>Cancel</Button>
       </div>
     </form>
   );

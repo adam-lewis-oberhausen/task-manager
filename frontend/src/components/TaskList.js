@@ -39,6 +39,9 @@ const TaskList = ({ token }) => {
   const toggleTaskPanel = () => {
     taskListLogger.debug('Toggling task panel');
     setTaskPanelOpen(!taskPanelOpen);
+    setEditingTask(null);
+    setEditingTaskId(null);
+    setEditingName(null);
   };
 
   const handleSave = async (task) => {
@@ -77,7 +80,7 @@ const TaskList = ({ token }) => {
       </Button>
         <div className={styles.customTable}>
         <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-          <TaskForm 
+          <TaskForm
             key={editingTask?._id || 'new-task'} // Force remount when switching between new/edit
             task={{
               ...editingTask,
@@ -87,11 +90,11 @@ const TaskList = ({ token }) => {
             setEditingName={setEditingName}
             editingName={editingName}
             setEditingTaskId={setEditingTaskId}
-            onSave={handleSave} 
+            onSave={handleSave}
             onCancel={() => {
               setEditingTask(null);
               handleCancel();
-            }} 
+            }}
             token={token}
           />
         </div>
