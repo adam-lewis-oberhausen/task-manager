@@ -1,5 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const { app, server } = require('../index');
 const User = require('../models/User');
 const Workspace = require('../models/Workspace');
@@ -137,13 +138,17 @@ beforeAll(async () => {
   const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
   await mongoose.connect(mongoUri);
 
-  // Create a test user and get auth token
+  const bcrypt = require('bcryptjs');
+  
+  // Create a test user with hashed password
+  const hashedPassword = await bcrypt.hash('ValidPass123!', 10);
   const user = new User({
     email: 'test@example.com',
-    password: 'ValidPass123!'
+    password: hashedPassword
   });
   await user.save();
 
+  // Get auth token
   const loginRes = await request(app)
     .post('/api/auth/login')
     .send({
