@@ -1,31 +1,30 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const { app, server } = require('../index');
+const { app } = require('../index');
+const User = require('../models/User');
+
 let testServer;
 
 beforeAll(async () => {
-  // Start test server on a different port
-  testServer = app.listen(5002);
+  // Start test server on a random available port
+  testServer = app.listen(0); // 0 means random available port
+  process.env.TEST_PORT = testServer.address().port;
+
+  // Connect to the test database
+  const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
+  await mongoose.connect(mongoUri);
 });
-const User = require('../models/User');
+
+afterAll(async () => {
+  // Clean up test data
+  await User.deleteMany({});
+  
+  // Close connections
+  await mongoose.connection.close();
+  testServer.close();
+});
 
 describe('Auth Endpoints', () => {
-  beforeAll(async () => {
-    // Connect to the test database
-    const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
-    await mongoose.connect(mongoUri);
-  });
-
-  afterEach(async () => {
-    // Clean up test data
-    await User.deleteMany({});
-  });
-
-  afterAll(async () => {
-    // Close connections
-    await mongoose.connection.close();
-    testServer.close();
-  });
 
   it('should register a new user with valid credentials', async () => {
     const res = await request(app)

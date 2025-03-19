@@ -127,3 +127,59 @@ describe('Workspace API', () => {
     expect(deletedWorkspace).toBeNull();
   });
 });
+const request = require('supertest');
+const mongoose = require('mongoose');
+const { app } = require('../index');
+const Workspace = require('../models/Workspace');
+const User = require('../models/User');
+
+let testServer;
+let authToken;
+
+beforeAll(async () => {
+  // Start test server on a random available port
+  testServer = app.listen(0); // 0 means random available port
+  process.env.TEST_PORT = testServer.address().port;
+
+  // Connect to the test database
+  const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
+  await mongoose.connect(mongoUri);
+
+  // Create a test user and get auth token
+  const user = new User({
+    email: 'test@example.com',
+    password: 'ValidPass123!'
+  });
+  await user.save();
+  
+  const loginRes = await request(app)
+    .post('/api/auth/login')
+    .send({
+      email: 'test@example.com',
+      password: 'ValidPass123!'
+    });
+  authToken = loginRes.body.token;
+});
+
+afterAll(async () => {
+  // Clean up test data
+  await Workspace.deleteMany({});
+  await User.deleteMany({});
+  
+  // Close connections
+  await mongoose.connection.close();
+  testServer.close();
+});
+
+describe('Workspace API', () => {
+  it('Create a new workspace', async () => {
+    const res = await request(app)
+      .post('/api/workspaces')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
+        name: 'Test Workspace'
+      });
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('name', 'Test Workspace');
+  });
+});
