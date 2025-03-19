@@ -13,20 +13,22 @@ const Register = ({ setView }) => {
   const handleRegister = async () => {
     setError('');
 
-    // Validate email and password
+    // Validate email
     if (!username || !/\S+@\S+\.\S+/.test(username)) {
       setError('Please enter a valid email address.');
       return;
     }
-    if (!password) {
-      setError('Please enter a password.');
+    // Validate password complexity
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.');
       return;
     }
 
     try {
-      await axios.post('/api/auth/register', { 
-        email: username, 
-        password 
+      await axios.post('/api/auth/register', {
+        email: username,
+        password
       });
       setView('login');
     } catch (error) {

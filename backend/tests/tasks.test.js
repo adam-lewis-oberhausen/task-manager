@@ -69,6 +69,7 @@ afterEach(async () => {
   await Task.deleteMany({ name: /^test_tasks/ });
   await Project.deleteMany({ name: /^test_tasks/ });
   await Workspace.deleteMany({ name: /^test_tasks/ });
+  await User.deleteMany({ email: /^test_tasks/ });
 });
 
 afterAll(async () => {
