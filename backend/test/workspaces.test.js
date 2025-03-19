@@ -6,6 +6,7 @@ let testServer;
 beforeAll(async () => {
   // Start test server on a different port
   testServer = app.listen(5001);
+});
 const User = require('../models/User');
 const Workspace = require('../models/Workspace');
 const jwt = require('jsonwebtoken');
