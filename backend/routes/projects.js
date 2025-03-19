@@ -11,16 +11,22 @@ router.post('/', auth, async (req, res) => {
   try {
     const { name, workspace } = req.body;
     
-    // Verify workspace membership
+    // Verify workspace exists and user has access
     const workspaceDoc = await Workspace.findOne({
-      _id: workspace,
-      $or: [
-        { owner: req.userId },
-        { 'members.user': req.userId }
-      ]
+      _id: workspace
     });
     
     if (!workspaceDoc) {
+      return res.status(404).json({ 
+        error: 'Workspace not found'
+      });
+    }
+
+    // Check if user is workspace owner or member
+    const isOwner = workspaceDoc.owner.equals(req.userId);
+    const isMember = workspaceDoc.members.some(m => m.user.equals(req.userId));
+    
+    if (!isOwner && !isMember) {
       return res.status(403).json({ 
         error: 'Not authorized to create projects in this workspace'
       });
