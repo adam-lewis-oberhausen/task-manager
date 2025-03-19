@@ -5,8 +5,9 @@ const User = require('../models/User');
 
 describe('Auth Endpoints', () => {
   beforeAll(async () => {
-    // Connect to a test database
-    await mongoose.connect(process.env.MONGO_URI_TEST, {
+    // Connect to the test database
+    const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
+    await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

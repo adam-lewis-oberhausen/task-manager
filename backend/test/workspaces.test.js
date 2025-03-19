@@ -9,6 +9,13 @@ let testUser;
 let testToken;
 
 beforeAll(async () => {
+  // Connect to the test database
+  const mongoUri = process.env.MONGO_URI_TEST || process.env.MONGO_URI;
+  await mongoose.connect(mongoUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
   // Create a test user
   testUser = new User({
     email: 'test@workspace.com',

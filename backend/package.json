@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jest --watchAll --coverage",
     "test:ci": "jest --ci --coverage",
-    "test:setup": "mongod --dbpath ./testdb &",
-    "test:teardown": "pkill mongod"
+    "test:setup": "echo 'Using cloud MongoDB instance'",
+    "test:teardown": "echo 'No teardown needed for cloud MongoDB'"
   },
   "keywords": [],
   "author": "",
