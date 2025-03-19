@@ -1,0 +1,53 @@
+.form {
+  background-color: #ffffff;
+  padding: 24px;
+  width: 300px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: #00a6ff;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}
