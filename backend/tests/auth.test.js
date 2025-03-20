@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const { app } = require('../index');
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const Workspace = require('../models/Workspace');
+const Project = require('../models/Project');
 
 // Test constants
 const TEST_PASSWORD = 'ValidPass123!';
