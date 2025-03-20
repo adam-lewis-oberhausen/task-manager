@@ -1,16 +1,17 @@
-4. Add Workspace/Project Context to the Frontend
-4.1 Create a WorkspaceContext or Combined Context
-In frontend/src/context/WorkspaceContext.js (or a similarly named file), you can create a React context that loads:
+# Add Workspace/Project Context to the Frontend
 
-All workspaces for the current user
-The currently selected workspace
-All projects in that workspace
-The currently selected project
-Minimal example:
+## 4.1 Create a WorkspaceContext or Combined Context
 
-jsx
-Copy
-Edit
+In `frontend/src/context/WorkspaceContext.js` (or a similarly named file), you can create a React context that loads:
+
+- All workspaces for the current user
+- The currently selected workspace
+- All projects in that workspace
+- The currently selected project
+
+### Minimal example:
+
+```jsx
 // WorkspaceContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { getUserWorkspaces } from '../services/workspaceService';
@@ -64,15 +65,16 @@ export const WorkspaceProvider = ({ children, token }) => {
     </WorkspaceContext.Provider>
   );
 };
-Note: Adjust for how you actually get token. Typically you might pass it in or read from localStorage.
+```
 
-4.2 Wrap Your <App /> with <WorkspaceProvider>
-Open frontend/src/App.js and do something like:
+**Note:** Adjust for how you actually get `token`. Typically, you might pass it in or read from `localStorage`.
 
-jsx
-Copy
-Edit
-import React from 'react';
+## 4.2 Wrap Your `<App />` with `<WorkspaceProvider>`
+
+Open `frontend/src/App.js` and update it as follows:
+
+```jsx
+import React, { useState } from 'react';
 import { WorkspaceProvider } from './context/WorkspaceContext';
 
 function App() {
@@ -86,12 +88,14 @@ function App() {
 }
 
 export default App;
-4.3 Create WorkspaceSelector.js & ProjectSelector.js
-WorkspaceSelector.js: A simple dropdown that displays all user workspaces (provided by WorkspaceContext), and sets the chosen one as currentWorkspace.
+```
 
-jsx
-Copy
-Edit
+## 4.3 Create `WorkspaceSelector.js` & `ProjectSelector.js`
+
+### `WorkspaceSelector.js`
+A simple dropdown that displays all user workspaces (provided by `WorkspaceContext`), and sets the chosen one as `currentWorkspace`.
+
+```jsx
 import React, { useContext } from 'react';
 import { WorkspaceContext } from '../context/WorkspaceContext';
 
@@ -116,11 +120,12 @@ function WorkspaceSelector() {
 }
 
 export default WorkspaceSelector;
-ProjectSelector.js: A similar dropdown for the projects inside currentWorkspace:
+```
 
-jsx
-Copy
-Edit
+### `ProjectSelector.js`
+A similar dropdown for selecting projects inside the `currentWorkspace`.
+
+```jsx
 import React, { useContext } from 'react';
 import { WorkspaceContext } from '../context/WorkspaceContext';
 
@@ -145,10 +150,13 @@ function ProjectSelector() {
 }
 
 export default ProjectSelector;
-Then, within your main UI (App.js or a common layout), render:
+```
 
-jsx
-Copy
-Edit
+### Integrating the Selectors
+Within your main UI (`App.js` or a common layout), render:
+
+```jsx
 <WorkspaceSelector />
 <ProjectSelector />
+```
+
