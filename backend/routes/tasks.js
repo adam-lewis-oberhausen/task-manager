@@ -1,47 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
-const Project = require('../models/Project');
-const Workspace = require('../models/Workspace');
-
 const auth = require('../middleware/auth');
-
-// Middleware to check project access
-const checkProjectAccess = async (req, res, next) => {
-  try {
-    const projectId = req.body.project || req.query.project;
-    if (!projectId) return next();
-
-    // Check both project membership and workspace membership
-    const project = await Project.findOne({
-      _id: projectId,
-      $or: [
-        { 'members.user': req.userId },
-        { workspace: { $in: await Workspace.find({
-          $or: [
-            { owner: req.userId },
-            { 'members.user': req.userId }
-          ]
-        }).select('_id') }}
-      ]
-    })
-    .populate('workspace')
-    .populate('members.user');
-
-    if (!project) {
-      return res.status(403).json({ error: 'Access to project denied' });
-    }
-
-    req.project = project;
-    next();
-  } catch (error) {
-    console.error('Project access check error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+const checkProjectAccess = require('../middleware/projectAccess');
 
 // Get all tasks for the authenticated user
-router.get('/', auth, checkProjectAccess, async (req, res) => {
+router.get('/', auth, checkProjectAccess(), async (req, res) => {
   try {
     const filter = { owner: req.userId };
     if (req.project) {
@@ -74,36 +38,13 @@ router.patch('/order', async (req, res) => {
   }
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, checkProjectAccess(), async (req, res) => {
   try {
-    // Check if project ID is provided
-    if (!req.body.project) {
-      return res.status(400).json({ error: 'Project ID is required' });
-    }
-
-    // Verify project exists and user has access
-    const project = await Project.findOne({
-      _id: req.body.project,
-      $or: [
-        { 'members.user': req.userId },
-        { workspace: { $in: await Workspace.find({
-          $or: [
-            { owner: req.userId },
-            { 'members.user': req.userId }
-          ]
-        }).select('_id') }}
-      ]
-    });
-
-    if (!project) {
-      return res.status(403).json({ error: 'Access to project denied' });
-    }
-
     // Create the task
     const task = new Task({
       ...req.body,
       owner: req.userId,
-      project: project._id
+      project: req.project._id
     });
 
     const savedTask = await task.save();
