@@ -32,8 +32,10 @@ afterAll(async () => {
 
 describe('Auth Endpoints', () => {
   beforeEach(async () => {
-    // Clean up test data before each test
+    // Clean up all test data
     await User.deleteMany({ email: /^test_auth/ });
+    await Workspace.deleteMany({ name: /^test_auth/ });
+    await Project.deleteMany({ name: /^test_auth/ });
   });
 
   describe('Registration', () => {
