@@ -15,6 +15,13 @@ router.post('/register', async (req, res) => {
     const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password?.trim();
 
+    // Add test account validation
+    if (email.startsWith('_____test_') && (!req.body.workspaceName || !req.body.projectName)) {
+      return res.status(400).send({
+        error: 'Test accounts require explicit workspace and project names'
+      });
+    }
+
     // Check if email is already in use
     const existingUser = await User.findOne({ email });
     if (existingUser) {

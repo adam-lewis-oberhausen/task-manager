@@ -8,9 +8,9 @@ const User = require('../models/User');
 
 // Define test constants
 const TEST_PASSWORD = 'ValidPass123!';
-const TEST_EMAIL = (suffix) => `test_projects_email_${suffix}@example.com`;
-const TEST_WORKSPACE = (suffix) => `test_projects_workspace_${suffix}`;
-const TEST_PROJECT = (suffix) => `test_projects_project_${suffix}`;
+const TEST_EMAIL = (suffix) => `_____test_projects_email_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `_____test_projects_workspace_${suffix}`;
+const TEST_PROJECT = (suffix) => `_____test_projects_project_${suffix}`;
 
 describe('Project API', () => {
   let testUser, testWorkspace, testToken, testProject;
@@ -50,9 +50,9 @@ describe('Project API', () => {
   });
 
   afterEach(async () => {
-    await Project.deleteMany({ name: /^test_projects/ });
-    await Workspace.deleteMany({ name: /^test_projects/ });
-    await User.deleteMany({ email: /^test_projects/ });
+    await Project.deleteMany({ name: /^_____test_projects/ });
+    await Workspace.deleteMany({ name: /^_____test_projects/ });
+    await User.deleteMany({ email: /^_____test_projects/ });
   });
 
   afterAll(async () => {

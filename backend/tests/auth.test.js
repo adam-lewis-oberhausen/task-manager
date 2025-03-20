@@ -9,9 +9,9 @@ const Project = require('../models/Project');
 // Test constants
 const TEST_PASSWORD = 'ValidPass123!';
 const INVALID_PASSWORD = 'weak';
-const TEST_EMAIL = (suffix) => `test_auth_email_${suffix}@example.com`;
-const TEST_WORKSPACE = (suffix) => `test_auth_workspace_${suffix}`;
-const TEST_PROJECT = (suffix) => `test_auth_project_${suffix}`;
+const TEST_EMAIL = (suffix) => `_____test_auth_email_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `_____test_auth_workspace_${suffix}`;
+const TEST_PROJECT = (suffix) => `_____test_auth_project_${suffix}`;
 
 let testServer;
 
@@ -27,7 +27,9 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Clean up test data
-  await User.deleteMany({ email: /^test_auth/ });
+  await User.deleteMany({ email: /^_____test_auth/ });
+  await Workspace.deleteMany({ name: /^_____test_auth/ });
+  await Project.deleteMany({ name: /^_____test_auth/ });
 
   // Close connections
   await mongoose.connection.close();
@@ -37,9 +39,9 @@ afterAll(async () => {
 describe('Auth Endpoints', () => {
   beforeEach(async () => {
     // Clean up all test data
-    await User.deleteMany({ email: /^test_auth/ });
-    await Workspace.deleteMany({ name: /^test_auth/ });
-    await Project.deleteMany({ name: /^test_auth/ });
+    await User.deleteMany({ email: /^_____test_auth/ });
+    await Workspace.deleteMany({ name: /^_____test_auth/ });
+    await Project.deleteMany({ name: /^_____test_auth/ });
   });
 
   describe('Registration', () => {
@@ -226,6 +228,38 @@ describe('Auth Endpoints', () => {
       expect(res.body).toHaveProperty('error');
       expect(res.body.error).toMatch(/Invalid email format/);
     });
+
+    it('should reject test account registration without explicit workspace/project names', async () => {
+      const email = TEST_EMAIL(Date.now());
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: email,
+          password: TEST_PASSWORD
+        })
+        .expect(400);
+
+      expect(res.body.error).toBe('Test accounts require explicit workspace and project names');
+    });
+
+    it('should allow test account registration with explicit workspace/project names', async () => {
+      const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: email,
+          password: TEST_PASSWORD,
+          workspaceName: workspaceName,
+          projectName: projectName
+        })
+        .expect(201);
+
+      expect(res.body.user.email).toBe(email);
+      expect(res.body.workspace.name).toBe(workspaceName);
+      expect(res.body.project.name).toBe(projectName);
+    }); 
   });
 
   describe('Login', () => {

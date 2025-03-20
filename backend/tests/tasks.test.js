@@ -10,10 +10,10 @@ const jwt = require('jsonwebtoken');
 
 // Test constants
 const TEST_PASSWORD = 'ValidPass123!';
-const TEST_EMAIL = (suffix) => `test_tasks_${suffix}@example.com`;
-const TEST_WORKSPACE = (suffix) => `test_tasks_workspace_${suffix}`;
-const TEST_PROJECT = (suffix) => `test_tasks_project_${suffix}`;
-const TEST_TASK = (suffix) => `test_tasks_${suffix}`;
+const TEST_EMAIL = (suffix) => `_____test_tasks_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `_____test_tasks_workspace_${suffix}`;
+const TEST_PROJECT = (suffix) => `_____test_tasks_project_${suffix}`;
+const TEST_TASK = (suffix) => `_____test_tasks_${suffix}`;
 
 let testServer;
 let testToken;
@@ -66,10 +66,10 @@ beforeEach(async () => {
 
 afterEach(async () => {
   // Clean up test data after each test
-  await Task.deleteMany({ name: /^test_tasks/ });
-  await Project.deleteMany({ name: /^test_tasks/ });
-  await Workspace.deleteMany({ name: /^test_tasks/ });
-  await User.deleteMany({ email: /^test_tasks/ });
+  await Task.deleteMany({ name: /^_____test_tasks/ });
+  await Project.deleteMany({ name: /^_____test_tasks/ });
+  await Workspace.deleteMany({ name: /^_____test_tasks/ });
+  await User.deleteMany({ email: /^_____test_tasks/ });
 });
 
 afterAll(async () => {
