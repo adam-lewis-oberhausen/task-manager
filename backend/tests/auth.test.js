@@ -10,6 +10,8 @@ const Project = require('../models/Project');
 const TEST_PASSWORD = 'ValidPass123!';
 const INVALID_PASSWORD = 'weak';
 const TEST_EMAIL = (suffix) => `test_auth_email_${suffix}@example.com`;
+const TEST_WORKSPACE = (suffix) => `test_auth_workspace_${suffix}`;
+const TEST_PROJECT = (suffix) => `test_auth_project_${suffix}`;
 
 let testServer;
 
@@ -43,18 +45,22 @@ describe('Auth Endpoints', () => {
   describe('Registration', () => {
     it('should create default workspace and project', async () => {
       const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
       const res = await request(app)
         .post('/api/auth/register')
         .send({
           email,
-          password: TEST_PASSWORD
+          password: TEST_PASSWORD,
+          workspaceName: workspaceName,
+          projectName: projectName
         })
         .expect(201);
 
       // Verify response
       expect(res.body.user.email).toBe(email);
-      expect(res.body.workspace.name).toBe(`${email}'s Workspace`);
-      expect(res.body.project.name).toBe('My First Project');
+      expect(res.body.workspace.name).toBe(workspaceName);
+      expect(res.body.project.name).toBe(projectName);
 
       // Verify database state
       const user = await User.findById(res.body.user._id);
@@ -74,18 +80,20 @@ describe('Auth Endpoints', () => {
 
     it('should use provided workspace and project names', async () => {
       const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
       const res = await request(app)
         .post('/api/auth/register')
         .send({
           email,
           password: TEST_PASSWORD,
-          workspaceName: 'Test Workspace',
-          projectName: 'Test Project'
+          workspaceName: workspaceName,
+          projectName: projectName
         })
         .expect(201);
 
-      expect(res.body.workspace.name).toBe('Test Workspace');
-      expect(res.body.project.name).toBe('Test Project');
+      expect(res.body.workspace.name).toBe(workspaceName);
+      expect(res.body.project.name).toBe(projectName);
 
       // Cleanup
       await User.deleteOne({ _id: res.body.user._id });
@@ -99,11 +107,15 @@ describe('Auth Endpoints', () => {
       Project.prototype.save = jest.fn().mockRejectedValue(new Error('Project creation failed'));
 
       const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
       const res = await request(app)
         .post('/api/auth/register')
         .send({
           email,
-          password: TEST_PASSWORD
+          password: TEST_PASSWORD,
+          workspaceName: workspaceName,
+          projectName: projectName
         })
         .expect(400);
 
@@ -112,46 +124,77 @@ describe('Auth Endpoints', () => {
       // Verify cleanup
       const user = await User.findOne({ email });
       const workspaces = await Workspace.find({ owner: user?._id });
+      const projects = await Project.find({ workspace: workspaces.map(ws => ws._id) });
       expect(user).toBeNull();
       expect(workspaces.length).toBe(0);
+      expect(projects.length).toBe(0);
 
       // Restore original save
       Project.prototype.save = originalSave;
     });
     it('should register a new user with valid credentials', async () => {
-      const userEmail = TEST_EMAIL(Date.now());
+      const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
       const res = await request(app)
         .post('/api/auth/register')
         .send({
-          email: userEmail,
+          email: email,
           password: TEST_PASSWORD,
-        });
+          workspaceName: workspaceName,
+          projectName: projectName
+        })
       expect(res.statusCode).toEqual(201);
-      expect(res.body).toHaveProperty('email', userEmail);
+
+      // Verify the response structure
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toHaveProperty('email', email);
+      expect(res.body).toHaveProperty('workspace');
+      expect(res.body.workspace).toHaveProperty('name', workspaceName);
+      expect(res.body).toHaveProperty('project');
+      expect(res.body.project).toHaveProperty('name', projectName);
     });
 
     it('should fail to register with invalid password', async () => {
+      const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
       const res = await request(app)
         .post('/api/auth/register')
         .send({
-          email: TEST_EMAIL(Date.now()),
+          email: email,
           password: INVALID_PASSWORD,
-        });
+          workspaceName: workspaceName,
+          projectName: projectName
+        })
       expect(res.statusCode).toEqual(400);
       expect(res.body.error).toMatch(/Password must be at least 8 characters long/);
     });
 
     it('should fail to register with duplicate email', async () => {
       const email = TEST_EMAIL(Date.now());
+      const workspaceName = TEST_WORKSPACE(Date.now());
+      const projectName = TEST_PROJECT(Date.now());
+
       // Create initial user
       await request(app)
         .post('/api/auth/register')
-        .send({ email, password: TEST_PASSWORD });
+        .send({
+          email: email,
+          password: TEST_PASSWORD,
+          workspaceName: workspaceName,
+          projectName: projectName
+        })
 
       // Try to create duplicate
       const res = await request(app)
         .post('/api/auth/register')
-        .send({ email, password: 'AnotherPass123!' });
+        .send({
+          email: email,
+          password: TEST_PASSWORD,
+          workspaceName: workspaceName,
+          projectName: projectName
+        })
       expect(res.statusCode).toEqual(400);
       expect(res.body.error).toMatch(/Email is already in use/);
     });
@@ -162,6 +205,8 @@ describe('Auth Endpoints', () => {
         .send({
           email: 'invalid-email',
           password: TEST_PASSWORD,
+          workspaceName: TEST_WORKSPACE(Date.now()),
+          projectName: TEST_PROJECT(Date.now())
         });
       expect(res.statusCode).toEqual(400);
       expect(res.body).toHaveProperty('error');
@@ -174,6 +219,8 @@ describe('Auth Endpoints', () => {
         .send({
           email: '',
           password: '',
+          workspaceName: '',
+          projectName: ''
         });
       expect(res.statusCode).toEqual(400);
       expect(res.body).toHaveProperty('error');

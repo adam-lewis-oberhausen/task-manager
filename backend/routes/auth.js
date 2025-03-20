@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
     if (existingUser) {
       return res.status(400).send({ error: 'Email is already in use' });
     }
-    console.log('Email is available:', email);
+
     // Validate email format
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
@@ -28,14 +28,14 @@ router.post('/register', async (req, res) => {
         error: 'Invalid email format'
       });
     }
-    console.log('Email format is valid:', email);
+
     // Validate required fields
     if (!email || !password) {
       return res.status(400).send({
         error: 'Email and password are required'
       });
     }
-    console.log('Email and password are provided');
+
     // Validate password complexity
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -43,16 +43,14 @@ router.post('/register', async (req, res) => {
         error: 'Password must be at least 8 characters long and include an uppercase letter, a number, and a special character'
       });
     }
-    console.log('Password complexity is valid');
-    console.log('Creating user with email:', email);
+
     // Create user
     user = new User({ email, password });
     await user.save();
-    console.log('User created:', user.email);
+
     // Create default workspace
-    console.log('Creating default workspace for user:', user.email);
     workspace = new Workspace({
-      name: req.body.workspaceName || `${email}'s Workspace`,
+      name: req.body.workspaceName || 'Default Workspace',
       owner: user._id,
       members: [{
         user: user._id,
@@ -60,11 +58,10 @@ router.post('/register', async (req, res) => {
       }]
     });
     await workspace.save();
-    console.log('Workspace created:', workspace.name);
-    console.log('Creating default project for workspace:', workspace.name);
+
     // Create default project
     project = new Project({
-      name: req.body.projectName || 'My First Project',
+      name: req.body.projectName || 'Default Project',
       workspace: workspace._id,
       members: [{
         user: user._id,
@@ -72,13 +69,12 @@ router.post('/register', async (req, res) => {
       }]
     });
     await project.save();
-    console.log('Project created:', project.name);
-    console.log('Linking user to workspace and project');
+
     // Link workspace/project to user
     user.defaultWorkspace = workspace._id;
     user.defaultProject = project._id;
     await user.save();
-    console.log('User linked to workspace and project');
+
     res.status(201).send({
       user: {
         _id: user._id,
@@ -94,7 +90,6 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error during registration:', error.message);
     // Cleanup if anything fails
     if (user?._id) await User.deleteOne({ _id: user._id });
     if (workspace?._id) await Workspace.deleteOne({ _id: workspace._id });
@@ -111,25 +106,20 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt with email:', email);
     const user = await User.findOne({ email });
     if (!user) {
-      console.log('User not found for email:', email);
       return res.status(401).send({ error: 'Invalid username or password' });
     }
-    console.log('User found:', user.email);
+
     const passwordMatch = await user.comparePassword(password);
     if (!passwordMatch) {
-      console.log('Password does not match');
       return res.status(401).send({ error: 'Invalid username or password' });
     }
-    console.log('Password matches');
+
     try {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-      console.log('Login successful, token generated');
       res.send({ token });
     } catch (jwtError) {
-      console.error('Error generating token:', jwtError);
       res.status(500).send('Error generating token');
     }
   } catch (error) {
