@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import DndContext from './context/DndContext';
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -46,9 +45,9 @@ const App = () => {
   return (
     <div>
       {token && (
-        <Navbar 
-          onToggleSidePanel={toggleSidePanel} 
-          onLogout={handleLogout} 
+        <Navbar
+          onToggleSidePanel={toggleSidePanel}
+          onLogout={handleLogout}
         />
       )}
       <div style={{ display: 'flex' }}>
