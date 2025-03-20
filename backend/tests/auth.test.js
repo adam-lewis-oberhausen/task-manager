@@ -37,6 +37,83 @@ describe('Auth Endpoints', () => {
   });
 
   describe('Registration', () => {
+    it('should create default workspace and project', async () => {
+      const email = TEST_EMAIL(Date.now());
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: TEST_PASSWORD
+        })
+        .expect(201);
+
+      // Verify response
+      expect(res.body.user.email).toBe(email);
+      expect(res.body.workspace.name).toBe(`${email}'s Workspace`);
+      expect(res.body.project.name).toBe('My First Project');
+
+      // Verify database state
+      const user = await User.findById(res.body.user._id);
+      const workspace = await Workspace.findById(res.body.workspace._id);
+      const project = await Project.findById(res.body.project._id);
+
+      expect(user.defaultWorkspace.toString()).toBe(workspace._id.toString());
+      expect(user.defaultProject.toString()).toBe(project._id.toString());
+      expect(workspace.owner.toString()).toBe(user._id.toString());
+      expect(project.workspace.toString()).toBe(workspace._id.toString());
+
+      // Cleanup
+      await User.deleteOne({ _id: user._id });
+      await Workspace.deleteOne({ _id: workspace._id });
+      await Project.deleteOne({ _id: project._id });
+    });
+
+    it('should use provided workspace and project names', async () => {
+      const email = TEST_EMAIL(Date.now());
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: TEST_PASSWORD,
+          workspaceName: 'Test Workspace',
+          projectName: 'Test Project'
+        })
+        .expect(201);
+
+      expect(res.body.workspace.name).toBe('Test Workspace');
+      expect(res.body.project.name).toBe('Test Project');
+
+      // Cleanup
+      await User.deleteOne({ _id: res.body.user._id });
+      await Workspace.deleteOne({ _id: res.body.workspace._id });
+      await Project.deleteOne({ _id: res.body.project._id });
+    });
+
+    it('should clean up on failure', async () => {
+      // Mock Project.save to fail
+      const originalSave = Project.prototype.save;
+      Project.prototype.save = jest.fn().mockRejectedValue(new Error('Project creation failed'));
+
+      const email = TEST_EMAIL(Date.now());
+      const res = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email,
+          password: TEST_PASSWORD
+        })
+        .expect(400);
+
+      expect(res.body.error).toBe('Registration failed');
+
+      // Verify cleanup
+      const user = await User.findOne({ email });
+      const workspaces = await Workspace.find({ owner: user?._id });
+      expect(user).toBeNull();
+      expect(workspaces.length).toBe(0);
+
+      // Restore original save
+      Project.prototype.save = originalSave;
+    });
     it('should register a new user with valid credentials', async () => {
       const userEmail = TEST_EMAIL(Date.now());
       const res = await request(app)

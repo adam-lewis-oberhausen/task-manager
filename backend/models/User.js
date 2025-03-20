@@ -15,6 +15,14 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  defaultWorkspace: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Workspace'
+  },
+  defaultProject: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project'
+  }
 });
 
 // Hash password before saving

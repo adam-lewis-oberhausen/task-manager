@@ -7,6 +7,7 @@ const router = express.Router();
 
 // Register
 router.post('/register', async (req, res) => {
+  let user, workspace, project;
   try {
     // Normalize inputs
     const email = req.body.email?.trim().toLowerCase();
@@ -41,12 +42,61 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    console.log('Creating new user with email:', email);
-    const user = new User({ email, password });
+    // Create user
+    user = new User({ email, password });
     await user.save();
-    res.status(201).send(user);
+    
+    // Create default workspace
+    workspace = new Workspace({
+      name: req.body.workspaceName || `${email}'s Workspace`,
+      owner: user._id,
+      members: [{
+        user: user._id,
+        role: 'admin'
+      }]
+    });
+    await workspace.save();
+    
+    // Create default project
+    project = new Project({
+      name: req.body.projectName || 'My First Project',
+      workspace: workspace._id,
+      members: [{
+        user: user._id,
+        role: 'admin'
+      }]
+    });
+    await project.save();
+    
+    // Link workspace/project to user
+    user.defaultWorkspace = workspace._id;
+    user.defaultProject = project._id;
+    await user.save();
+    
+    res.status(201).send({
+      user: {
+        _id: user._id,
+        email: user.email
+      },
+      workspace: {
+        _id: workspace._id,
+        name: workspace.name
+      },
+      project: {
+        _id: project._id,
+        name: project.name
+      }
+    });
   } catch (error) {
-    res.status(400).send(error);
+    // Cleanup if anything fails
+    if (user?._id) await User.deleteOne({ _id: user._id });
+    if (workspace?._id) await Workspace.deleteOne({ _id: workspace._id });
+    if (project?._id) await Project.deleteOne({ _id: project._id });
+    
+    res.status(400).send({
+      error: 'Registration failed',
+      details: error.message
+    });
   }
 });
 
