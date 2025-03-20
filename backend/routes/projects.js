@@ -48,6 +48,51 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// Get all projects for a workspace
+router.get('/', auth, async (req, res) => {
+  try {
+    const workspaceId = req.query.workspace;
+    if (!workspaceId) {
+      return res.status(400).json({ error: 'Workspace ID is required' });
+    }
+
+    // Verify workspace exists and user has access
+    const workspace = await Workspace.findOne({
+      _id: workspaceId,
+      $or: [
+        { owner: req.userId },
+        { 'members.user': req.userId }
+      ]
+    });
+
+    if (!workspace) {
+      return res.status(403).json({ error: 'Workspace not found or access denied' });
+    }
+
+    // Get projects for the workspace
+    const projects = await Project.find({
+      workspace: workspaceId,
+      $or: [
+        { 'members.user': req.userId },
+        { workspace: { $in: await Workspace.find({
+          $or: [
+            { owner: req.userId },
+            { 'members.user': req.userId }
+          ]
+        }).select('_id') }}
+      ]
+    })
+    .populate({
+      path: 'workspace',
+      select: '_id name'
+    });
+    
+    res.json(projects);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get project details
 router.get('/:id', auth, async (req, res) => {
   try {
