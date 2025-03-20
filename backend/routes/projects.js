@@ -6,18 +6,24 @@ const Task = require('../models/Task');
 
 const router = express.Router();
 
+ // Error handling middleware for projects
+ router.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Projects API error' });
+});
+
 // Create a new project
 router.post('/', auth, async (req, res) => {
   try {
     const { name, workspace } = req.body;
-    
+
     // Verify workspace exists and user has access
     const workspaceDoc = await Workspace.findOne({
       _id: workspace
     });
-    
+
     if (!workspaceDoc) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: 'Workspace not found'
       });
     }
@@ -25,9 +31,9 @@ router.post('/', auth, async (req, res) => {
     // Check if user is workspace owner or member
     const isOwner = workspaceDoc.owner.equals(req.userId);
     const isMember = workspaceDoc.members.some(m => m.user.equals(req.userId));
-    
+
     if (!isOwner && !isMember) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Not authorized to create projects in this workspace'
       });
     }
@@ -86,7 +92,7 @@ router.get('/', auth, async (req, res) => {
       path: 'workspace',
       select: '_id name'
     });
-    
+
     res.json(projects);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -112,11 +118,11 @@ router.get('/:id', auth, async (req, res) => {
       path: 'workspace',
       select: '_id name'
     });
-    
+
     if (!project) {
       return res.status(403).json({ error: 'Project not found or access denied' });
     }
-    
+
     res.json(project);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -135,11 +141,11 @@ router.patch('/:id', auth, async (req, res) => {
       req.body,
       { new: true, runValidators: true }
     );
-    
+
     if (!project) {
       return res.status(404).json({ error: 'Project not found or insufficient permissions' });
     }
-    
+
     res.json(project);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -154,14 +160,14 @@ router.delete('/:id', auth, async (req, res) => {
       'members.user': req.userId,
       'members.role': 'admin'
     });
-    
+
     if (!project) {
       return res.status(404).json({ error: 'Project not found or insufficient permissions' });
     }
-    
+
     // Delete associated tasks
     await Task.deleteMany({ project: project._id });
-    
+
     res.json({ message: 'Project deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

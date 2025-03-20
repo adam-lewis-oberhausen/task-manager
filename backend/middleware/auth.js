@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const auth = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   if (!token) {
-    return res.status(401).send('Access denied. No token provided.');
+    return res.status(401).json({ error: 'Access denied. No token provided.' });
   }
 
   try {
@@ -11,8 +11,12 @@ const auth = (req, res, next) => {
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(400).send('Invalid token.');
+    console.error('Token verification error:', error);
+    res.status(401).json({
+      error: 'Invalid token',
+      details: error.message
+    });
   }
-};
+}; 
 
 module.exports = auth;

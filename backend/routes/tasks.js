@@ -74,16 +74,36 @@ router.patch('/order', async (req, res) => {
   }
 });
 
-router.post('/', auth, checkProjectAccess, async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    if (!req.project) {
-      return res.status(403).json({ error: 'Project access denied' });
+    // Check if project ID is provided
+    if (!req.body.project) {
+      return res.status(400).json({ error: 'Project ID is required' });
     }
 
+    // Verify project exists and user has access
+    const project = await Project.findOne({
+      _id: req.body.project,
+      $or: [
+        { 'members.user': req.userId },
+        { workspace: { $in: await Workspace.find({
+          $or: [
+            { owner: req.userId },
+            { 'members.user': req.userId }
+          ]
+        }).select('_id') }}
+      ]
+    });
+
+    if (!project) {
+      return res.status(403).json({ error: 'Access to project denied' });
+    }
+
+    // Create the task
     const task = new Task({
       ...req.body,
       owner: req.userId,
-      project: req.project._id
+      project: project._id
     });
 
     const savedTask = await task.save();

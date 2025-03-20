@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/tasks');
+const projectRoutes = require('./routes/projects');
+const workspaceRoutes = require('./routes/workspaces');
 
 dotenv.config();
 
@@ -12,16 +14,16 @@ app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { 
-  serverSelectionTimeoutMS: 5000 
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 5000
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log('MongoDB connection error:', err));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
-app.use('/api/workspaces', require('./routes/workspaces'));
-app.use('/api/projects', require('./routes/projects'));
+app.use('/api/workspaces', workspaceRoutes);
+app.use('/api/projects', projectRoutes);
 
 const PORT = process.env.PORT || 5000;
 let server;
