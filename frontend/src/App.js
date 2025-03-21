@@ -50,40 +50,40 @@ const App = () => {
   };
 
   return (
-    <WorkspaceProvider token={token}>
-      <div>
-        {token && (
+    <div>
+      {token ? (
+        <WorkspaceProvider token={token}>
           <Navbar
             onToggleSidePanel={toggleSidePanel}
             onLogout={handleLogout}
           />
-        )}
-        <div style={{ display: 'flex' }}>
-          <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
-            {!token ? (
-              view === 'login' ? (
-                <>
-                  {logger.debug('Rendering login view')}
-                  <Login onLogin={handleLogin} setView={setView} />
-                </>
-              ) : (
-                <>
-                  {logger.debug('Rendering register view')}
-                  <Register setView={setView} />
-                </>
-              )
-            ) : (
+          <div style={{ display: 'flex' }}>
+            <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
               <TaskList onLogout={handleLogout} token={token} />
-            )}
-            {sidePanelOpen && (
-              <div className="side-panel">
-                {/* Side panel content goes here */}
-              </div>
-            )}
+              {sidePanelOpen && (
+                <div className="side-panel">
+                  {/* Side panel content goes here */}
+                </div>
+              )}
+            </div>
           </div>
+        </WorkspaceProvider>
+      ) : (
+        <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
+          {view === 'login' ? (
+            <>
+              {logger.debug('Rendering login view')}
+              <Login onLogin={handleLogin} setView={setView} />
+            </>
+          ) : (
+            <>
+              {logger.debug('Rendering register view')}
+              <Register setView={setView} />
+            </>
+          )}
         </div>
-      </div>
-    </WorkspaceProvider>
+      )}
+    </div>
   );
 };
 

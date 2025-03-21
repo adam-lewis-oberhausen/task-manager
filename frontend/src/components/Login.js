@@ -43,12 +43,17 @@ const Login = ({ onLogin, setView }) => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
+  };
+
   return (
-    <Form className={styles.form}>
+    <Form className={styles.form} onSubmit={handleSubmit}>
       <h2 className={styles.title}>Login</h2>
       <div className={styles.formGroup}>
         <Input
-          type="text"
+          type="email"
           placeholder="Email"
           value={username}
           onChange={(e) => {
@@ -58,6 +63,7 @@ const Login = ({ onLogin, setView }) => {
             });
             setUsername(e.target.value);
           }}
+          required
         />
       </div>
       <div className={styles.formGroup}>
@@ -72,6 +78,7 @@ const Login = ({ onLogin, setView }) => {
             });
             setPassword(e.target.value);
           }}
+          required
         />
       </div>
       {error && (
@@ -80,11 +87,12 @@ const Login = ({ onLogin, setView }) => {
         </div>
       )}
       <div className={styles.actions}>
-        <Button onClick={handleLogin}>Login</Button>
+        <Button type="submit">Login</Button>
       </div>
       <div className={styles.link}>
         No account yet?{' '}
         <button
+          type="button"
           className={styles.linkButton}
           onClick={() => {
             logger.info('Navigating to register view');
