@@ -42,8 +42,8 @@ router.post('/', auth, checkProjectAccess(), async (req, res) => {
   try {
     // Validate required fields
     if (!req.body.name) {
-      return res.status(400).json({ 
-        error: 'Task name is required' 
+      return res.status(400).json({
+        error: 'Task name is required'
       });
     }
 
@@ -61,6 +61,7 @@ router.post('/', auth, checkProjectAccess(), async (req, res) => {
     res.status(201).json(savedTask);
   } catch (error) {
     if (error.name === 'ValidationError') {
+      console.error('Error creating task:', error);
       return res.status(400).json({
         error: 'Validation failed',
         details: error.errors
@@ -71,32 +72,14 @@ router.post('/', auth, checkProjectAccess(), async (req, res) => {
   }
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', auth, checkProjectAccess(), async (req, res) => {
   try {
     const task = await Task.findById(req.params.id).populate('project').populate('owner');
 
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
-
-    // Check if user has access
-    const hasAccess = await Project.exists({
-      _id: task.project,
-      $or: [
-        { 'members.user': req.userId },
-        { workspace: { $in: await Workspace.find({
-          $or: [
-            { owner: req.userId },
-            { 'members.user': req.userId }
-          ]
-        }).select('_id') }}
-      ]
-    });
-
-    if (!hasAccess) {
-      return res.status(403).json({ error: 'Access to task denied' });
-    }
-
+    
     res.json({
       ...task.toObject(),
       project: task.project._id
