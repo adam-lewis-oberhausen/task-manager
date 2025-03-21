@@ -1,0 +1,9 @@
+Key Organization Principles:
+
+ 1 Group related code together
+ 2 Use consistent ordering
+ 3 Separate concerns
+ 4 Keep render method clean
+ 5 Use descriptive names
+ 6 Minimize inline functions
+ 7 Use custom hooks for complex logic
