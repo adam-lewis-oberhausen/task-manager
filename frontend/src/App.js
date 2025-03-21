@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createLogger } from './utils/logger';
+const logger = createLogger('APP');
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -13,7 +15,9 @@ const App = () => {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
 
   const toggleSidePanel = () => {
-    setSidePanelOpen(!sidePanelOpen);
+    const newState = !sidePanelOpen;
+    logger.info(`Side panel ${newState ? 'opened' : 'closed'}`);
+    setSidePanelOpen(newState);
   };
 
   const isMounted = useRef(false);
@@ -21,10 +25,10 @@ const App = () => {
   useEffect(() => {
     if (isMounted.current) {
       if (token) {
-        console.log('Token detected, setting view to tasks');
+        logger.info('Token detected, setting view to tasks');
         setView('tasks');
       } else {
-        console.log('No token detected, setting view to login');
+        logger.info('No token detected, setting view to login');
         setView('login');
       }
     } else {
@@ -33,11 +37,13 @@ const App = () => {
   }, [token]);
 
   const handleLogin = (token) => {
+    logger.info('User logged in');
     localStorage.setItem('token', token);
     setToken(token);
   };
 
   const handleLogout = () => {
+    logger.info('User logged out');
     localStorage.removeItem('token');
     setToken(null);
     setView('login');
@@ -56,9 +62,15 @@ const App = () => {
           <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
             {!token ? (
               view === 'login' ? (
-                <Login onLogin={handleLogin} setView={setView} />
+                <>
+                  {logger.debug('Rendering login view')}
+                  <Login onLogin={handleLogin} setView={setView} />
+                </>
               ) : (
-                <Register setView={setView} />
+                <>
+                  {logger.debug('Rendering register view')}
+                  <Register setView={setView} />
+                </>
               )
             ) : (
               <TaskList onLogout={handleLogout} token={token} />
