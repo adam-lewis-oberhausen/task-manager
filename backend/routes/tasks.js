@@ -40,11 +40,21 @@ router.patch('/order', async (req, res) => {
 
 router.post('/', auth, checkProjectAccess(), async (req, res) => {
   try {
+    // Validate required fields
+    if (!req.body.name) {
+      return res.status(400).json({ 
+        error: 'Task name is required' 
+      });
+    }
+
     // Create the task
     const task = new Task({
-      ...req.body,
+      name: req.body.name,
+      description: req.body.description || '',
+      priority: req.body.priority || 'Medium',
+      dueDate: req.body.dueDate || null,
       owner: req.userId,
-      project: req.project._id
+      project: req.project?._id || null
     });
 
     const savedTask = await task.save();
