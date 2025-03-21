@@ -23,8 +23,8 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       container.style.height = '100%';
       editor.root.style.fontFamily = "'Cousine', monospace";
       editor.root.style.fontSize = '16px';
-      editor.root.style.height = '100%';
-      editor.root.style.minHeight = '300px';
+      //editor.root.style.height = '100%';
+      editor.root.style.minHeight = '100px';
       editor.root.style.maxHeight = '300px';
       editor.root.style.overflow = 'auto';
     }
@@ -36,7 +36,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   // Handle form state updates when task changes
   useEffect(() => {
     if (!isMounted.current) return;
-    
+
     const newName = task?.name || '';
     const newDescription = task?.description || '';
     const newPriority = task?.priority || 'Medium';
