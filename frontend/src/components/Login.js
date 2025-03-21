@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from '../services/axiosConfig';
 import Form from './ui/Form';
 import Input from './ui/Input';
@@ -11,6 +11,8 @@ const Login = ({ onLogin, setView }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const formRef = useRef(null);
 
   const handleLogin = async () => {
     logger.info('Login attempt initiated');
@@ -45,11 +47,14 @@ const Login = ({ onLogin, setView }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleLogin();
+    // Trigger form validation
+    if (formRef.current.reportValidity()) {
+      handleLogin();
+    }
   };
 
   return (
-    <Form className={styles.form} onSubmit={handleSubmit}>
+    <Form className={styles.form} onSubmit={handleSubmit} ref={formRef}>
       <h2 className={styles.title}>Login</h2>
       <div className={styles.formGroup}>
         <Input
