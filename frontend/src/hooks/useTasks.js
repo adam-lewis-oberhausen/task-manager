@@ -10,7 +10,9 @@ export const useTasks = (token) => {
   const [editingName, setEditingName] = useState('');
 
   const loadMockTasks = useCallback(() => {
-    setTasks([...MOCK_TASKS]);
+    const normalizedTasks = MOCK_TASKS.map(normalizeTask);
+    logger.debug('Loading mock tasks:', normalizedTasks);
+    setTasks(normalizedTasks);
   }, []);
 
   useEffect(() => {
