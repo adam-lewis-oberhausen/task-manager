@@ -32,7 +32,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
 
   // Reset form when task prop changes
   const prevTaskId = useRef(task?._id);
-  
+
   useEffect(() => {
     if (isMounted.current && task?._id !== prevTaskId.current) {
       const normalizedTask = normalizeTask(task || {});
