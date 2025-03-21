@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('LOGIN');
 import axios from '../services/axiosConfig';
 import Form from './ui/Form';
 import Input from './ui/Input';
@@ -11,20 +13,33 @@ const Login = ({ onLogin, setView }) => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
+    logger.info('Login attempt initiated');
     setError('');
+    
     try {
       const normalizedEmail = username.trim().toLowerCase();
       const normalizedPassword = password.trim();
+
+      logger.debug('Login credentials normalized', {
+        email: normalizedEmail,
+        passwordLength: normalizedPassword.length
+      });
 
       const response = await axios.post('/api/auth/login', {
         email: normalizedEmail,
         password: normalizedPassword
       });
 
+      logger.info('Login successful');
       setError('Login successful!');
       onLogin(response.data.token);
     } catch (error) {
-      setError(error.response?.data?.error || 'Login failed');
+      const errorMessage = error.response?.data?.error || 'Login failed';
+      logger.error('Login failed', {
+        error: errorMessage,
+        status: error.response?.status
+      });
+      setError(errorMessage);
     }
   };
 
@@ -36,7 +51,13 @@ const Login = ({ onLogin, setView }) => {
           type="text"
           placeholder="Email"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            logger.debug('Username field changed', {
+              oldValue: username,
+              newValue: e.target.value
+            });
+            setUsername(e.target.value);
+          }}
         />
       </div>
       <div className={styles.formGroup}>
@@ -44,7 +65,13 @@ const Login = ({ onLogin, setView }) => {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            logger.debug('Password field changed', {
+              oldLength: password.length,
+              newLength: e.target.value.length
+            });
+            setPassword(e.target.value);
+          }}
         />
       </div>
       {error && (
@@ -59,7 +86,10 @@ const Login = ({ onLogin, setView }) => {
         No account yet?{' '}
         <button
           className={styles.linkButton}
-          onClick={() => setView('register')}
+          onClick={() => {
+            logger.info('Navigating to register view');
+            setView('register');
+          }}
         >
           Register
         </button>
