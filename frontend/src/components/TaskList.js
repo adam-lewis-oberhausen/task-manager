@@ -100,14 +100,15 @@ const TaskList = ({ token }) => {
     }
   }, [editingTask]);
 
-  const toggleTaskPanel = () => {
-    const newState = !taskPanelOpen;
+  const toggleTaskPanel = useCallback((newState) => {
     logger.info(`Task panel ${newState ? 'opened' : 'closed'}`);
-    setTaskPanelOpen(newState);
-    setEditingTask(null);
-    setEditingTaskId(null);
-    setEditingName(null);
-  };
+    setTaskPanelOpen(prev => typeof newState === 'boolean' ? newState : !prev);
+    if (!newState) {
+      setEditingTask(null);
+      setEditingTaskId(null);
+      setEditingName(null);
+    }
+  }, []);
 
   const handleSave = async (task) => {
     logger.info(`Attempting to save task: ${task._id || 'new task'}`, {

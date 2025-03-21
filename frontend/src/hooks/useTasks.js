@@ -153,7 +153,15 @@ export const useTasks = (token, projectId) => {
   const handleTaskUpdate = useCallback(async (taskData) => {
     try {
       logger.debug('Handling task update for:', taskData);
-      let updatedTasks = [...tasks];
+      
+      // Prepare task data
+      const taskToCreate = {
+        name: taskData.name,
+        description: taskData.description,
+        priority: taskData.priority,
+        dueDate: taskData.dueDate,
+        project: taskData.project
+      };
 
       // Handle mock task conversion
       if (taskData._id?.startsWith('mock-')) {
@@ -164,18 +172,12 @@ export const useTasks = (token, projectId) => {
           return true;
         }
 
-        // Convert mock task to real task - remove _id since it's invalid
-        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
-        const taskToCreate = {
-          name: taskData.name,
-          description: taskData.description,
-          priority: taskData.priority,
-          dueDate: taskData.dueDate,
-          project: taskData.project
-        };
-        logger.debug('Creating new task from mock:', taskToCreate);
+        // Create new task and update state in one batch
         const newTask = await createTask(taskToCreate);
-        updatedTasks = [...updatedTasks, newTask];
+        setTasks(prevTasks => [
+          ...prevTasks.filter(t => !t._id.startsWith('mock-')),
+          newTask
+        ]);
       } else if (taskData._id) {
         logger.debug('Updating existing task');
         // Remove mock tasks if any real task exists
