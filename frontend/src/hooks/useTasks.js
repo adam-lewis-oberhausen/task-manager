@@ -28,27 +28,37 @@ export const useTasks = (token) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        if (isMounted.current && token !== prevToken.current) {
-          logger.info('Fetching tasks...');
-          const tasks = await getTasks(token);
-          logger.debug('Tasks retrieved:', tasks);
-          logger.debug('Number of tasks:', tasks.length);
+        if (!isMounted.current) return;
+        
+        logger.info('Fetching tasks...');
+        const tasks = await getTasks(token);
+        logger.debug('Tasks retrieved:', tasks);
+        logger.debug('Number of tasks:', tasks.length);
 
-          if (tasks.length === 0) {
-            logger.info('No tasks found, loading mock tasks');
-            loadMockTasks();
-          } else {
-            logger.debug('Setting tasks:', tasks);
-            setTasks(tasks);
-          }
-          prevToken.current = token;
+        if (tasks.length === 0) {
+          logger.info('No tasks found, loading mock tasks');
+          loadMockTasks();
+        } else {
+          logger.debug('Setting tasks:', tasks);
+          setTasks(tasks);
         }
+        prevToken.current = token;
       } catch (error) {
         logger.error('Error fetching tasks:', error);
+        // If there's an error fetching tasks, load mock tasks as fallback
+        logger.info('Error fetching tasks, loading mock tasks as fallback');
+        loadMockTasks();
       }
     };
 
-    fetchTasks();
+    // Only fetch tasks if we have a valid token
+    if (token) {
+      fetchTasks();
+    } else {
+      // If no token, load mock tasks
+      logger.info('No token available, loading mock tasks');
+      loadMockTasks();
+    }
   }, [token, loadMockTasks]);
 
   const handleDelete = useCallback(async (id) => {
