@@ -74,10 +74,13 @@ router.post('/', auth, checkProjectAccess(), async (req, res) => {
 
 router.get('/:id', auth, checkProjectAccess(), async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id).populate('project').populate('owner');
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.userId
+    }).populate('project').populate('owner');
 
     if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
+      return res.status(403).json({ error: 'Task not found or access denied' });
     }
     
     res.json({
@@ -92,28 +95,40 @@ router.get('/:id', auth, checkProjectAccess(), async (req, res) => {
 
 
 // Update a task by id
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, checkProjectAccess(), async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const task = await Task.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        owner: req.userId
+      },
+      req.body,
+      { new: true, runValidators: true }
+    );
+
     if (!task) {
-      return res.status(404).send();
+      return res.status(403).json({ error: 'Task not found or access denied' });
     }
-    res.send(task);
+    res.json(task);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({ error: error.message });
   }
 });
 
 // Delete a task by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, checkProjectAccess(), async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.userId
+    });
+
     if (!task) {
-      return res.status(404).send();
+      return res.status(403).json({ error: 'Task not found or access denied' });
     }
-    res.send(task);
+    res.json({ message: 'Task deleted successfully' });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ error: error.message });
   }
 });
 
