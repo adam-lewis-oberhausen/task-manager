@@ -30,7 +30,7 @@ export const getTasks = async (token, projectId) => {
   }
 };
 
-export const createTask = async (task) => {
+export const createTask = async (task, projectId) => {
   try {
     // Validate task data
     if (!task.name || typeof task.name !== 'string') {
@@ -48,7 +48,7 @@ export const createTask = async (task) => {
       description: task.description?.trim() || '',
       priority: task.priority || 'Medium',
       dueDate: task.dueDate || null,
-      project: task.project || null
+      project: projectId || task.project || null
     };
 
     logger.debug('Creating new task with payload:', payload);
