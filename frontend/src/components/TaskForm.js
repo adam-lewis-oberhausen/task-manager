@@ -53,6 +53,14 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
     setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
 
     // If this is the same task being edited inline, sync the name
+  useEffect(() => {
+    const newName = task?.name || '';
+    setName(newName);
+    setDescription(task?.description || '');
+    setPriority(task?.priority || 'Medium');
+    setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
+
+    // If this is the same task being edited inline, sync the name
     if (editingTaskId === task?._id) {
       setEditingName(newName);
     }
