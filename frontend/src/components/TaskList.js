@@ -103,13 +103,21 @@ const TaskList = ({ token }) => {
   const toggleTaskPanel = useCallback((newState) => {
     const isOpening = typeof newState === 'boolean' ? newState : !taskPanelOpen;
     logger.info(`Task panel ${isOpening ? 'opened' : 'closed'}`);
-    
-    // Batch all state updates together
-    setTaskPanelOpen(isOpening);
-    if (!isOpening) {
+
+    if (isOpening) {
+      setTaskPanelOpen(true);
+      setTimeout(() => {
+        setEditingTask(null);
+        setEditingTaskId(null);
+        setEditingName(null);
+      }, 10);
+    } else {
       setEditingTask(null);
       setEditingTaskId(null);
       setEditingName(null);
+      setTimeout(() => {
+        setTaskPanelOpen(false);
+      }, 10);
     }
   }, [taskPanelOpen]);
 
@@ -158,8 +166,8 @@ const TaskList = ({ token }) => {
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </Button>
         <div className={styles.customTable}>
+        <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
         {taskPanelOpen && (
-          <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
             <TaskForm
               key={editingTask?._id || 'new-task'}
               task={editingTask || defaultTask}
@@ -174,8 +182,8 @@ const TaskList = ({ token }) => {
               editingTaskId={editingTaskId}
               setEditingName={setEditingName}
             />
-          </div>
-        )}
+          )}
+        </div>
         <Table>
             <TableHead>
               <TableRow>
