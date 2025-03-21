@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { WorkspaceContext } from '../context/WorkspaceContext';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 import styles from './ui/Table.module.css';
@@ -12,6 +12,18 @@ import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_LIST');
 
 const TaskList = ({ token }) => {
+  const isMounted = useRef(false);
+
+  // Component lifecycle logging
+  useEffect(() => {
+    logger.info('TaskList component mounted');
+    isMounted.current = true;
+    
+    return () => {
+      logger.info('TaskList component unmounted');
+      isMounted.current = false;
+    };
+  }, []);
   const { currentProject } = useContext(WorkspaceContext);
   logger.info('TaskList component rendering with token.');
   const {
@@ -40,38 +52,49 @@ const TaskList = ({ token }) => {
   }, [editingTask]);
 
   const toggleTaskPanel = () => {
-    logger.debug('Toggling task panel');
-    setTaskPanelOpen(!taskPanelOpen);
+    const newState = !taskPanelOpen;
+    logger.info(`Task panel ${newState ? 'opened' : 'closed'}`);
+    setTaskPanelOpen(newState);
     setEditingTask(null);
     setEditingTaskId(null);
     setEditingName(null);
   };
 
   const handleSave = async (task) => {
-    logger.info('Saving task:', task);
+    logger.info(`Attempting to save task: ${task._id || 'new task'}`, {
+      name: task.name,
+      project: task.project,
+      priority: task.priority
+    });
+    
     const success = await handleTaskUpdate(task);
     if (success) {
-      logger.info('Task saved successfully');
+      logger.info(`Task ${task._id || 'new task'} saved successfully`);
       setTaskPanelOpen(false);
       setEditingTask(null);
     } else {
-      logger.warn('Task save failed');
+      logger.error(`Failed to save task: ${task._id || 'new task'}`, {
+        error: 'Save operation unsuccessful'
+      });
     }
   };
 
   const handleCancel = () => {
-    logger.debug('Canceling task edit');
+    logger.info('Task edit canceled', {
+      taskId: editingTask?._id || 'new task',
+      panelWasOpen: taskPanelOpen
+    });
     setTaskPanelOpen(false);
     setEditingTask(null);
   };
 
   const startEditing = (task) => {
-    logger.debug('Starting to edit task:', task);
+    logger.info(`Starting to edit task: ${task._id} - "${task.name}"`);
     setEditingTask(task);
     setEditingTaskId(task._id);
     setEditingName(task.name);
     if (!taskPanelOpen) {
-      logger.debug('Opening task panel for editing');
+      logger.info('Opening task panel for editing');
       setTaskPanelOpen(true);
     }
   };
