@@ -37,24 +37,31 @@ export const useTasks = (token, projectId) => {
         
         // Add small debounce to prevent rapid refetches
         const timeoutId = setTimeout(async () => {
-          logger.info('Fetching tasks for project:', projectId);
-          const tasks = await getTasks(token, projectId);
-        logger.debug('Tasks retrieved:', tasks);
-        logger.debug('Number of tasks:', tasks.length);
+          try {
+            logger.info('Fetching tasks for project:', projectId);
+            const tasks = await getTasks(token, projectId);
+            logger.debug('Tasks retrieved:', tasks);
+            logger.debug('Number of tasks:', tasks.length);
 
-        if (tasks.length === 0) {
-          logger.info('No tasks found, loading mock tasks');
-          loadMockTasks();
-        } else {
-          logger.debug('Setting tasks:', tasks);
-          setTasks(tasks);
-        }
-        prevToken.current = token;
+            if (tasks.length === 0) {
+              logger.info('No tasks found, loading mock tasks');
+              loadMockTasks();
+            } else {
+              logger.debug('Setting tasks:', tasks);
+              setTasks(tasks);
+            }
+            prevToken.current = token;
+          } catch (error) {
+            logger.error('Error fetching tasks:', error);
+            // If there's an error fetching tasks, load mock tasks as fallback
+            logger.info('Error fetching tasks, loading mock tasks as fallback');
+            loadMockTasks();
+          }
+        }, 200); // 200ms debounce
+
+        return timeoutId;
       } catch (error) {
-        logger.error('Error fetching tasks:', error);
-        // If there's an error fetching tasks, load mock tasks as fallback
-        logger.info('Error fetching tasks, loading mock tasks as fallback');
-        loadMockTasks();
+        logger.error('Error in fetchTasks:', error);
       }
     };
 
