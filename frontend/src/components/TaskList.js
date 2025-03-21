@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { WorkspaceContext } from '../context/WorkspaceContext';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 import styles from './ui/Table.module.css';
