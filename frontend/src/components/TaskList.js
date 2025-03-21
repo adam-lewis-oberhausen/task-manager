@@ -7,7 +7,7 @@ import stylesButton from './ui/Button.module.css';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
-import { priorityColors, isOverdue, normalizeTask } from '../utils/taskHelpers';
+import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_LIST');
 
@@ -37,8 +37,9 @@ const TaskList = ({ token }) => {
       prevToken.current = token;
     }
   }, [token]);
+
   const { currentProject } = useContext(WorkspaceContext);
-  logger.info('TaskList component rendering with token.');
+
   const {
     tasks,
     editingTaskId,

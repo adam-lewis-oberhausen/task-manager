@@ -33,7 +33,7 @@ const TaskRow = ({
       priority: normalizedTask.priority,
       dueDate: normalizedTask.dueDate
     });
-  }, [task.completed, task.priority, task.dueDate]);
+  }, [task]);
 
   // Log drag-and-drop operations
   useEffect(() => {

@@ -34,7 +34,8 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   const prevTaskId = useRef(task?._id);
 
   useEffect(() => {
-    if (isMounted.current && task?._id !== prevTaskId.current) {
+    if (!isMounted.current) return;
+    if (task?._id !== prevTaskId.current) {
       const normalizedTask = normalizeTask(task || {});
       logger.debug('Task prop changed, resetting form:', {
         id: normalizedTask._id,
@@ -45,12 +46,13 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       });
       prevTaskId.current = task?._id;
     }
-  }, [task]);
-    const newName = task?.name || '';
-    setName(newName);
-    setDescription(task?.description || '');
-    setPriority(task?.priority || 'Medium');
-    setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
+  }, [task, isMounted]);
+
+  const newName = task?.name || '';
+  setName(newName);
+  setDescription(task?.description || '');
+  setPriority(task?.priority || 'Medium');
+  setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
 
     // If this is the same task being edited inline, sync the name
   useEffect(() => {
