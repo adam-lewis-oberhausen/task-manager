@@ -30,53 +30,51 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
     }
   }, []);
 
-  // Reset form when task prop changes
+  // Track previous task ID to detect changes
   const prevTaskId = useRef(task?._id);
 
+  // Handle form state updates when task changes
   useEffect(() => {
     if (!isMounted.current) return;
+    
+    const newName = task?.name || '';
+    const newDescription = task?.description || '';
+    const newPriority = task?.priority || 'Medium';
+    const newDueDate = task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '';
+
+    // Only update state if values have actually changed
+    if (name !== newName) setName(newName);
+    if (description !== newDescription) setDescription(newDescription);
+    if (priority !== newPriority) setPriority(newPriority);
+    if (dueDate !== newDueDate) setDueDate(newDueDate);
+
+    // Sync name with parent component if editing
+    if (editingTaskId === task?._id && editingName !== newName) {
+      setEditingName(newName);
+    }
+
+    // Update previous task ID reference
     if (task?._id !== prevTaskId.current) {
-      const normalizedTask = normalizeTask(task || {});
       logger.debug('Task prop changed, resetting form:', {
-        id: normalizedTask._id,
-        name: normalizedTask.name,
-        description: normalizedTask.description,
-        priority: normalizedTask.priority,
-        dueDate: normalizedTask.dueDate
+        id: task?._id,
+        name: newName,
+        description: newDescription,
+        priority: newPriority,
+        dueDate: newDueDate
       });
       prevTaskId.current = task?._id;
     }
-  }, [task, isMounted]);
+  }, [task, editingTaskId, setEditingName, isMounted]);
 
-  const newName = task?.name || '';
-  setName(newName);
-  setDescription(task?.description || '');
-  setPriority(task?.priority || 'Medium');
-  setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
-
-    // If this is the same task being edited inline, sync the name
+  // Cleanup form state when unmounting
   useEffect(() => {
-    const newName = task?.name || '';
-    setName(newName);
-    setDescription(task?.description || '');
-    setPriority(task?.priority || 'Medium');
-    setDueDate(task?.dueDate ? new Date(task.dueDate).toISOString().substr(0, 10) : '');
-
-    // If this is the same task being edited inline, sync the name
-    if (editingTaskId === task?._id) {
-      setEditingName(newName);
-    }
-  }, [task, editingTaskId, setEditingName]);
-
-  // Clear form when panel opens for new task
-  useEffect(() => {
-    if (!task) {
+    return () => {
       setName('');
       setDescription('');
       setPriority('Medium');
       setDueDate('');
-    }
-  }, [task]);
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

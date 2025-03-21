@@ -11,6 +11,13 @@ import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_LIST');
 
+const defaultTask = {
+  name: '',
+  description: '',
+  priority: 'Medium',
+  dueDate: ''
+};
+
 const TaskList = ({ token }) => {
   const prevToken = useRef(token);
 
@@ -134,28 +141,23 @@ const TaskList = ({ token }) => {
       </Button>
         <div className={styles.customTable}>
         {taskPanelOpen && (
-           <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-             <TaskForm
-               key={editingTask?._id || 'new-task'}
-               task={{
-                 ...editingTask,
-                 name: editingTaskId === editingTask?._id ? editingName : editingTask?.name
-               }}
-               editingTaskId={editingTaskId}
-               setEditingName={setEditingName}
-               editingName={editingName}
-               setEditingTaskId={setEditingTaskId}
-               onSave={handleSave}
-               onCancel={() => {
-                 setEditingTask(null);
-                 handleCancel();
-               }}
-               token={token}
-               currentProject={currentProject}
-               isMounted={isMounted}
-             />
-           </div>
-         )} 
+          <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
+            <TaskForm
+              key={editingTask?._id || 'new-task'}
+              task={editingTask || defaultTask}
+              onSave={handleSave}
+              onCancel={() => {
+                setEditingTask(null);
+                handleCancel();
+              }}
+              token={token}
+              currentProject={currentProject}
+              isMounted={isMounted}
+              editingTaskId={editingTaskId}
+              setEditingName={setEditingName}
+            />
+          </div>
+        )}
         <Table>
             <TableHead>
               <TableRow>
