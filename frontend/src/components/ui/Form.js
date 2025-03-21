@@ -1,14 +1,25 @@
 import React from 'react';
 import styles from './Form.module.css';
 
-const Form = React.forwardRef(({ children, className = '' }, ref) => {
+const Form = React.forwardRef(({ children, className = '', onSubmit }, ref) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSubmit) {
+      onSubmit(e);
+    }
+  };
+
   return (
-    <div ref={ref} className={`${styles.form} ${className}`}>
+    <form
+      ref={ref}
+      className={`${styles.form} ${className}`}
+      onSubmit={handleSubmit}
+    >
       {children}
-    </div>
+    </form>
   );
 });
 
 Form.displayName = 'Form';
 
-export default Form;
+export default Form; 
