@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { taskFormLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('TASK_FORM');
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ui/TaskForm.module.css';
@@ -31,7 +32,13 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
 
   // Reset form when task prop changes
   useEffect(() => {
-    taskFormLogger.debug('Task prop changed, resetting form:', task);
+    logger.debug('Task prop changed, resetting form:', {
+      id: task?._id || 'new task',
+      name: task?.name || '',
+      description: task?.description || '',
+      priority: task?.priority || 'Medium',
+      dueDate: task?.dueDate || ''
+    });
     const newName = task?.name || '';
     setName(newName);
     setDescription(task?.description || '');
@@ -56,9 +63,16 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!name.trim()) {
+      logger.warn('Form submission failed - name is required');
+      return;
+    }
+
     const taskData = {
-      name,
-      description,
+      name: name.trim(),
+      description: description.trim(),
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
       project: currentProject?._id || null
@@ -68,7 +82,14 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       taskData._id = task._id;
     }
 
-    taskFormLogger.info('Submitting task data:', taskData);
+    logger.info('Submitting task form:', {
+      id: taskData._id || 'new task',
+      name: taskData.name,
+      descriptionLength: taskData.description.length,
+      priority: taskData.priority,
+      dueDate: taskData.dueDate,
+      project: taskData.project
+    });
     onSave(taskData);
   };
 
@@ -82,7 +103,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           value={name}
           onChange={(e) => {
             const newName = e.target.value;
-            taskFormLogger.debug('Name changed:', newName);
+            logger.debug('Name field changed:', {
+              oldValue: name,
+              newValue: newName
+            });
             setName(newName);
             // If this is the same task being edited inline, sync the name
             if (editingTaskId === task?._id) {
@@ -101,7 +125,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           type="date"
           value={dueDate}
           onChange={(e) => {
-            taskFormLogger.debug('Due date changed:', e.target.value);
+            logger.debug('Due date changed:', {
+              oldValue: dueDate,
+              newValue: e.target.value
+            });
             setDueDate(e.target.value);
           }}
           aria-label="Due Date"
@@ -115,7 +142,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
             id="description"
             value={description}
             onChange={(value) => {
-              taskFormLogger.debug('Description changed:', value);
+              logger.debug('Description changed:', {
+                oldLength: description.length,
+                newLength: value.length
+              });
               setDescription(value);
             }}
             modules={{
@@ -141,7 +171,10 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
           id="priority"
           value={priority}
           onChange={(e) => {
-            taskFormLogger.debug('Priority changed:', e.target.value);
+            logger.debug('Priority changed:', {
+              oldValue: priority,
+              newValue: e.target.value
+            });
             setPriority(e.target.value);
           }}
           aria-label="Priority"
