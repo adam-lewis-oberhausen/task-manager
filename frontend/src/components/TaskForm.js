@@ -8,7 +8,7 @@ import { normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_FORM');
 
-const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject, isMounted }) => {
+const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject, isMounted, editingName }) => {
   const [name, setName] = useState(task?.name || '');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -218,7 +218,8 @@ TaskForm.propTypes = {
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   editingTaskId: PropTypes.string,
-  setEditingName: PropTypes.func
+  setEditingName: PropTypes.func,
+  editingName: PropTypes.string
 };
 
 // Use default parameters instead of defaultProps
