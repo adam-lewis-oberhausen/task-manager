@@ -85,6 +85,10 @@ export const useTasks = (token, projectId) => {
   const handleDelete = useCallback(async (id) => {
     try {
       logger.info('Deleting task with id:', id);
+      
+      // Optimistically remove the task from UI
+      setTasks(prevTasks => prevTasks.filter(task => task._id !== id));
+      
       // Only call deleteTask for non-mock tasks
       if (!id.startsWith('mock-')) {
         logger.debug('Deleting real task');
@@ -93,17 +97,14 @@ export const useTasks = (token, projectId) => {
         logger.debug('Deleting mock task');
       }
 
-      const updatedTasks = tasks.filter(task => task._id !== id);
-      logger.debug('Updated tasks after deletion:', updatedTasks);
-
-      // If we deleted all tasks, reload mock tasks
-      if (updatedTasks.length === 0) {
-        logger.info('Deleted all tasks, loading mock tasks');
-        loadMockTasks();
-      } else {
-        logger.debug('Setting updated tasks');
-        setTasks(updatedTasks);
-      }
+      // Check if we need to load mock tasks
+      setTasks(prevTasks => {
+        if (prevTasks.length === 0) {
+          logger.info('Deleted all tasks, loading mock tasks');
+          loadMockTasks();
+        }
+        return prevTasks;
+      });
     } catch (error) {
       logger.error('Error deleting task:', error);
     }
