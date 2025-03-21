@@ -7,7 +7,7 @@ import styles from './ui/TaskForm.module.css';
 import Button from './ui/Button';
 // import stylesButton from './ui/Button.module.css';
 
-const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName }) => {
+const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject }) => {
   const [name, setName] = useState(task?.name || '');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
@@ -61,6 +61,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       description,
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      project: currentProject?._id || null
     };
 
     if (task?._id) {

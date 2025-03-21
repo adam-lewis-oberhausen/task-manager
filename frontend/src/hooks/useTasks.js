@@ -125,10 +125,11 @@ export const useTasks = (token) => {
           name: taskData.name,
           description: taskData.description,
           priority: taskData.priority,
-          dueDate: taskData.dueDate
+          dueDate: taskData.dueDate,
+          project: taskData.project
         };
         logger.debug('Creating new task from mock:', taskToCreate);
-        const newTask = await createTask(taskToCreate, token);
+        const newTask = await createTask(taskToCreate);
         updatedTasks = [...updatedTasks, newTask];
       } else if (taskData._id) {
         logger.debug('Updating existing task');
@@ -139,10 +140,11 @@ export const useTasks = (token) => {
           name: taskData.name,
           description: taskData.description,
           priority: taskData.priority,
-          dueDate: taskData.dueDate
+          dueDate: taskData.dueDate,
+          project: taskData.project
         };
         logger.debug('Task update data:', taskUpdate);
-        const updatedTask = await updateTask(taskData._id, taskUpdate, token);
+        const updatedTask = await updateTask(taskData._id, taskUpdate);
         updatedTasks = tasks.map(t => 
           t._id === taskData._id ? { ...t, ...updatedTask } : t
         );
@@ -154,10 +156,11 @@ export const useTasks = (token) => {
           name: taskData.name,
           description: taskData.description,
           priority: taskData.priority,
-          dueDate: taskData.dueDate
+          dueDate: taskData.dueDate,
+          project: taskData.project
         };
         logger.debug('New task data:', taskToCreate);
-        const newTask = await createTask(taskToCreate, token);
+        const newTask = await createTask(taskToCreate);
         updatedTasks = [...updatedTasks, newTask];
       }
 

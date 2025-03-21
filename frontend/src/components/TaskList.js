@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { WorkspaceContext } from '../context/WorkspaceContext';
 import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
 import styles from './ui/Table.module.css';
 import Button from './ui/Button';
@@ -10,6 +11,7 @@ import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { taskListLogger } from '../utils/logger';
 
 const TaskList = ({ token }) => {
+  const { currentProject } = useContext(WorkspaceContext);
   taskListLogger.info('TaskList component rendering with token.');
   const {
     tasks,
@@ -96,6 +98,7 @@ const TaskList = ({ token }) => {
               handleCancel();
             }}
             token={token}
+            currentProject={currentProject}
           />
         </div>
         <Table>
