@@ -9,47 +9,50 @@ import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
+
 const logger = createLogger('TASK_LIST');
 
-const defaultTask = {
+// Constants
+const DEFAULT_TASK = {
   name: '',
   description: '',
   priority: 'Medium',
   dueDate: ''
 };
 
-const TaskList = ({ token }) => {
-  const prevToken = useRef(token);
+// Custom Hook for Task Panel Management
+const useTaskPanel = (initialState = false) => {
+  const [isOpen, setIsOpen] = useState(initialState);
+  const [editingTask, setEditingTask] = useState(null);
 
-  // Component lifecycle logging
-  useEffect(() => {
-    if (!isMounted.current) {
-      logger.info('TaskList component mounted');
-      isMounted.current = true;
-    }
-
-    return () => {
-      if (isMounted.current) {
-        logger.info('TaskList component unmounted');
-        isMounted.current = false;
-      }
-    };
+  const openPanel = useCallback((task = null) => {
+    logger.info('Opening task panel', { taskId: task?._id });
+    setIsOpen(true);
+    setEditingTask(task);
   }, []);
 
-  // Log token changes
-  useEffect(() => {
-    if (isMounted.current && token !== prevToken.current) {
-      logger.info('Token changed, re-rendering TaskList');
-      prevToken.current = token;
-    }
-  }, [token]);
+  const closePanel = useCallback(() => {
+    logger.info('Closing task panel');
+    setIsOpen(false);
+    setEditingTask(null);
+  }, []);
 
-  const {
-    currentProject,
-    fetchWorkspaces,
-    fetchProjects
-  } = useContext(WorkspaceContext);
+  return {
+    isOpen,
+    editingTask,
+    openPanel,
+    closePanel,
+    togglePanel: useCallback(() => setIsOpen(prev => !prev), [])
+  };
+};
 
+const TaskList = ({ token }) => {
+  // Context and State Management
+  const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
+  const taskPanel = useTaskPanel();
+  const isMounted = useRef(false);
+
+  // Task Operations
   const {
     tasks,
     editingTaskId,
@@ -61,165 +64,134 @@ const TaskList = ({ token }) => {
     toggleCompletion,
     handleTaskUpdate,
     updateTasksOrder,
-    setName,
+    setName
   } = useTasks(token, currentProject?._id);
 
-  const [editingTask, setEditingTask] = useState(null);
-  const [taskPanelOpen, setTaskPanelOpen] = useState(false);
-  const isMounted = useRef(false);
-
+  // Lifecycle and Initialization
   useEffect(() => {
     if (!isMounted.current) {
       isMounted.current = true;
-      logger.debug('TaskList component mounted');
+      logger.info('TaskList component mounted');
+      initializeData();
+    }
 
-      // Initialize all required data
-      if (token) {
-        Promise.all([
-          fetchWorkspaces(),
-          fetchProjects()
-        ]).catch(error => {
-          logger.error('Error initializing data:', error);
-        });
+    return () => {
+      if (isMounted.current) {
+        logger.info('TaskList component unmounted');
+        isMounted.current = false;
+      }
+    };
+  }, []);
+
+  const initializeData = useCallback(async () => {
+    if (token) {
+      try {
+        logger.debug('Initializing workspace and project data');
+        await Promise.all([fetchWorkspaces(), fetchProjects()]);
+      } catch (error) {
+        logger.error('Error initializing data:', error);
       }
     }
-    return () => {
-      isMounted.current = false;
-    };
-  }, [fetchWorkspaces, fetchProjects, token]);
+  }, [token, fetchWorkspaces, fetchProjects]);
 
-  useEffect(() => {
-    if (isMounted.current) {
-      logger.debug('Task panel state changed:', taskPanelOpen);
-    }
-  }, [taskPanelOpen]);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      logger.debug('Editing task changed:', editingTask);
-    }
-  }, [editingTask]);
-
-  const toggleTaskPanel = useCallback((newState) => {
-    const isOpening = typeof newState === 'boolean' ? newState : !taskPanelOpen;
-    logger.info(`Task panel ${isOpening ? 'opened' : 'closed'}`);
-
-    if (isOpening) {
-      setTaskPanelOpen(true);
-      setTimeout(() => {
-        setEditingTask(null);
-        setEditingTaskId(null);
-        setEditingName(null);
-      }, 10);
-    } else {
-      setEditingTask(null);
-      setEditingTaskId(null);
-      setEditingName(null);
-      setTimeout(() => {
-        setTaskPanelOpen(false);
-      }, 10);
-    }
-  }, [taskPanelOpen]);
-
-  const handleSave = async (task) => {
-    logger.info(`Attempting to save task: ${task._id || 'new task'}`, {
-      name: task.name,
-      project: task.project,
-      priority: task.priority
-    });
-
+  // Task Operations Handlers
+  const handleSave = useCallback(async (task) => {
+    logger.info('Saving task', { taskId: task._id });
     const success = await handleTaskUpdate(task);
+    
     if (success) {
-      logger.info(`Task ${task._id || 'new task'} saved successfully`);
-      setTaskPanelOpen(false);
-      setEditingTask(null);
+      logger.info('Task saved successfully');
+      taskPanel.closePanel();
     } else {
-      logger.error(`Failed to save task: ${task._id || 'new task'}`, {
-        error: 'Save operation unsuccessful'
-      });
+      logger.error('Failed to save task');
     }
-  };
+  }, [handleTaskUpdate, taskPanel]);
 
-  const handleCancel = () => {
-    logger.info('Task edit canceled', {
-      taskId: editingTask?._id || 'new task',
-      panelWasOpen: taskPanelOpen
-    });
-    setTaskPanelOpen(false);
-    setEditingTask(null);
-  };
+  const handleCancel = useCallback(() => {
+    logger.info('Task edit canceled');
+    taskPanel.closePanel();
+  }, [taskPanel]);
 
-  const startEditing = (task) => {
-    logger.info(`Starting to edit task: ${task._id} - "${task.name}"`);
-    setEditingTask(task);
+  const startEditing = useCallback((task) => {
+    logger.info('Starting task edit', { taskId: task._id });
     setEditingTaskId(task._id);
     setEditingName(task.name);
-    if (!taskPanelOpen) {
-      logger.info('Opening task panel for editing');
-      setTaskPanelOpen(true);
-    }
-  };
+    taskPanel.openPanel(task);
+  }, [setEditingTaskId, setEditingName, taskPanel]);
+
+  // Render Methods
+  const renderTaskPanel = () => (
+    taskPanel.isOpen && (
+      <TaskForm
+        key={taskPanel.editingTask?._id || 'new-task'}
+        task={taskPanel.editingTask || DEFAULT_TASK}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        token={token}
+        currentProject={currentProject}
+        isMounted={isMounted}
+        editingTaskId={editingTaskId}
+        setEditingName={setEditingName}
+      />
+    )
+  );
+
+  const renderTableHeader = () => (
+    <TableHead>
+      <TableRow>
+        <TableCell className={styles.tableCellHeader}></TableCell>
+        <TableCell className={styles.tableCellHeader}>Complete</TableCell>
+        <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
+        <TableCell className={styles.tableCellHeader}>Name</TableCell>
+        <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
+        <TableCell className={styles.tableCellHeader}>Priority</TableCell>
+        <TableCell className={styles.tableCellHeader}>Edit</TableCell>
+        <TableCell className={styles.tableCellHeader}>Delete</TableCell>
+      </TableRow>
+    </TableHead>
+  );
+
+  const renderTaskRows = () => tasks.map((task, index) => (
+    <TaskRow
+      key={task._id}
+      task={task}
+      index={index}
+      editingTaskId={editingTaskId}
+      setEditingTaskId={setEditingTaskId}
+      editingName={editingName}
+      setEditingName={setEditingName}
+      toggleCompletion={toggleCompletion}
+      handleDelete={handleDelete}
+      moveTask={moveTask}
+      isOverdue={isOverdue}
+      priorityColors={priorityColors}
+      handleTaskUpdate={handleTaskUpdate}
+      startEditing={startEditing}
+      updateTasksOrder={updateTasksOrder}
+      setName={setName}
+    />
+  ));
 
   return (
     <div>
-      <Button onClick={toggleTaskPanel} className={stylesButton.button}>
-        {taskPanelOpen ? 'Close Panel' : 'Add Task'}
+      <Button 
+        onClick={taskPanel.togglePanel} 
+        className={stylesButton.button}
+      >
+        {taskPanel.isOpen ? 'Close Panel' : 'Add Task'}
       </Button>
-        <div className={styles.customTable}>
-        <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-        {taskPanelOpen && (
-            <TaskForm
-              key={editingTask?._id || 'new-task'}
-              task={editingTask || defaultTask}
-              onSave={handleSave}
-              onCancel={() => {
-                setEditingTask(null);
-                handleCancel();
-              }}
-              token={token}
-              currentProject={currentProject}
-              isMounted={isMounted}
-              editingTaskId={editingTaskId}
-              setEditingName={setEditingName}
-            />
-          )}
+
+      <div className={styles.customTable}>
+        <div className={`task-panel ${taskPanel.isOpen ? 'open' : ''}`}>
+          {renderTaskPanel()}
         </div>
+
         <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className={styles.tableCellHeader}></TableCell>
-                <TableCell className={styles.tableCellHeader}>Complete</TableCell>
-                <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
-                <TableCell className={styles.tableCellHeader}>Name</TableCell>
-                <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
-                <TableCell className={styles.tableCellHeader}>Priority</TableCell>
-                <TableCell className={styles.tableCellHeader}>Edit</TableCell>
-                <TableCell className={styles.tableCellHeader}>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tasks.map((task, index) => (
-                <TaskRow
-                  key={task._id}
-                  task={task}
-                  index={index}
-                  editingTaskId={editingTaskId}
-                  setEditingTaskId={setEditingTaskId}
-                  editingName={editingName}
-                  setEditingName={setEditingName}
-                  toggleCompletion={toggleCompletion}
-                  handleDelete={handleDelete}
-                  moveTask={moveTask}
-                  isOverdue={isOverdue}
-                  priorityColors={priorityColors}
-                  handleTaskUpdate={handleTaskUpdate}
-                  startEditing={startEditing}
-                  updateTasksOrder={updateTasksOrder}
-                  setName={setName}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          {renderTableHeader()}
+          <TableBody>
+            {renderTaskRows()}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
