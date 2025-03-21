@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('REGISTER');
 import axios from '../services/axiosConfig';
 import Form from './ui/Form';
 import Input from './ui/Input';
@@ -11,33 +13,57 @@ const Register = ({ setView }) => {
   const [error, setError] = useState('');
 
   const handleRegister = async () => {
+    logger.info('Registration attempt initiated');
     setError('');
 
     // Normalize inputs
     const normalizedEmail = username.trim().toLowerCase();
     const normalizedPassword = password.trim();
 
+    logger.debug('Registration credentials normalized', {
+      email: normalizedEmail,
+      passwordLength: normalizedPassword.length
+    });
+
     // Validate email
     if (!normalizedEmail || !/\S+@\S+\.\S+/.test(normalizedEmail)) {
-      setError('Please enter a valid email address.');
+      const errorMsg = 'Please enter a valid email address.';
+      logger.warn('Email validation failed', {
+        email: normalizedEmail,
+        error: errorMsg
+      });
+      setError(errorMsg);
       return;
     }
 
     // Validate password complexity
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(normalizedPassword)) {
-      setError('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.');
+      const errorMsg = 'Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.';
+      logger.warn('Password validation failed', {
+        passwordLength: normalizedPassword.length,
+        error: errorMsg
+      });
+      setError(errorMsg);
       return;
     }
 
     try {
+      logger.info('Attempting registration');
       await axios.post('/api/auth/register', {
         email: normalizedEmail,
         password: normalizedPassword
       });
+      logger.info('Registration successful');
+      logger.debug('Navigating to login view');
       setView('login');
     } catch (error) {
-      setError(error.response?.data?.error || 'Registration failed');
+      const errorMsg = error.response?.data?.error || 'Registration failed';
+      logger.error('Registration failed', {
+        error: errorMsg,
+        status: error.response?.status
+      });
+      setError(errorMsg);
     }
   };
 
@@ -49,7 +75,13 @@ const Register = ({ setView }) => {
           type="email"
           placeholder="Email"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            logger.debug('Username field changed', {
+              oldValue: username,
+              newValue: e.target.value
+            });
+            setUsername(e.target.value);
+          }}
         />
       </div>
       <div className={styles.formGroup}>
@@ -57,7 +89,13 @@ const Register = ({ setView }) => {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            logger.debug('Password field changed', {
+              oldLength: password.length,
+              newLength: e.target.value.length
+            });
+            setPassword(e.target.value);
+          }}
         />
       </div>
       {error && (
@@ -72,7 +110,10 @@ const Register = ({ setView }) => {
         Already have an account?{' '}
         <button
           className={styles.linkButton}
-          onClick={() => setView('login')}
+          onClick={() => {
+            logger.info('Navigating to login view');
+            setView('login');
+          }}
         >
           Login
         </button>
