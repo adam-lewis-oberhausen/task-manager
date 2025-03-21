@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
 import { MOCK_TASKS } from '../utils/taskHelpers';
-import { tasksLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('USE_TASKS');
 
 export const useTasks = (token) => {
   const [tasks, setTasks] = useState([]);
@@ -12,8 +13,6 @@ export const useTasks = (token) => {
     setTasks([...MOCK_TASKS]);
   }, []);
 
-  const logger = tasksLogger;
-
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -21,7 +20,7 @@ export const useTasks = (token) => {
         const tasks = await getTasks(token);
         logger.debug('Tasks retrieved:', tasks);
         logger.debug('Number of tasks:', tasks.length);
-        
+
         if (tasks.length === 0) {
           logger.info('No tasks found, loading mock tasks');
           loadMockTasks();
@@ -47,10 +46,10 @@ export const useTasks = (token) => {
       } else {
         logger.debug('Deleting mock task');
       }
-      
+
       const updatedTasks = tasks.filter(task => task._id !== id);
       logger.debug('Updated tasks after deletion:', updatedTasks);
-      
+
       // If we deleted all tasks, reload mock tasks
       if (updatedTasks.length === 0) {
         logger.info('Deleted all tasks, loading mock tasks');
@@ -68,12 +67,12 @@ export const useTasks = (token) => {
     // Only log if we're actually moving the task to a new position
     if (dragIndex !== hoverIndex) {
       logger.debug(`Moving task from index ${dragIndex} to ${hoverIndex}`);
-      
+
       const draggedTask = tasks[dragIndex];
       const updatedTasks = [...tasks];
       updatedTasks.splice(dragIndex, 1);
       updatedTasks.splice(hoverIndex, 0, draggedTask);
-      
+
       // Only update state if the position actually changed
       if (tasks[dragIndex]._id !== updatedTasks[hoverIndex]._id) {
         setTasks(updatedTasks);
@@ -109,7 +108,7 @@ export const useTasks = (token) => {
     try {
       logger.debug('Handling task update for:', taskData);
       let updatedTasks = [...tasks];
-      
+
       // Handle mock task conversion
       if (taskData._id?.startsWith('mock-')) {
         logger.debug('Handling mock task conversion');
@@ -118,7 +117,7 @@ export const useTasks = (token) => {
           loadMockTasks();
           return true;
         }
-        
+
         // Convert mock task to real task - remove _id since it's invalid
         updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         const taskToCreate = {
@@ -145,7 +144,7 @@ export const useTasks = (token) => {
         };
         logger.debug('Task update data:', taskUpdate);
         const updatedTask = await updateTask(taskData._id, taskUpdate);
-        updatedTasks = tasks.map(t => 
+        updatedTasks = tasks.map(t =>
           t._id === taskData._id ? { ...t, ...updatedTask } : t
         );
       } else {

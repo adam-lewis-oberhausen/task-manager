@@ -11,9 +11,9 @@ const getLogLevel = (componentName) => {
   return LOG_LEVELS[level] || LOG_LEVELS.ERROR; // Default to ERROR level
 };
 
-const createLogger = (componentName) => {
+export const createLogger = (componentName) => {
   const componentLevel = getLogLevel(componentName);
-  
+
   return {
     debug: (...args) => {
       if (componentLevel <= LOG_LEVELS.DEBUG) {
@@ -37,5 +37,3 @@ const createLogger = (componentName) => {
     }
   };
 };
-
-// Remove these exports since we're creating loggers in each component
