@@ -181,7 +181,7 @@ export const useTasks = (token, projectId) => {
       } else if (taskData._id) {
         logger.debug('Updating existing task');
         // Remove mock tasks if any real task exists
-        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
+        let updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         // Update existing task
         const taskUpdate = {
           name: taskData.name,
@@ -192,13 +192,13 @@ export const useTasks = (token, projectId) => {
         };
         logger.debug('Task update data:', taskUpdate);
         const updatedTask = await updateTask(taskData._id, taskUpdate);
-        updatedTasks = tasks.map(t =>
+        updatedTasks = updatedTasks.map(t =>
           t._id === taskData._id ? { ...t, ...updatedTask } : t
         );
       } else {
         logger.debug('Creating new task');
         // Create new task and remove mock tasks
-        updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
+        let updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         const taskToCreate = {
           name: taskData.name,
           description: taskData.description,
