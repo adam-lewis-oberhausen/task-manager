@@ -13,6 +13,12 @@ export const WorkspaceProvider = ({ children, token }) => {
   const [error, setError] = useState(null);
 
   const fetchWorkspaces = useCallback(async () => {
+    if (!token) {
+      setWorkspaces([]);
+      setError('No authentication token');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
