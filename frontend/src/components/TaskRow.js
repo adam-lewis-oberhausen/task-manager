@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { taskRowLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
+const taskRowLogger = createLogger('TASK_ROW');
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';

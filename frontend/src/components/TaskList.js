@@ -8,7 +8,8 @@ import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
-import { taskListLogger } from '../utils/logger';
+import { createLogger } from '../utils/logger';
+const taskListLogger = createLogger('TASK_LIST');
 
 const TaskList = ({ token }) => {
   const { currentProject } = useContext(WorkspaceContext);
