@@ -12,12 +12,11 @@ export const useTasks = (token, projectId) => {
   const loadMockTasks = useCallback(() => {
     const normalizedTasks = MOCK_TASKS.map(normalizeTask);
     logger.debug('Loading mock tasks:', normalizedTasks);
-    // Batch update using functional setState
+    // Single state update for all mock tasks
     setTasks(prevTasks => {
-      const newTasks = normalizedTasks.filter(newTask => 
-        !prevTasks.some(task => task._id === newTask._id)
-      );
-      return [...prevTasks, ...newTasks];
+      // Remove any existing mock tasks
+      const filteredTasks = prevTasks.filter(t => !t._id.startsWith('mock-'));
+      return [...filteredTasks, ...normalizedTasks];
     });
   }, []);
 
@@ -36,8 +35,10 @@ export const useTasks = (token, projectId) => {
       try {
         if (!isMounted.current || !projectId) return;
         
-        logger.info('Fetching tasks for project:', projectId);
-        const tasks = await getTasks(token, projectId);
+        // Add small debounce to prevent rapid refetches
+        const timeoutId = setTimeout(async () => {
+          logger.info('Fetching tasks for project:', projectId);
+          const tasks = await getTasks(token, projectId);
         logger.debug('Tasks retrieved:', tasks);
         logger.debug('Number of tasks:', tasks.length);
 
@@ -58,13 +59,20 @@ export const useTasks = (token, projectId) => {
     };
 
     // Only fetch tasks if we have a valid token
+    let timeoutId;
     if (token) {
-      fetchTasks();
+      timeoutId = fetchTasks();
     } else {
       // If no token, load mock tasks
       logger.info('No token available, loading mock tasks');
       loadMockTasks();
     }
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [token, loadMockTasks, projectId]);
 
   const handleDelete = useCallback(async (id) => {

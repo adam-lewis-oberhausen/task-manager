@@ -85,11 +85,17 @@ export const WorkspaceProvider = ({ children, token }) => {
     fetchWorkspaces();
   }, [fetchWorkspaces]);
 
-  // Load projects when workspace changes
+  const prevWorkspace = useRef(null);
+
+  // Load projects when workspace changes, but only if it's a different workspace
   useEffect(() => {
-    logger.debug('Workspace changed, loading projects');
-    fetchProjects();
-  }, [fetchProjects]);
+    if (currentWorkspace && (!prevWorkspace.current || 
+        currentWorkspace._id !== prevWorkspace.current._id)) {
+      logger.debug('Workspace changed, loading projects');
+      fetchProjects();
+      prevWorkspace.current = currentWorkspace;
+    }
+  }, [currentWorkspace, fetchProjects]);
 
   // Context value
   const contextValue = {
