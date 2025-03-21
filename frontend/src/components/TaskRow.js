@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createLogger } from '../utils/logger';
-const taskRowLogger = createLogger('TASK_ROW');
+const logger = createLogger('TASK_ROW');
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';
@@ -38,7 +38,7 @@ const TaskRow = ({
         <Checkbox
           checked={task.completed}
           onChange={() => {
-            taskRowLogger.debug('Toggling completion for task:', task._id);
+            logger.debug('Toggling completion for task:', task._id);
             toggleCompletion(task);
           }}
         />
@@ -75,7 +75,7 @@ const TaskRow = ({
         <Button
           onClick={() => {
             if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
-              taskRowLogger.debug('Deleting task:', task._id);
+              logger.debug('Deleting task:', task._id);
               handleDelete(task._id);
             }
           }}

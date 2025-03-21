@@ -9,11 +9,11 @@ import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
-const taskListLogger = createLogger('TASK_LIST');
+const logger = createLogger('TASK_LIST');
 
 const TaskList = ({ token }) => {
   const { currentProject } = useContext(WorkspaceContext);
-  taskListLogger.info('TaskList component rendering with token.');
+  logger.info('TaskList component rendering with token.');
   const {
     tasks,
     editingTaskId,
@@ -32,15 +32,15 @@ const TaskList = ({ token }) => {
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
 
   useEffect(() => {
-    taskListLogger.debug('Task panel state changed:', taskPanelOpen);
+    logger.debug('Task panel state changed:', taskPanelOpen);
   }, [taskPanelOpen]);
 
   useEffect(() => {
-    taskListLogger.debug('Editing task changed:', editingTask);
+    logger.debug('Editing task changed:', editingTask);
   }, [editingTask]);
 
   const toggleTaskPanel = () => {
-    taskListLogger.debug('Toggling task panel');
+    logger.debug('Toggling task panel');
     setTaskPanelOpen(!taskPanelOpen);
     setEditingTask(null);
     setEditingTaskId(null);
@@ -48,30 +48,30 @@ const TaskList = ({ token }) => {
   };
 
   const handleSave = async (task) => {
-    taskListLogger.info('Saving task:', task);
+    logger.info('Saving task:', task);
     const success = await handleTaskUpdate(task);
     if (success) {
-      taskListLogger.info('Task saved successfully');
+      logger.info('Task saved successfully');
       setTaskPanelOpen(false);
       setEditingTask(null);
     } else {
-      taskListLogger.warn('Task save failed');
+      logger.warn('Task save failed');
     }
   };
 
   const handleCancel = () => {
-    taskListLogger.debug('Canceling task edit');
+    logger.debug('Canceling task edit');
     setTaskPanelOpen(false);
     setEditingTask(null);
   };
 
   const startEditing = (task) => {
-    taskListLogger.debug('Starting to edit task:', task);
+    logger.debug('Starting to edit task:', task);
     setEditingTask(task);
     setEditingTaskId(task._id);
     setEditingName(task.name);
     if (!taskPanelOpen) {
-      taskListLogger.debug('Opening task panel for editing');
+      logger.debug('Opening task panel for editing');
       setTaskPanelOpen(true);
     }
   };
