@@ -174,10 +174,10 @@ export const useTasks = (token, projectId) => {
 
         // Create new task and update state in one batch
         const newTask = await createTask(taskToCreate);
-        setTasks(prevTasks => [
-          ...prevTasks.filter(t => !t._id.startsWith('mock-')),
-          newTask
-        ]);
+        setTasks(prevTasks => {
+          const filteredTasks = prevTasks.filter(t => !t._id.startsWith('mock-'));
+          return [...filteredTasks, newTask];
+        });
       } else if (taskData._id) {
         logger.debug('Updating existing task');
         // Update existing task
