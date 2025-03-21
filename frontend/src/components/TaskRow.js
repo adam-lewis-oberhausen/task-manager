@@ -8,6 +8,7 @@ import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import styles from './ui/Table.module.css';
 import stylesButton from './ui/Button.module.css';
+import { normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_ROW');
 

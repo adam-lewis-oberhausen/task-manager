@@ -7,7 +7,7 @@ import stylesButton from './ui/Button.module.css';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
-import { priorityColors, isOverdue } from '../utils/taskHelpers';
+import { priorityColors, isOverdue, normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_LIST');
 
@@ -18,7 +18,7 @@ const TaskList = ({ token }) => {
   useEffect(() => {
     logger.info('TaskList component mounted');
     isMounted.current = true;
-    
+
     return () => {
       logger.info('TaskList component unmounted');
       isMounted.current = false;
@@ -66,7 +66,7 @@ const TaskList = ({ token }) => {
       project: task.project,
       priority: task.priority
     });
-    
+
     const success = await handleTaskUpdate(task);
     if (success) {
       logger.info(`Task ${task._id || 'new task'} saved successfully`);
@@ -166,4 +166,4 @@ const TaskList = ({ token }) => {
   );
 };
 
-export default TaskList;
+export default React.memo(TaskList);

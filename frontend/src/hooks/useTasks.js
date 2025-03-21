@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
-import { MOCK_TASKS } from '../utils/taskHelpers';
+import { MOCK_TASKS, normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('USE_TASKS');
 
