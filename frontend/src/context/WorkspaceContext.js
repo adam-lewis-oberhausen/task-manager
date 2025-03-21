@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import { getWorkspaces } from '../services/workspaceService';
 import { getProjects } from '../services/projectService';
 import { createLogger } from '../utils/logger';
@@ -89,7 +89,7 @@ export const WorkspaceProvider = ({ children, token }) => {
 
   // Load projects when workspace changes, but only if it's a different workspace
   useEffect(() => {
-    if (currentWorkspace && (!prevWorkspace.current || 
+    if (currentWorkspace && (!prevWorkspace.current ||
         currentWorkspace._id !== prevWorkspace.current._id)) {
       logger.debug('Workspace changed, loading projects');
       fetchProjects();
