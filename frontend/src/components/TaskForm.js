@@ -31,15 +31,21 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
   }, []);
 
   // Reset form when task prop changes
+  const prevTaskId = useRef(task?._id);
+  
   useEffect(() => {
-    const normalizedTask = normalizeTask(task || {});
-    logger.debug('Task prop changed, resetting form:', {
-      id: normalizedTask._id,
-      name: normalizedTask.name,
-      description: normalizedTask.description,
-      priority: normalizedTask.priority,
-      dueDate: normalizedTask.dueDate
-    });
+    if (isMounted.current && task?._id !== prevTaskId.current) {
+      const normalizedTask = normalizeTask(task || {});
+      logger.debug('Task prop changed, resetting form:', {
+        id: normalizedTask._id,
+        name: normalizedTask.name,
+        description: normalizedTask.description,
+        priority: normalizedTask.priority,
+        dueDate: normalizedTask.dueDate
+      });
+      prevTaskId.current = task?._id;
+    }
+  }, [task]);
     const newName = task?.name || '';
     setName(newName);
     setDescription(task?.description || '');

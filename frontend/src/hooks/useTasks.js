@@ -15,20 +15,33 @@ export const useTasks = (token) => {
     setTasks(normalizedTasks);
   }, []);
 
+  const isMounted = useRef(false);
+  const prevToken = useRef(token);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        logger.info('Fetching tasks...');
-        const tasks = await getTasks(token);
-        logger.debug('Tasks retrieved:', tasks);
-        logger.debug('Number of tasks:', tasks.length);
+        if (isMounted.current && token !== prevToken.current) {
+          logger.info('Fetching tasks...');
+          const tasks = await getTasks(token);
+          logger.debug('Tasks retrieved:', tasks);
+          logger.debug('Number of tasks:', tasks.length);
 
-        if (tasks.length === 0) {
-          logger.info('No tasks found, loading mock tasks');
-          loadMockTasks();
-        } else {
-          logger.debug('Setting tasks:', tasks);
-          setTasks(tasks);
+          if (tasks.length === 0) {
+            logger.info('No tasks found, loading mock tasks');
+            loadMockTasks();
+          } else {
+            logger.debug('Setting tasks:', tasks);
+            setTasks(tasks);
+          }
+          prevToken.current = token;
         }
       } catch (error) {
         logger.error('Error fetching tasks:', error);
@@ -36,7 +49,7 @@ export const useTasks = (token) => {
     };
 
     fetchTasks();
-  }, [token, loadMockTasks, logger]);
+  }, [token, loadMockTasks]);
 
   const handleDelete = useCallback(async (id) => {
     try {

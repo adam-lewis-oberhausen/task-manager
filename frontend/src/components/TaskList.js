@@ -13,17 +13,30 @@ const logger = createLogger('TASK_LIST');
 
 const TaskList = ({ token }) => {
   const isMounted = useRef(false);
+  const prevToken = useRef(token);
 
   // Component lifecycle logging
   useEffect(() => {
-    logger.info('TaskList component mounted');
-    isMounted.current = true;
+    if (!isMounted.current) {
+      logger.info('TaskList component mounted');
+      isMounted.current = true;
+    }
 
     return () => {
-      logger.info('TaskList component unmounted');
-      isMounted.current = false;
+      if (isMounted.current) {
+        logger.info('TaskList component unmounted');
+        isMounted.current = false;
+      }
     };
   }, []);
+
+  // Log token changes
+  useEffect(() => {
+    if (isMounted.current && token !== prevToken.current) {
+      logger.info('Token changed, re-rendering TaskList');
+      prevToken.current = token;
+    }
+  }, [token]);
   const { currentProject } = useContext(WorkspaceContext);
   logger.info('TaskList component rendering with token.');
   const {
