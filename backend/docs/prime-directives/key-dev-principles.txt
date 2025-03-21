@@ -1,3 +1,5 @@
+BELOW YOU WILL FIND THE PRIME DIRECTIVES FOR DEVELOPING TASK MANAGER
+
 Key Organization Principles:
 
  1 Group related code together
