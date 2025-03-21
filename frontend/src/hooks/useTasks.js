@@ -4,7 +4,7 @@ import { MOCK_TASKS, normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('USE_TASKS');
 
-export const useTasks = (token) => {
+export const useTasks = (token, projectId) => {
   const [tasks, setTasks] = useState([]);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingName, setEditingName] = useState('');

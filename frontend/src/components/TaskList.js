@@ -46,6 +46,12 @@ const TaskList = ({ token }) => {
 
   const { currentProject } = useContext(WorkspaceContext);
 
+  const { 
+    currentProject,
+    fetchWorkspaces,
+    fetchProjects
+  } = useContext(WorkspaceContext);
+
   const {
     tasks,
     editingTaskId,
@@ -58,7 +64,7 @@ const TaskList = ({ token }) => {
     handleTaskUpdate,
     updateTasksOrder,
     setName,
-  } = useTasks(token);
+  } = useTasks(token, currentProject?._id);
 
   const [editingTask, setEditingTask] = useState(null);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
@@ -70,19 +76,19 @@ const TaskList = ({ token }) => {
       logger.debug('TaskList component mounted');
       
       // Initialize all required data
-      Promise.all([
-        fetchWorkspaces(),
-        fetchProjects()
-      ]).then(() => {
-        if (currentProject) {
-          fetchTasks();
-        }
-      });
+      if (token) {
+        Promise.all([
+          fetchWorkspaces(),
+          fetchProjects()
+        ]).catch(error => {
+          logger.error('Error initializing data:', error);
+        });
+      }
     }
     return () => {
       isMounted.current = false;
     };
-  }, [fetchWorkspaces, fetchProjects, fetchTasks, currentProject]);
+  }, [fetchWorkspaces, fetchProjects, token]);
 
   useEffect(() => {
     if (isMounted.current) {
