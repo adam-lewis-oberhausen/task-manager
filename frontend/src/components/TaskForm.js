@@ -8,7 +8,7 @@ import { normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_FORM');
 
-const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject }) => {
+const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject, isMounted }) => {
   const [name, setName] = useState(task?.name || '');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
