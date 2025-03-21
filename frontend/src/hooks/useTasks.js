@@ -191,12 +191,11 @@ export const useTasks = (token, projectId) => {
         };
         logger.debug('Task update data:', taskUpdate);
         const updatedTask = await updateTask(taskData._id, taskUpdate);
-        setTasks(prevTasks => [
-          ...prevTasks.filter(t => !t._id.startsWith('mock-')),
-          ...prevTasks
-            .filter(t => t._id.startsWith('mock-'))
-            .map(t => t._id === taskData._id ? { ...t, ...updatedTask } : t)
-        ]);
+        setTasks(prevTasks => 
+          prevTasks.map(t => 
+            t._id === taskData._id ? { ...t, ...updatedTask } : t
+          )
+        );
       } else {
         logger.debug('Creating new task');
         const taskToCreate = {
