@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_ROW');
@@ -22,6 +22,49 @@ const TaskRow = ({
   startEditing,
   updateTasksOrder
 }) => {
+  // Log task state changes
+  useEffect(() => {
+    logger.debug('Task state changed:', {
+      id: task._id,
+      name: task.name,
+      completed: task.completed,
+      priority: task.priority,
+      dueDate: task.dueDate
+    });
+  }, [task.completed, task.priority, task.dueDate]);
+
+  // Log drag-and-drop operations
+  useEffect(() => {
+    const handleDragStart = () => {
+      logger.debug('Drag started for task:', {
+        id: task._id,
+        name: task.name,
+        index
+      });
+    };
+
+    const handleDragEnd = () => {
+      logger.debug('Drag ended for task:', {
+        id: task._id,
+        name: task.name,
+        index
+      });
+      updateTasksOrder();
+    };
+
+    const dragHandle = document.querySelector(`.${stylesButton.dragHandle}`);
+    if (dragHandle) {
+      dragHandle.addEventListener('dragstart', handleDragStart);
+      dragHandle.addEventListener('dragend', handleDragEnd);
+    }
+
+    return () => {
+      if (dragHandle) {
+        dragHandle.removeEventListener('dragstart', handleDragStart);
+        dragHandle.removeEventListener('dragend', handleDragEnd);
+      }
+    };
+  }, [task._id, task.name, index, updateTasksOrder]);
 
   return (
     <TableRow
@@ -38,7 +81,12 @@ const TaskRow = ({
         <Checkbox
           checked={task.completed}
           onChange={() => {
-            logger.debug('Toggling completion for task:', task._id);
+            logger.info('Toggling task completion:', {
+              id: task._id,
+              name: task.name,
+              currentState: task.completed,
+              newState: !task.completed
+            });
             toggleCompletion(task);
           }}
         />
@@ -65,7 +113,13 @@ const TaskRow = ({
       </TableCell>
       <TableCell className={styles.tableCell}>
         <Button
-          onClick={() => startEditing(task)}
+          onClick={() => {
+            logger.info('Starting task edit:', {
+              id: task._id,
+              name: task.name
+            });
+            startEditing(task);
+          }}
           icon={EditIcon}
           className={`${stylesButton.iconOnly} ${stylesButton.editButton}`}
         >
@@ -75,8 +129,16 @@ const TaskRow = ({
         <Button
           onClick={() => {
             if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
-              logger.debug('Deleting task:', task._id);
+              logger.info('Deleting task:', {
+                id: task._id,
+                name: task.name
+              });
               handleDelete(task._id);
+            } else {
+              logger.debug('Task deletion canceled by user:', {
+                id: task._id,
+                name: task.name
+              });
             }
           }}
           icon={DeleteIcon}
