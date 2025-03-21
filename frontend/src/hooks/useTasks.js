@@ -65,7 +65,7 @@ export const useTasks = (token, projectId) => {
       logger.info('No token available, loading mock tasks');
       loadMockTasks();
     }
-  }, [token, loadMockTasks]);
+  }, [token, loadMockTasks, projectId]);
 
   const handleDelete = useCallback(async (id) => {
     try {
