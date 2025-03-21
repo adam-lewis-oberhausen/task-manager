@@ -68,11 +68,21 @@ const TaskList = ({ token }) => {
     if (!isMounted.current) {
       isMounted.current = true;
       logger.debug('TaskList component mounted');
+      
+      // Initialize all required data
+      Promise.all([
+        fetchWorkspaces(),
+        fetchProjects()
+      ]).then(() => {
+        if (currentProject) {
+          fetchTasks();
+        }
+      });
     }
     return () => {
       isMounted.current = false;
     };
-  }, []);
+  }, [fetchWorkspaces, fetchProjects, fetchTasks, currentProject]);
 
   useEffect(() => {
     if (isMounted.current) {

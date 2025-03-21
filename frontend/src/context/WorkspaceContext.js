@@ -11,8 +11,16 @@ export const WorkspaceProvider = ({ children, token }) => {
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
   const [projects, setProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState({
+    workspaces: true,
+    projects: true,
+    tasks: false
+  });
+  const [error, setError] = useState({
+    workspaces: null,
+    projects: null,
+    tasks: null
+  });
 
   const fetchWorkspaces = useCallback(async () => {
     if (!token) {

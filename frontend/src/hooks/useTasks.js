@@ -12,7 +12,13 @@ export const useTasks = (token) => {
   const loadMockTasks = useCallback(() => {
     const normalizedTasks = MOCK_TASKS.map(normalizeTask);
     logger.debug('Loading mock tasks:', normalizedTasks);
-    setTasks(normalizedTasks);
+    // Batch update using functional setState
+    setTasks(prevTasks => {
+      const newTasks = normalizedTasks.filter(newTask => 
+        !prevTasks.some(task => task._id === newTask._id)
+      );
+      return [...prevTasks, ...newTasks];
+    });
   }, []);
 
   const isMounted = useRef(false);
@@ -28,10 +34,10 @@ export const useTasks = (token) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        if (!isMounted.current) return;
+        if (!isMounted.current || !projectId) return;
         
-        logger.info('Fetching tasks...');
-        const tasks = await getTasks(token);
+        logger.info('Fetching tasks for project:', projectId);
+        const tasks = await getTasks(token, projectId);
         logger.debug('Tasks retrieved:', tasks);
         logger.debug('Number of tasks:', tasks.length);
 

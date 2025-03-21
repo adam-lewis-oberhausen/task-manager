@@ -4,10 +4,19 @@ const logger = createLogger('TASK_SERVICE');
 
 const BASE_URL = '/api/tasks';
 
-export const getTasks = async () => {
+export const getTasks = async (token, projectId) => {
   try {
-    logger.debug('Fetching tasks from API');
-    const response = await axios.get(BASE_URL);
+    if (!projectId) {
+      logger.debug('No project ID provided, returning empty task list');
+      return [];
+    }
+
+    logger.debug('Fetching tasks for project:', projectId);
+    const response = await axios.get(`${BASE_URL}?project=${projectId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     logger.debug('Tasks fetched successfully', {
       count: response.data.length
     });
