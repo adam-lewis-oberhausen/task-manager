@@ -197,8 +197,6 @@ export const useTasks = (token, projectId) => {
         );
       } else {
         logger.debug('Creating new task');
-        // Create new task and remove mock tasks
-        let updatedTasks = tasks.filter(t => !t._id.startsWith('mock-'));
         const taskToCreate = {
           name: taskData.name,
           description: taskData.description,
@@ -208,15 +206,12 @@ export const useTasks = (token, projectId) => {
         };
         logger.debug('New task data:', taskToCreate);
         const newTask = await createTask(taskToCreate);
-        updatedTasks = [...updatedTasks, newTask];
+        setTasks(prevTasks => [
+          ...prevTasks.filter(t => !t._id.startsWith('mock-')),
+          newTask
+        ]);
       }
 
-      if (updatedTasks) {
-        logger.debug('Final updated tasks:', updatedTasks);
-        setTasks(updatedTasks);
-        return true;
-      }
-      return false;
       return true;
     } catch (error) {
       logger.error('Error updating task:', error);
