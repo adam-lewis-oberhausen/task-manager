@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { createLogger } from '../utils/logger';
-const logger = createLogger('LOGIN');
 import axios from '../services/axiosConfig';
 import Form from './ui/Form';
 import Input from './ui/Input';
 import Button from './ui/Button';
 import styles from './ui/Form.module.css';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('LOGIN');
 
 const Login = ({ onLogin, setView }) => {
   const [username, setUsername] = useState('');
@@ -15,7 +15,7 @@ const Login = ({ onLogin, setView }) => {
   const handleLogin = async () => {
     logger.info('Login attempt initiated');
     setError('');
-    
+
     try {
       const normalizedEmail = username.trim().toLowerCase();
       const normalizedPassword = password.trim();

@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { createLogger } from '../utils/logger';
-const logger = createLogger('TASK_ROW');
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';
@@ -10,6 +8,8 @@ import { ReactComponent as DeleteIcon } from '../assets/delete.svg';
 import { ReactComponent as DragHandleIcon } from '../assets/drag-handle.svg';
 import styles from './ui/Table.module.css';
 import stylesButton from './ui/Button.module.css';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('TASK_ROW');
 
 const TaskRow = ({
   task,

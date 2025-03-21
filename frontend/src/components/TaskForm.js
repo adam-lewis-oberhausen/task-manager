@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { createLogger } from '../utils/logger';
-const logger = createLogger('TASK_FORM');
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ui/TaskForm.module.css';
 import Button from './ui/Button';
-// import stylesButton from './ui/Button.module.css';
+import { createLogger } from '../utils/logger';
+const logger = createLogger('TASK_FORM');
 
 const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, setEditingName, currentProject }) => {
   const [name, setName] = useState(task?.name || '');
@@ -63,7 +62,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!name.trim()) {
       logger.warn('Form submission failed - name is required');

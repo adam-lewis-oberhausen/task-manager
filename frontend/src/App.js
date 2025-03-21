@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createLogger } from './utils/logger';
-const logger = createLogger('APP');
 import TaskList from './components/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
 import Navbar from './components/ui/Navbar';
 import { WorkspaceProvider } from './context/WorkspaceContext';
 import './styles/App.css';
+import { createLogger } from './utils/logger';
+const logger = createLogger('APP');
 
 const App = () => {
   const [view, setView] = useState('login');
