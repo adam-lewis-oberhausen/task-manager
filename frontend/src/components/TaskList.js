@@ -44,9 +44,7 @@ const TaskList = ({ token }) => {
     }
   }, [token]);
 
-  const { currentProject } = useContext(WorkspaceContext);
-
-  const { 
+  const {
     currentProject,
     fetchWorkspaces,
     fetchProjects
@@ -74,7 +72,7 @@ const TaskList = ({ token }) => {
     if (!isMounted.current) {
       isMounted.current = true;
       logger.debug('TaskList component mounted');
-      
+
       // Initialize all required data
       if (token) {
         Promise.all([
