@@ -29,7 +29,10 @@ instance.interceptors.response.use(
       if (status === 401) {
         // Handle unauthorized errors
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        // Only redirect if we're not already on the login page
+        if (!window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login';
+        }
       }
       return Promise.reject(data || error.message);
     } else if (error.request) {
