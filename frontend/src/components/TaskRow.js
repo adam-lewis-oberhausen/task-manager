@@ -24,12 +24,13 @@ const TaskRow = ({
 }) => {
   // Log task state changes
   useEffect(() => {
+    const normalizedTask = normalizeTask(task);
     logger.debug('Task state changed:', {
-      id: task._id,
-      name: task.name,
-      completed: task.completed,
-      priority: task.priority,
-      dueDate: task.dueDate
+      id: normalizedTask._id,
+      name: normalizedTask.name,
+      completed: normalizedTask.completed,
+      priority: normalizedTask.priority,
+      dueDate: normalizedTask.dueDate
     });
   }, [task.completed, task.priority, task.dueDate]);
 

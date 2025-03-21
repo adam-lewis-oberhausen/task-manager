@@ -31,12 +31,13 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
 
   // Reset form when task prop changes
   useEffect(() => {
+    const normalizedTask = normalizeTask(task || {});
     logger.debug('Task prop changed, resetting form:', {
-      id: task?._id || 'new task',
-      name: task?.name || '',
-      description: task?.description || '',
-      priority: task?.priority || 'Medium',
-      dueDate: task?.dueDate || ''
+      id: normalizedTask._id,
+      name: normalizedTask.name,
+      description: normalizedTask.description,
+      priority: normalizedTask.priority,
+      dueDate: normalizedTask.dueDate
     });
     const newName = task?.name || '';
     setName(newName);
