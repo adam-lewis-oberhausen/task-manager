@@ -1,12 +1,14 @@
 import React from 'react';
 import styles from './Form.module.css';
 
-const Form = ({ children, className = '' }) => {
+const Form = React.forwardRef(({ children, className = '' }, ref) => {
   return (
-    <div className={`${styles.form} ${className}`}>
+    <div ref={ref} className={`${styles.form} ${className}`}>
       {children}
     </div>
   );
-};
+});
+
+Form.displayName = 'Form';
 
 export default Form;
