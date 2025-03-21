@@ -12,7 +12,6 @@ import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_LIST');
 
 const TaskList = ({ token }) => {
-  const isMounted = useRef(false);
   const prevToken = useRef(token);
 
   // Component lifecycle logging
@@ -56,13 +55,28 @@ const TaskList = ({ token }) => {
 
   const [editingTask, setEditingTask] = useState(null);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    logger.debug('Task panel state changed:', taskPanelOpen);
+    if (!isMounted.current) {
+      isMounted.current = true;
+      logger.debug('TaskList component mounted');
+    }
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      logger.debug('Task panel state changed:', taskPanelOpen);
+    }
   }, [taskPanelOpen]);
 
   useEffect(() => {
-    logger.debug('Editing task changed:', editingTask);
+    if (isMounted.current) {
+      logger.debug('Editing task changed:', editingTask);
+    }
   }, [editingTask]);
 
   const toggleTaskPanel = () => {
@@ -119,26 +133,29 @@ const TaskList = ({ token }) => {
         {taskPanelOpen ? 'Close Panel' : 'Add Task'}
       </Button>
         <div className={styles.customTable}>
-        <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
-          <TaskForm
-            key={editingTask?._id || 'new-task'} // Force remount when switching between new/edit
-            task={{
-              ...editingTask,
-              name: editingTaskId === editingTask?._id ? editingName : editingTask?.name
-            }}
-            editingTaskId={editingTaskId}
-            setEditingName={setEditingName}
-            editingName={editingName}
-            setEditingTaskId={setEditingTaskId}
-            onSave={handleSave}
-            onCancel={() => {
-              setEditingTask(null);
-              handleCancel();
-            }}
-            token={token}
-            currentProject={currentProject}
-          />
-        </div>
+        {taskPanelOpen && (
+           <div className={`task-panel ${taskPanelOpen ? 'open' : ''}`}>
+             <TaskForm
+               key={editingTask?._id || 'new-task'}
+               task={{
+                 ...editingTask,
+                 name: editingTaskId === editingTask?._id ? editingName : editingTask?.name
+               }}
+               editingTaskId={editingTaskId}
+               setEditingName={setEditingName}
+               editingName={editingName}
+               setEditingTaskId={setEditingTaskId}
+               onSave={handleSave}
+               onCancel={() => {
+                 setEditingTask(null);
+                 handleCancel();
+               }}
+               token={token}
+               currentProject={currentProject}
+               isMounted={isMounted}
+             />
+           </div>
+         )} 
         <Table>
             <TableHead>
               <TableRow>
