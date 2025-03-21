@@ -211,8 +211,12 @@ export const useTasks = (token, projectId) => {
         updatedTasks = [...updatedTasks, newTask];
       }
 
-      logger.debug('Final updated tasks:', updatedTasks);
-      setTasks(updatedTasks);
+      if (updatedTasks) {
+        logger.debug('Final updated tasks:', updatedTasks);
+        setTasks(updatedTasks);
+        return true;
+      }
+      return false;
       return true;
     } catch (error) {
       logger.error('Error updating task:', error);
