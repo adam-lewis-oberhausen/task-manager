@@ -19,18 +19,19 @@ const Login = ({ onLogin, setView }) => {
   }, [setView]);
 
   return (
-    <div>
+    <div className={styles.formContainer}>
       <LoginForm
         onSubmit={handleSubmit}
         onChange={handleChange}
         values={formState}
-      />
-      <AuthError error={formState.error} />
-      <AuthLink
-        onClick={handleRegisterClick}
-        text="No account yet?"
-        linkText="Register"
-      />
+      >
+        <AuthError error={formState.error} />
+        <AuthLink
+          onClick={handleRegisterClick}
+          text="No account yet?"
+          linkText="Register"
+        />
+      </LoginForm>
     </div>
   );
 };

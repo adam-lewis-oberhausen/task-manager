@@ -1,23 +1,20 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '../ui/Button';
 import styles from '../ui/Form.module.css';
 
 const AuthLink = ({ onClick, text, linkText }) => {
-  const handleClick = useCallback((e) => {
-    e.preventDefault();
-    onClick();
-  }, [onClick]);
-
   return (
     <div className={styles.link}>
       {text}{' '}
-      <button
+      <Button
         type="button"
         className={styles.linkButton}
-        onClick={handleClick}
+        onClick={onClick}
+        variant="text"
       >
         {linkText}
-      </button>
+      </Button>
     </div>
   );
 };

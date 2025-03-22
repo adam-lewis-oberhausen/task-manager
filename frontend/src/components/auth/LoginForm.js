@@ -5,7 +5,7 @@ import Input from '../ui/Input';
 import Button from '../ui/Button';
 import styles from '../ui/Form.module.css';
 
-const LoginForm = ({ onSubmit, onChange, values }) => {
+const LoginForm = ({ onSubmit, onChange, values, children }) => {
   return (
     <Form className={styles.form} onSubmit={onSubmit}>
       <h2 className={styles.title}>Login</h2>
@@ -32,6 +32,7 @@ const LoginForm = ({ onSubmit, onChange, values }) => {
       <div className={styles.actions}>
         <Button type="submit">Login</Button>
       </div>
+      {children}
     </Form>
   );
 };
