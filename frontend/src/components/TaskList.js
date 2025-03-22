@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { WorkspaceContext } from '../context/WorkspaceContext';
-import { Table, TableHead, TableBody, TableRow, TableCell } from './ui/Table';
+import { Table, TableBody } from './ui/Table';
+import TaskTableHeader from './TaskTableHeader';
 import styles from './ui/Table.module.css';
 import Button from './ui/Button';
 import stylesButton from './ui/Button.module.css';
@@ -96,34 +97,13 @@ const TaskList = ({ token }) => {
 
   // Render Methods
   const renderTaskPanel = () => (
-    taskPanel.isOpen && (
-      <TaskForm
-        key={taskPanel.editingTask?._id || 'new-task'}
-        task={taskPanel.editingTask || DEFAULT_TASK}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        token={token}
-        currentProject={currentProject}
-        isMounted={isMounted}
-        editingTaskId={editingTaskId}
-        setEditingName={setEditingName}
-      />
-    )
-  );
-
-  const renderTableHeader = () => (
-    <TableHead>
-      <TableRow>
-        <TableCell className={styles.tableCellHeader}></TableCell>
-        <TableCell className={styles.tableCellHeader}>Complete</TableCell>
-        <TableCell className={styles.tableCellHeader}>Assignee</TableCell>
-        <TableCell className={styles.tableCellHeader}>Name</TableCell>
-        <TableCell className={styles.tableCellHeader}>Due Date</TableCell>
-        <TableCell className={styles.tableCellHeader}>Priority</TableCell>
-        <TableCell className={styles.tableCellHeader}>Edit</TableCell>
-        <TableCell className={styles.tableCellHeader}>Delete</TableCell>
-      </TableRow>
-    </TableHead>
+    <TaskPanel
+      isOpen={taskPanel.isOpen}
+      editingTask={taskPanel.editingTask || DEFAULT_TASK}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      currentProject={currentProject}
+    />
   );
 
   const renderTaskRows = () => tasks.map((task, index) => (
@@ -160,7 +140,7 @@ const TaskList = ({ token }) => {
         </div>
 
         <Table>
-          {renderTableHeader()}
+          <TaskTableHeader />
           <TableBody>
             {renderTaskRows()}
           </TableBody>
