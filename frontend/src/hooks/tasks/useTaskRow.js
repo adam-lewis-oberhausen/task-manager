@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('USE_TASK_ROW');
 

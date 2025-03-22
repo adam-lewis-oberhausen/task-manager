@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { getTasks, deleteTask, updateTask, createTask } from '../services/taskService';
-import { MOCK_TASKS, normalizeTask } from '../utils/taskHelpers';
-import { createLogger } from '../utils/logger';
+import { getTasks, deleteTask, updateTask, createTask } from '../../services/taskService';
+import { MOCK_TASKS, normalizeTask } from '../../utils/taskHelpers';
+import { createLogger } from '../../utils/logger';
 const logger = createLogger('USE_TASKS');
 
 export const useTasks = (token, projectId) => {
@@ -34,7 +34,7 @@ export const useTasks = (token, projectId) => {
     const fetchTasks = async () => {
       try {
         if (!isMounted.current || !projectId) return;
-        
+
         // Add small debounce to prevent rapid refetches
         const timeoutId = setTimeout(async () => {
           try {
@@ -74,7 +74,7 @@ export const useTasks = (token, projectId) => {
       logger.info('No token available, loading mock tasks');
       loadMockTasks();
     }
-    
+
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -85,10 +85,10 @@ export const useTasks = (token, projectId) => {
   const handleDelete = useCallback(async (id) => {
     try {
       logger.info('Deleting task with id:', id);
-      
+
       // Optimistically remove the task from UI
       setTasks(prevTasks => prevTasks.filter(task => task._id !== id));
-      
+
       // Only call deleteTask for non-mock tasks
       if (!id.startsWith('mock-')) {
         logger.debug('Deleting real task');
@@ -118,8 +118,8 @@ export const useTasks = (token, projectId) => {
       const updatedTask = { ...task, completed: !task.completed };
       logger.debug('Updated task state:', updatedTask);
       await updateTask(task._id, updatedTask);
-      setTasks(prevTasks => 
-        prevTasks.map(t => 
+      setTasks(prevTasks =>
+        prevTasks.map(t =>
           t._id === task._id ? updatedTask : t
         )
       );
@@ -131,7 +131,7 @@ export const useTasks = (token, projectId) => {
   const handleTaskUpdate = useCallback(async (taskData) => {
     try {
       logger.debug('Handling task update for:', taskData);
-      
+
       // Prepare task data
       const taskToCreate = {
         name: taskData.name,
@@ -168,8 +168,8 @@ export const useTasks = (token, projectId) => {
         };
         logger.debug('Task update data:', taskUpdate);
         const updatedTask = await updateTask(taskData._id, taskUpdate);
-        setTasks(prevTasks => 
-          prevTasks.map(t => 
+        setTasks(prevTasks =>
+          prevTasks.map(t =>
             t._id === taskData._id ? { ...t, ...updatedTask } : t
           )
         );

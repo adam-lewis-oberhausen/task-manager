@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useTaskRow from '../../hooks/useTaskRow';
+import useTaskRow from '../../hooks/tasks/useTaskRow';
 import Checkbox from '../ui/Checkbox';
 import Button from '../ui/Button';
 import { TableRow, TableCell } from '../ui/Table';

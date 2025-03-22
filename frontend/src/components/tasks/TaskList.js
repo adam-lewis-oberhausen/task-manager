@@ -7,7 +7,7 @@ import TaskPanel from './TaskPanel';
 import TaskRow from './TaskRow';
 import Button from '../ui/Button';
 import stylesButton from '../ui/Button.module.css';
-import { useTasks } from '../../hooks/useTasks';
+import { useTasks } from '../../hooks/tasks/useTasks';
 import useTaskPanel from '../../hooks/useTaskPanel';
 import useWorkspaceData from '../../hooks/useWorkspaceData';
 import useTaskCallbacks from '../../hooks/useTaskCallbacks';
