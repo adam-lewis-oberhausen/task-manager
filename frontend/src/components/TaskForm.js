@@ -23,7 +23,6 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       container.style.height = '100%';
       editor.root.style.fontFamily = "'Cousine', monospace";
       editor.root.style.fontSize = '16px';
-      //editor.root.style.height = '100%';
       editor.root.style.minHeight = '100px';
       editor.root.style.maxHeight = '300px';
       editor.root.style.overflow = 'auto';
