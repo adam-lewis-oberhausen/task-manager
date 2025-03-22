@@ -92,22 +92,11 @@ const TaskList = ({ token }) => {
     };
   }, [initializeData]);
 
-  const initializeData = useCallback(async () => {
-    if (token) {
-      try {
-        logger.debug('Initializing workspace and project data');
-        await Promise.all([fetchWorkspaces(), fetchProjects()]);
-      } catch (error) {
-        logger.error('Error initializing data:', error);
-      }
-    }
-  }, [token, fetchWorkspaces, fetchProjects]);
-
   // Task Operations Handlers
   const handleSave = useCallback(async (task) => {
     logger.info('Saving task', { taskId: task._id });
     const success = await handleTaskUpdate(task);
-    
+
     if (success) {
       logger.info('Task saved successfully');
       taskPanel.closePanel();
@@ -181,8 +170,8 @@ const TaskList = ({ token }) => {
 
   return (
     <div>
-      <Button 
-        onClick={taskPanel.togglePanel} 
+      <Button
+        onClick={taskPanel.togglePanel}
         className={stylesButton.button}
       >
         {taskPanel.isOpen ? 'Close Panel' : 'Add Task'}

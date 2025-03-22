@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from './ui/TaskForm.module.css';
 import Button from './ui/Button';
-import { normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('TASK_FORM');
 
