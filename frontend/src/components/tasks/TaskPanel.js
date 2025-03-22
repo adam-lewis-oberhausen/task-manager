@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TaskForm from './TaskForm';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('TASK_PANEL');
 
@@ -16,7 +16,7 @@ const logger = createLogger('TASK_PANEL');
  * @returns {JSX.Element} Task panel component
  */
 const TaskPanel = ({ isOpen, editingTask, onSave, onCancel, currentProject }) => {
-  logger.debug('Rendering task panel', { 
+  logger.debug('Rendering task panel', {
     isOpen,
     editingTaskId: editingTask?._id,
     currentProjectId: currentProject?._id

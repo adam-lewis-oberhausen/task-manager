@@ -1,17 +1,17 @@
 import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { WorkspaceContext } from '../context/WorkspaceContext';
-import { Table, TableBody } from './ui/Table';
+import { WorkspaceContext } from '../../context/WorkspaceContext';
+import { Table, TableBody } from '../ui/Table';
 import TaskTableHeader from './TaskTableHeader';
 import TaskPanel from './TaskPanel';
 import TaskRow from './TaskRow';
-import Button from './ui/Button';
+import Button from '../ui/Button';
 import stylesButton from './ui/Button.module.css';
-import { useTasks } from '../hooks/useTasks';
-import useTaskPanel from '../hooks/useTaskPanel';
-import useWorkspaceData from '../hooks/useWorkspaceData';
-import { priorityColors, isOverdue } from '../utils/taskHelpers';
-import { createLogger } from '../utils/logger';
+import { useTasks } from '../../hooks/useTasks';
+import useTaskPanel from '../../hooks/useTaskPanel';
+import useWorkspaceData from '../../hooks/useWorkspaceData';
+import { priorityColors, isOverdue } from '../../utils/taskHelpers';
+import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('TASK_LIST');
 
@@ -33,7 +33,7 @@ const TaskList = ({ token }) => {
   // Context and State Management
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
-  
+
   // Custom hooks
   const { initializeData } = useWorkspaceData(token, fetchWorkspaces, fetchProjects);
   const {

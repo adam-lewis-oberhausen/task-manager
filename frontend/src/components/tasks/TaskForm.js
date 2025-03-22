@@ -2,10 +2,10 @@ import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import useTaskForm from '../hooks/useTaskForm';
-import Button from './ui/Button';
+import useTaskForm from '../../hooks/useTaskForm';
+import Button from '../ui/Button';
 import styles from './ui/TaskForm.module.css';
-import { createLogger } from '../utils/logger';
+import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('TASK_FORM');
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import TaskList from './components/TaskList';
+import TaskList from './components/tasks/TaskList';
 import Register from './components/Register';
 import Login from './components/Login';
 import Navbar from './components/ui/Navbar';
