@@ -66,6 +66,17 @@ const TaskList = ({ token }) => {
   } = useTasks(token, currentProject?._id);
 
   // Lifecycle and Initialization
+  const initializeData = useCallback(async () => {
+    if (token) {
+      try {
+        logger.debug('Initializing workspace and project data');
+        await Promise.all([fetchWorkspaces(), fetchProjects()]);
+      } catch (error) {
+        logger.error('Error initializing data:', error);
+      }
+    }
+  }, [token, fetchWorkspaces, fetchProjects]);
+
   useEffect(() => {
     if (!isMounted.current) {
       isMounted.current = true;
@@ -79,7 +90,7 @@ const TaskList = ({ token }) => {
         isMounted.current = false;
       }
     };
-  }, []);
+  }, [initializeData]);
 
   const initializeData = useCallback(async () => {
     if (token) {

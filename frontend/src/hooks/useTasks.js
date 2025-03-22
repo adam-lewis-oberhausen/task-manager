@@ -118,13 +118,15 @@ export const useTasks = (token, projectId) => {
       const updatedTask = { ...task, completed: !task.completed };
       logger.debug('Updated task state:', updatedTask);
       await updateTask(task._id, updatedTask);
-      const updatedTasks = tasks.map(t => (t._id === task._id ? updatedTask : t));
-      logger.debug('Updated tasks after toggle:', updatedTasks);
-      setTasks(updatedTasks);
+      setTasks(prevTasks => 
+        prevTasks.map(t => 
+          t._id === task._id ? updatedTask : t
+        )
+      );
     } catch (error) {
       logger.error('Error toggling task completion:', error);
     }
-  }, [tasks]);
+  }, []);
 
   const handleTaskUpdate = useCallback(async (taskData) => {
     try {
@@ -193,7 +195,7 @@ export const useTasks = (token, projectId) => {
       logger.error('Error updating task:', error);
       return false;
     }
-  }, [tasks, loadMockTasks]);
+  }, [loadMockTasks]);
 
   const setName = useCallback((name) => {
     setEditingName(name);
