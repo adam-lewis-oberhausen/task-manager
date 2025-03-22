@@ -40,6 +40,7 @@ const App = () => {
     logger.info('User logged in');
     localStorage.setItem('token', token);
     setToken(token);
+    setView('main');
   };
 
   const handleLogout = () => {
@@ -78,7 +79,7 @@ const App = () => {
           ) : (
             <>
               {logger.debug('Rendering register view')}
-              <Register setView={setView} />
+              <Register onLogin={handleLogin} setView={setView} />
             </>
           )}
         </div>
