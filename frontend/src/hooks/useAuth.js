@@ -23,8 +23,27 @@ const useAuth = (onLogin) => {
     }
   }, [onLogin]);
 
+  const handleRegister = useCallback(async (credentials) => {
+    logger.info('Registration attempt initiated');
+    
+    try {
+      const response = await axios.post('/api/auth/register', credentials);
+      logger.info('Registration successful');
+      onLogin(response.data.token);
+      return { success: true };
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Registration failed';
+      logger.error('Registration failed', {
+        error: errorMessage,
+        status: error.response?.status
+      });
+      return { success: false, error: errorMessage };
+    }
+  }, [onLogin]);
+
   return {
-    handleLogin
+    handleLogin,
+    handleRegister
   };
 };
 
