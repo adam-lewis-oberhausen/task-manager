@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import TaskRow from '../TaskRow';
 import { createLogger } from '../../../utils/logger';
 
@@ -40,10 +40,10 @@ describe('TaskRow', () => {
       <table>
         <tbody>
           <TaskRow
-          task={testTask}
-          isOverdue={isOverdue}
-          priorityColors={priorityColors}
-          callbacks={mockCallbacks}
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
           />
         </tbody>
       </table>
@@ -62,5 +62,160 @@ describe('TaskRow', () => {
     // Verify action buttons are present
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
+  });
+
+  it('toggles task completion state when checkbox is clicked', () => {
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+    expect(mockCallbacks.toggleCompletion).toHaveBeenCalledWith(testTask);
+  });
+
+  it('calls startEditing when edit button is clicked', () => {
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const editButton = screen.getByRole('button', { name: /edit/i });
+    fireEvent.click(editButton);
+    expect(mockCallbacks.startEditing).toHaveBeenCalled();
+  });
+
+  it('calls handleDelete when delete button is clicked', () => {
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    fireEvent.click(deleteButton);
+    expect(mockCallbacks.handleDelete).toHaveBeenCalledWith(testTask._id);
+  });
+
+  it('applies overdue styling when task is overdue', () => {
+    const overdueTask = { ...testTask, dueDate: '2020-01-01' };
+    isOverdue.mockReturnValue(true);
+    
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={overdueTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const row = screen.getByRole('row');
+    expect(row).toHaveClass('overdueRow');
+  });
+
+  it('applies completed styling when task is completed', () => {
+    const completedTask = { ...testTask, completed: true };
+    
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={completedTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const row = screen.getByRole('row');
+    expect(row).toHaveClass('completedRow');
+  });
+
+  it('applies correct priority color class', () => {
+    const highPriorityTask = { ...testTask, priority: 'High' };
+    
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={highPriorityTask}
+            isOverdue={isOverdue}
+            priorityColors={{ High: 'high-priority' }}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const priorityCell = screen.getByText('High');
+    expect(priorityCell).toHaveClass('high-priority');
+  });
+
+  it('formats dates correctly', () => {
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    expect(screen.getByText('12/31/2023')).toBeInTheDocument();
+  });
+
+  it('handles empty due dates gracefully', () => {
+    const noDateTask = { ...testTask, dueDate: null };
+    
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={noDateTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const dateCell = screen.getByRole('cell', { name: '' });
+    expect(dateCell).toBeInTheDocument();
   });
 });
