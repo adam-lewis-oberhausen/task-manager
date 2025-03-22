@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import useTaskRow from '../hooks/useTaskRow';
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
 import { TableRow, TableCell } from './ui/Table';
@@ -10,19 +11,22 @@ import styles from './ui/Table.module.css';
 import stylesButton from './ui/Button.module.css';
 import { normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
+
 const logger = createLogger('TASK_ROW');
 
 const TaskRow = ({
   task,
-  index,
-  toggleCompletion,
-  handleDelete,
-  moveTask,
   isOverdue,
   priorityColors,
-  startEditing,
-  updateTasksOrder
+  toggleCompletion,
+  handleDelete,
+  startEditing
 }) => {
+  const { handleToggleCompletion, handleEdit, handleDeleteTask } = useTaskRow(
+    task,
+    { toggleCompletion, handleDelete, startEditing }
+  );
+
   // Log task state changes
   useEffect(() => {
     const normalizedTask = normalizeTask(task);
@@ -35,7 +39,6 @@ const TaskRow = ({
     });
   }, [task]);
 
-
   return (
     <TableRow
       className={`${styles.tableRow} ${isOverdue(task.dueDate) ? styles.overdueRow : ''} ${task.completed ? styles.completedRow : ''}`}
@@ -44,76 +47,39 @@ const TaskRow = ({
         <Button
           icon={DragHandleIcon}
           className={`${stylesButton.iconOnly} ${stylesButton.dragHandle}`}
-        >
-        </Button>
+        />
       </TableCell>
       <TableCell className={styles.tableCell}>
         <Checkbox
           checked={task.completed}
-          onChange={() => {
-            logger.info('Toggling task completion:', {
-              id: task._id,
-              name: task.name,
-              currentState: task.completed,
-              newState: !task.completed
-            });
-            toggleCompletion(task);
-          }}
+          onChange={handleToggleCompletion}
         />
       </TableCell>
-      <TableCell className={styles.tableCell}
-      onClick={() => startEditing(task)}
-      >
+      <TableCell className={styles.tableCell} onClick={handleEdit}>
         {task.assignee}
       </TableCell>
-      <TableCell className={styles.tableCell}
-        onClick={() => startEditing(task)}
-      >
+      <TableCell className={styles.tableCell} onClick={handleEdit}>
         {task.name}
       </TableCell>
-      <TableCell className={styles.tableCell}
-        onClick={() => startEditing(task)}
-      >
+      <TableCell className={styles.tableCell} onClick={handleEdit}>
         {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
       </TableCell>
-      <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`}
-        onClick={() => startEditing(task)}
-      >
+      <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`} onClick={handleEdit}>
         {task.priority}
       </TableCell>
       <TableCell className={styles.tableCell}>
         <Button
-          onClick={() => {
-            logger.info('Starting task edit:', {
-              id: task._id,
-              name: task.name
-            });
-            startEditing(task);
-          }}
+          onClick={handleEdit}
           icon={EditIcon}
           className={`${stylesButton.iconOnly} ${stylesButton.editButton}`}
-        >
-        </Button>
+        />
       </TableCell>
       <TableCell className={styles.tableCell}>
         <Button
-          onClick={() => {
-            if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
-              logger.info('Deleting task:', {
-                id: task._id,
-                name: task.name
-              });
-              handleDelete(task._id);
-            } else {
-              logger.debug('Task deletion canceled by user:', {
-                id: task._id,
-                name: task.name
-              });
-            }
-          }}
+          onClick={handleDeleteTask}
           icon={DeleteIcon}
-          className={`${stylesButton.iconOnly} ${stylesButton.deleteButton}`}>
-        </Button>
+          className={`${stylesButton.iconOnly} ${stylesButton.deleteButton}`}
+        />
       </TableCell>
     </TableRow>
   );
@@ -121,12 +87,10 @@ const TaskRow = ({
 
 TaskRow.propTypes = {
   task: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  toggleCompletion: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  moveTask: PropTypes.func.isRequired,
   isOverdue: PropTypes.func.isRequired,
   priorityColors: PropTypes.object.isRequired,
+  toggleCompletion: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
   startEditing: PropTypes.func.isRequired,
 };
 
