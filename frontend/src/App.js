@@ -71,12 +71,13 @@ const App = () => {
         </WorkspaceProvider>
       ) : (
         <div className={`content ${sidePanelOpen ? 'shifted' : ''}`}>
-          {view === 'login' ? (
+          {view === 'login' && (
             <>
               {logger.debug('Rendering login view')}
               <Login onLogin={handleLogin} setView={setView} />
             </>
-          ) : (
+          )}
+          {view === 'register' && (
             <>
               {logger.debug('Rendering register view')}
               <Register onLogin={handleLogin} setView={setView} />
