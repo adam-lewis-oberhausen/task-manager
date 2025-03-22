@@ -13,6 +13,41 @@ This document outlines the key principles and best practices for developing and 
 
 ## Code Organization
 
+### Representative Files
+The following files represent key architectural patterns and should be referenced when making significant changes:
+
+1. **Core Application Flow**
+   - `frontend/src/App.js` - Main application entry point
+   - `frontend/src/index.js` - React initialization
+
+2. **State Management & Context**
+   - `frontend/src/context/WorkspaceContext.js` - Global state management
+   - `frontend/src/hooks/useTasks.js` - Custom hook pattern
+
+3. **Service Layer**
+   - `frontend/src/services/axiosConfig.js` - API client configuration
+   - `frontend/src/services/taskService.js` - Service layer example
+
+4. **Core Components**
+   - `frontend/src/components/TaskList.js` - Main container component
+   - `frontend/src/components/TaskForm.js` - Form handling example
+
+5. **Authentication**
+   - `frontend/src/components/Login.js` - Frontend auth flow
+   - `backend/middleware/auth.js` - Backend auth middleware
+
+6. **Data Models**
+   - `backend/models/Task.js` - Core model example
+   - `backend/models/Project.js` - Relationship example
+
+7. **Testing**
+   - `backend/tests/tasks.test.js` - Integration test example
+   - `backend/tests/auth.test.js` - Auth test coverage
+
+8. **Utilities**
+   - `frontend/src/utils/logger.js` - Logging implementation
+   - `frontend/src/utils/taskHelpers.js` - Utility functions
+
 ### Principles
 1. **Group related code together**
    - Keep components, hooks, and utilities in logical groupings
