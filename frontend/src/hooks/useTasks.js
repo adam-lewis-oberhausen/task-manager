@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { getTasks, deleteTask, updateTask, updateTaskOrder, createTask } from '../services/taskService';
+import { getTasks, deleteTask, updateTask, createTask } from '../services/taskService';
 import { MOCK_TASKS, normalizeTask } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 const logger = createLogger('USE_TASKS');
@@ -127,15 +127,6 @@ export const useTasks = (token, projectId) => {
     }
   }, [tasks]);
 
-  // Separate function for final order update
-  const updateTasksOrder = useCallback(async () => {
-    const realTasks = tasks.filter(t => !t._id.startsWith('mock-'));
-    if (realTasks.length > 0) {
-      const orderUpdates = realTasks.map((task, index) => ({ _id: task._id, order: index }));
-      logger.debug('Final task order:', orderUpdates);
-      await updateTaskOrder(orderUpdates);
-    }
-  }, [tasks]);
 
   const toggleCompletion = useCallback(async (task) => {
     try {
@@ -238,7 +229,6 @@ export const useTasks = (token, projectId) => {
     createTask,
     setTasks,
     handleTaskUpdate,
-    updateTasksOrder,
     setName
   };
 };
