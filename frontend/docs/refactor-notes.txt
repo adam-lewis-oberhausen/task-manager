@@ -1,0 +1,57 @@
+This refactor primarily impacts Login.js, but it has some ripple effects that would require changes to other files. Here's the
+full scope of impacted files:
+
+ 1 New Files to Create
+
+ • src/hooks/useAuth.js - For auth-related logic
+ • src/hooks/useLoginForm.js - For form state management
+ • src/components/auth/AuthError.js - Error display component
+ • src/components/auth/AuthLink.js - Link component
+ • src/components/auth/LoginForm.js - Form UI component
+
+ 2 Files Requiring Updates
+
+ • src/App.js - May need updates to handle new auth flow
+ • src/services/axiosConfig.js - May need auth-related config updates
+ • src/context/WorkspaceContext.js - May need auth state integration
+ • src/components/Register.js - Should follow same patterns for consistency
+
+ 3 Test Files to Update/Create
+
+ • src/__tests__/useAuth.test.js
+ • src/__tests__/useLoginForm.test.js
+ • src/__tests__/Login.test.js
+ • src/__tests__/LoginForm.test.js
+
+ 4 Directory Structure Changes
+
+ • Create new directories:
+    • src/hooks/
+    • src/components/auth/
+ • Move Login.js to src/components/auth/Login.js
+
+ 5 Dependency Updates
+
+ • May need to add new dev dependencies for testing
+ • May need to update existing dependencies
+
+The refactor follows these principles from DEVELOPMENT_PRINCIPLES.md:
+
+ 1 Code Organization
+    • Group related code together
+    • Use consistent ordering
+    • Separate concerns
+ 2 Component Architecture
+    • Single Responsibility
+    • Container/Presentational Pattern
+    • Prop Validation
+    • Memoization
+ 3 State Management
+    • Local State in custom hooks
+    • Derived state in components
+ 4 Error Handling
+    • Centralized error handling in useAuth
+    • Clear user feedback via AuthError
+ 5 Logging
+    • Maintain existing logging patterns
+    • Add logging to new hooks 
