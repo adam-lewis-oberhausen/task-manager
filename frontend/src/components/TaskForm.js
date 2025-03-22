@@ -62,7 +62,17 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       });
       prevTaskId.current = task?._id;
     }
-  }, [task, editingTaskId, setEditingName, isMounted]);
+  }, [
+    task,
+    editingTaskId,
+    setEditingName,
+    isMounted,
+    name,
+    description,
+    priority,
+    dueDate,
+    editingName
+  ]);
 
   // Cleanup form state when unmounting
   useEffect(() => {
@@ -72,7 +82,7 @@ const TaskForm = ({ task = defaultTask, onSave, onCancel, token, editingTaskId, 
       setPriority('Medium');
       setDueDate('');
     };
-  }, []);
+  }, [setName, setDescription, setPriority, setDueDate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
