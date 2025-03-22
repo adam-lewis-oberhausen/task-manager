@@ -2,11 +2,11 @@ import React, { useState, useEffect, useContext, useRef, useCallback } from 'rea
 import { WorkspaceContext } from '../context/WorkspaceContext';
 import { Table, TableBody } from './ui/Table';
 import TaskTableHeader from './TaskTableHeader';
+import TaskPanel from './TaskPanel';
 import styles from './ui/Table.module.css';
 import Button from './ui/Button';
 import stylesButton from './ui/Button.module.css';
 import TaskRow from './TaskRow';
-import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
 import useTaskPanel from '../hooks/useTaskPanel';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
@@ -21,8 +21,6 @@ const DEFAULT_TASK = {
   priority: 'Medium',
   dueDate: ''
 };
-
-
 
 const TaskList = ({ token }) => {
   // Context and State Management
