@@ -5,9 +5,6 @@ import 'react-quill/dist/quill.snow.css';
 import useTaskForm from '../../hooks/useTaskForm';
 import Button from '../ui/Button';
 import styles from './TaskForm.module.css';
-import { createLogger } from '../../utils/logger';
-
-const logger = createLogger('TASK_FORM');
 
 const TaskForm = ({ task, onSave, onCancel, currentProject }) => {
   const quillRef = useRef(null);
