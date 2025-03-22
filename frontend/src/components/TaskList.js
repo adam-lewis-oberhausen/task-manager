@@ -7,6 +7,7 @@ import stylesButton from './ui/Button.module.css';
 import TaskRow from './TaskRow';
 import TaskForm from './TaskForm';
 import { useTasks } from '../hooks/useTasks';
+import useTaskPanel from '../hooks/useTaskPanel';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 
@@ -20,7 +21,7 @@ const DEFAULT_TASK = {
   dueDate: ''
 };
 
-import useTaskPanel from '../hooks/useTaskPanel';
+
 
 const TaskList = ({ token }) => {
   // Context and State Management
