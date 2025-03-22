@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { WorkspaceContext } from '../context/WorkspaceContext';
 import { Table, TableBody } from './ui/Table';
 import TaskTableHeader from './TaskTableHeader';
 import TaskPanel from './TaskPanel';
-import styles from './ui/Table.module.css';
+import TaskRow from './TaskRow';
 import Button from './ui/Button';
 import stylesButton from './ui/Button.module.css';
-import TaskRow from './TaskRow';
 import { useTasks } from '../hooks/useTasks';
 import useTaskPanel from '../hooks/useTaskPanel';
+import useWorkspaceData from '../hooks/useWorkspaceData';
 import { priorityColors, isOverdue } from '../utils/taskHelpers';
 import { createLogger } from '../utils/logger';
 
@@ -22,51 +23,26 @@ const DEFAULT_TASK = {
   dueDate: ''
 };
 
+/**
+ * Main task list component
+ * @param {Object} props - Component props
+ * @param {string} props.token - Authentication token
+ * @returns {JSX.Element} Task list component
+ */
 const TaskList = ({ token }) => {
   // Context and State Management
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
-  const isMounted = useRef(false);
-
-  // Task Operations
+  
+  // Custom hooks
+  const { initializeData } = useWorkspaceData(token, fetchWorkspaces, fetchProjects);
   const {
     tasks,
-    editingTaskId,
-    setEditingTaskId,
-    editingName,
-    setEditingName,
     handleDelete,
     toggleCompletion,
     handleTaskUpdate,
-    setName
+    startEditing
   } = useTasks(token, currentProject?._id);
-
-  // Lifecycle and Initialization
-  const initializeData = useCallback(async () => {
-    if (token) {
-      try {
-        logger.debug('Initializing workspace and project data');
-        await Promise.all([fetchWorkspaces(), fetchProjects()]);
-      } catch (error) {
-        logger.error('Error initializing data:', error);
-      }
-    }
-  }, [token, fetchWorkspaces, fetchProjects]);
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      logger.info('TaskList component mounted');
-      initializeData();
-    }
-
-    return () => {
-      if (isMounted.current) {
-        logger.info('TaskList component unmounted');
-        isMounted.current = false;
-      }
-    };
-  }, [initializeData]);
 
   // Task Operations Handlers
   const handleSave = useCallback(async (task) => {
@@ -86,43 +62,6 @@ const TaskList = ({ token }) => {
     taskPanel.closePanel();
   }, [taskPanel]);
 
-  const startEditing = useCallback((task) => {
-    logger.info('Starting task edit', { taskId: task._id });
-    setEditingTaskId(task._id);
-    setEditingName(task.name);
-    taskPanel.openPanel(task);
-  }, [setEditingTaskId, setEditingName, taskPanel]);
-
-  // Render Methods
-  const renderTaskPanel = () => (
-    <TaskPanel
-      isOpen={taskPanel.isOpen}
-      editingTask={taskPanel.editingTask || DEFAULT_TASK}
-      onSave={handleSave}
-      onCancel={handleCancel}
-      currentProject={currentProject}
-    />
-  );
-
-  const renderTaskRows = () => tasks.map((task, index) => (
-    <TaskRow
-      key={task._id}
-      task={task}
-      index={index}
-      editingTaskId={editingTaskId}
-      setEditingTaskId={setEditingTaskId}
-      editingName={editingName}
-      setEditingName={setEditingName}
-      toggleCompletion={toggleCompletion}
-      handleDelete={handleDelete}
-      isOverdue={isOverdue}
-      priorityColors={priorityColors}
-      handleTaskUpdate={handleTaskUpdate}
-      startEditing={startEditing}
-      setName={setName}
-    />
-  ));
-
   return (
     <div>
       <Button
@@ -132,20 +71,38 @@ const TaskList = ({ token }) => {
         {taskPanel.isOpen ? 'Close Panel' : 'Add Task'}
       </Button>
 
-      <div className={styles.customTable}>
-        <div className={`task-panel ${taskPanel.isOpen ? 'open' : ''}`}>
-          {renderTaskPanel()}
-        </div>
+      <div className="task-list-container">
+        <TaskPanel
+          isOpen={taskPanel.isOpen}
+          editingTask={taskPanel.editingTask || DEFAULT_TASK}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          currentProject={currentProject}
+        />
 
         <Table>
           <TaskTableHeader />
           <TableBody>
-            {renderTaskRows()}
+            {tasks.map((task) => (
+              <TaskRow
+                key={task._id}
+                task={task}
+                toggleCompletion={toggleCompletion}
+                handleDelete={handleDelete}
+                isOverdue={isOverdue}
+                priorityColors={priorityColors}
+                startEditing={startEditing}
+              />
+            ))}
           </TableBody>
         </Table>
       </div>
     </div>
   );
+};
+
+TaskList.propTypes = {
+  token: PropTypes.string.isRequired
 };
 
 export default React.memo(TaskList);
