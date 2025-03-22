@@ -4,7 +4,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Navbar from './components/ui/Navbar';
 import { WorkspaceProvider } from './context/WorkspaceContext';
-import './styles/App.css';
+import './App.css';
 import { createLogger } from './utils/logger';
 const logger = createLogger('APP');
 
