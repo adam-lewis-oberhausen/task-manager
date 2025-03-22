@@ -6,6 +6,7 @@ import AuthError from './auth/AuthError';
 import AuthLink from './auth/AuthLink';
 import LoginForm from './auth/LoginForm';
 import { createLogger } from '../utils/logger';
+import styles from './ui/Form.module.css';
 
 const logger = createLogger('LOGIN');
 
