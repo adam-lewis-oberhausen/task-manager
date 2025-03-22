@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { WorkspaceContext } from '../../context/WorkspaceContext';
 import { Table, TableBody } from '../ui/Table';
@@ -7,7 +7,7 @@ import TaskPanel from './TaskPanel';
 import TaskRow from './TaskRow';
 import Button from '../ui/Button';
 import stylesButton from '../ui/Button.module.css';
-import { useTasks } from '../../hooks/tasks/useTasks';
+import useTasks from '../../hooks/tasks/useTasks';
 import useTaskPanel from '../../hooks/useTaskPanel';
 import useWorkspaceData from '../../hooks/useWorkspaceData';
 import useTaskCallbacks from '../../hooks/useTaskCallbacks';
@@ -27,27 +27,42 @@ const TaskList = ({ token }) => {
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
   const { initializeData } = useWorkspaceData(token, fetchWorkspaces, fetchProjects);
+  
+  // Initialize tasks hook
   const {
     tasks,
     handleDelete,
     toggleCompletion,
-    handleTaskUpdate
+    handleTaskUpdate,
+    fetchTasks
   } = useTasks(token, currentProject?._id);
 
+  // Initialize task callbacks
   const {
     handleSave,
     handleCancel,
     getTaskCallbacks
   } = useTaskCallbacks(taskPanel, handleTaskUpdate, toggleCompletion, handleDelete);
 
+  // Refresh tasks when project changes
+  useEffect(() => {
+    if (currentProject?._id) {
+      logger.debug('Project changed, refreshing tasks');
+      fetchTasks();
+    }
+  }, [currentProject?._id, fetchTasks]);
+
   return (
-    <div>
-      <Button
-        onClick={taskPanel.togglePanel}
-        className={stylesButton.button}
-      >
-        {taskPanel.isOpen ? 'Close Panel' : 'Add Task'}
-      </Button>
+    <div className="task-list-wrapper">
+      <div className="task-list-controls">
+        <Button
+          onClick={taskPanel.togglePanel}
+          className={stylesButton.button}
+          aria-label={taskPanel.isOpen ? 'Close task panel' : 'Open task panel'}
+        >
+          {taskPanel.isOpen ? 'Close Panel' : 'Add Task'}
+        </Button>
+      </div>
 
       <div className="task-list-container">
         <TaskPanel
@@ -58,7 +73,7 @@ const TaskList = ({ token }) => {
           currentProject={currentProject}
         />
 
-        <Table>
+        <Table aria-label="Task list">
           <TaskTableHeader />
           <TableBody>
             {tasks.map((task) => (
