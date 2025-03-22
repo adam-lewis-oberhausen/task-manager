@@ -5,7 +5,7 @@ import Input from '../ui/Input';
 import Button from '../ui/Button';
 import styles from '../ui/Form.module.css';
 
-const RegisterForm = ({ onSubmit, onChange, values }) => {
+const RegisterForm = ({ onSubmit, onChange, values, children }) => {
   return (
     <Form className={styles.form} onSubmit={onSubmit}>
       <h2 className={styles.title}>Register</h2>
@@ -32,6 +32,7 @@ const RegisterForm = ({ onSubmit, onChange, values }) => {
       <div className={styles.actions}>
         <Button type="submit">Register</Button>
       </div>
+      {children}
     </Form>
   );
 };

@@ -6,6 +6,7 @@ import AuthError from './auth/AuthError';
 import AuthLink from './auth/AuthLink';
 import RegisterForm from './auth/RegisterForm';
 import { createLogger } from '../utils/logger';
+import styles from './ui/Form.module.css';
 
 const logger = createLogger('REGISTER');
 
@@ -19,18 +20,19 @@ const Register = ({ onLogin, setView }) => {
   }, [setView]);
 
   return (
-    <div>
+    <div className={styles.formContainer}>
       <RegisterForm
         onSubmit={handleSubmit}
         onChange={handleChange}
         values={formState}
-      />
-      <AuthError error={formState.error} />
-      <AuthLink
-        onClick={handleLoginClick}
-        text="Already have an account?"
-        linkText="Login"
-      />
+      >
+        <AuthError error={formState.error} />
+        <AuthLink
+          onClick={handleLoginClick}
+          text="Already have an account?"
+          linkText="Login"
+        />
+      </RegisterForm>
     </div>
   );
 };
