@@ -6,7 +6,7 @@ import TaskTableHeader from './TaskTableHeader';
 import TaskPanel from './TaskPanel';
 import TaskRow from './TaskRow';
 import Button from '../ui/Button';
-import stylesButton from './ui/Button.module.css';
+import stylesButton from '../ui/Button.module.css';
 import { useTasks } from '../../hooks/useTasks';
 import useTaskPanel from '../../hooks/useTaskPanel';
 import useWorkspaceData from '../../hooks/useWorkspaceData';
