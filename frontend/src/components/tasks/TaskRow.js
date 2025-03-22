@@ -57,7 +57,7 @@ const TaskRow = ({
         {task.name}
       </TableCell>
       <TableCell className={styles.tableCell} onClick={handleEdit}>
-        {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : ''}
+        {task.dueDate ? new Date(`${task.dueDate}T00:00:00`).toLocaleDateString() : ''}
       </TableCell>
       <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`} onClick={handleEdit}>
         {task.priority}

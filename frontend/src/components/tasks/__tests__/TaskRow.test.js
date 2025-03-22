@@ -37,24 +37,28 @@ describe('TaskRow', () => {
 
   it('renders task name and basic information', () => {
     render(
-      <TaskRow
-        task={testTask}
-        isOverdue={isOverdue}
-        priorityColors={priorityColors}
-        callbacks={mockCallbacks}
-      />
+      <table>
+        <tbody>
+          <TaskRow
+          task={testTask}
+          isOverdue={isOverdue}
+          priorityColors={priorityColors}
+          callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
     );
-    
+
     // Verify core task information is displayed
     expect(screen.getByText('Test Task')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Medium')).toBeInTheDocument();
     expect(screen.getByText('12/31/2023')).toBeInTheDocument();
-    
+
     // Verify checkbox state
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
-    
+
     // Verify action buttons are present
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();

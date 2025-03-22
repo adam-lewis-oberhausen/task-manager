@@ -84,7 +84,7 @@ describe('Task API', () => {
       name: TEST_TASK(Date.now()),
       description: 'Test Description',
       priority: 'Medium',
-      dueDate: new Date().toISOString(),
+      dueDate: new Date().toISOString().substring(0, 10),
       project: testProject._id
     };
 
