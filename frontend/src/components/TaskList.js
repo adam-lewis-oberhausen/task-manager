@@ -87,11 +87,13 @@ const TaskList = ({ token }) => {
               <TaskRow
                 key={task._id}
                 task={task}
-                toggleCompletion={toggleCompletion}
-                handleDelete={handleDelete}
+                callbacks={{
+                  toggleCompletion: () => toggleCompletion(task),
+                  handleDelete: () => handleDelete(task._id),
+                  startEditing: () => startEditing(task)
+                }}
                 isOverdue={isOverdue}
                 priorityColors={priorityColors}
-                startEditing={startEditing}
               />
             ))}
           </TableBody>

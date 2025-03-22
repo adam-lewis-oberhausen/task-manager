@@ -18,14 +18,9 @@ const TaskRow = ({
   task,
   isOverdue,
   priorityColors,
-  toggleCompletion,
-  handleDelete,
-  startEditing
+  callbacks
 }) => {
-  const { handleToggleCompletion, handleEdit, handleDeleteTask } = useTaskRow(
-    task,
-    { toggleCompletion, handleDelete, startEditing }
-  );
+  const { handleToggleCompletion, handleEdit, handleDeleteTask } = useTaskRow(task, callbacks);
 
   // Log task state changes
   useEffect(() => {
@@ -89,9 +84,11 @@ TaskRow.propTypes = {
   task: PropTypes.object.isRequired,
   isOverdue: PropTypes.func.isRequired,
   priorityColors: PropTypes.object.isRequired,
-  toggleCompletion: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  startEditing: PropTypes.func.isRequired,
+  callbacks: PropTypes.shape({
+    toggleCompletion: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    startEditing: PropTypes.func.isRequired
+  }).isRequired,
 };
 
 export default React.memo(TaskRow);
