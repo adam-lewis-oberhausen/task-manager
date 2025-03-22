@@ -40,9 +40,13 @@ const TaskList = ({ token }) => {
     tasks,
     handleDelete,
     toggleCompletion,
-    handleTaskUpdate,
-    startEditing
+    handleTaskUpdate
   } = useTasks(token, currentProject?._id);
+
+  const startEditing = useCallback((task) => {
+    logger.info('Starting task edit', { taskId: task._id });
+    taskPanel.openPanel(task);
+  }, [taskPanel]);
 
   // Task Operations Handlers
   const handleSave = useCallback(async (task) => {
