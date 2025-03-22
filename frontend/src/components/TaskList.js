@@ -60,10 +60,8 @@ const TaskList = ({ token }) => {
     editingName,
     setEditingName,
     handleDelete,
-    moveTask,
     toggleCompletion,
     handleTaskUpdate,
-    updateTasksOrder,
     setName
   } = useTasks(token, currentProject?._id);
 
@@ -162,12 +160,10 @@ const TaskList = ({ token }) => {
       setEditingName={setEditingName}
       toggleCompletion={toggleCompletion}
       handleDelete={handleDelete}
-      moveTask={moveTask}
       isOverdue={isOverdue}
       priorityColors={priorityColors}
       handleTaskUpdate={handleTaskUpdate}
       startEditing={startEditing}
-      updateTasksOrder={updateTasksOrder}
       setName={setName}
     />
   ));

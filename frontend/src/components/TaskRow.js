@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from './ui/Checkbox';
 import Button from './ui/Button';
@@ -35,38 +35,6 @@ const TaskRow = ({
     });
   }, [task]);
 
-  // Log drag-and-drop operations
-  useEffect(() => {
-    const handleDragStart = () => {
-      logger.debug('Drag started for task:', {
-        id: task._id,
-        name: task.name,
-        index
-      });
-    };
-
-    const handleDragEnd = () => {
-      logger.debug('Drag ended for task:', {
-        id: task._id,
-        name: task.name,
-        index
-      });
-      updateTasksOrder();
-    };
-
-    const dragHandle = document.querySelector(`.${stylesButton.dragHandle}`);
-    if (dragHandle) {
-      dragHandle.addEventListener('dragstart', handleDragStart);
-      dragHandle.addEventListener('dragend', handleDragEnd);
-    }
-
-    return () => {
-      if (dragHandle) {
-        dragHandle.removeEventListener('dragstart', handleDragStart);
-        dragHandle.removeEventListener('dragend', handleDragEnd);
-      }
-    };
-  }, [task._id, task.name, index, updateTasksOrder]);
 
   return (
     <TableRow

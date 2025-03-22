@@ -110,22 +110,6 @@ export const useTasks = (token, projectId) => {
     }
   }, [tasks, loadMockTasks]);
 
-  const moveTask = useCallback((dragIndex, hoverIndex) => {
-    // Only log if we're actually moving the task to a new position
-    if (dragIndex !== hoverIndex) {
-      logger.debug(`Moving task from index ${dragIndex} to ${hoverIndex}`);
-
-      const draggedTask = tasks[dragIndex];
-      const updatedTasks = [...tasks];
-      updatedTasks.splice(dragIndex, 1);
-      updatedTasks.splice(hoverIndex, 0, draggedTask);
-
-      // Only update state if the position actually changed
-      if (tasks[dragIndex]._id !== updatedTasks[hoverIndex]._id) {
-        setTasks(updatedTasks);
-      }
-    }
-  }, [tasks]);
 
 
   const toggleCompletion = useCallback(async (task) => {
@@ -222,7 +206,6 @@ export const useTasks = (token, projectId) => {
     editingName,
     setEditingName,
     handleDelete,
-    moveTask,
     toggleCompletion,
     loadMockTasks,
     updateTask,

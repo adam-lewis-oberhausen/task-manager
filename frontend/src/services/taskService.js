@@ -106,21 +106,3 @@ export const deleteTask = async (id) => {
   }
 };
 
-export const updateTaskOrder = async (orderUpdates) => {
-  try {
-    logger.debug('Updating task order', {
-      count: orderUpdates.length
-    });
-    const response = await axios.patch(`${BASE_URL}/order`, { orderUpdates });
-    logger.debug('Task order updated successfully', {
-      count: orderUpdates.length
-    });
-    return response.data;
-  } catch (error) {
-    logger.error('Error updating task order:', {
-      error: error.message,
-      status: error.response?.status
-    });
-    throw error;
-  }
-};
