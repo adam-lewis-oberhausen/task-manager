@@ -28,14 +28,19 @@ const TaskList = ({ token }) => {
   const taskPanel = useTaskPanel();
   const { initializeData } = useWorkspaceData(token, useContext(WorkspaceContext)); 
 
-  // Initialize tasks hook
+  // Initialize task data and operations hooks
   const {
     tasks,
+    setTasks,
+    fetchTasks,
+    loadMockTasks
+  } = useTaskData(token, currentProject?._id);
+
+  const {
     handleDelete,
     toggleCompletion,
-    handleTaskUpdate,
-    fetchTasks
-  } = useTasks(token, currentProject?._id);
+    handleTaskUpdate
+  } = useTaskOperations(tasks, setTasks, loadMockTasks);
 
   // Initialize task callbacks
   const {
