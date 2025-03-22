@@ -27,7 +27,7 @@ const TaskList = ({ token }) => {
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
   const { initializeData } = useWorkspaceData(token, fetchWorkspaces, fetchProjects);
-  
+
   // Initialize tasks hook
   const {
     tasks,

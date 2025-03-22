@@ -4,7 +4,7 @@ import { MOCK_TASKS, normalizeTask } from '../../utils/taskHelpers';
 import { createLogger } from '../../utils/logger';
 const logger = createLogger('USE_TASKS');
 
-export const useTasks = (token, projectId) => {
+const useTasks = (token, projectId) => {
   const [tasks, setTasks] = useState([]);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingName, setEditingName] = useState('');
@@ -30,41 +30,41 @@ export const useTasks = (token, projectId) => {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        if (!isMounted.current || !projectId) return;
+  const fetchTasks = async () => {
+    try {
+      if (!isMounted.current || !projectId) return;
 
-        // Add small debounce to prevent rapid refetches
-        const timeoutId = setTimeout(async () => {
-          try {
-            logger.info('Fetching tasks for project:', projectId);
-            const tasks = await getTasks(token, projectId);
-            logger.debug('Tasks retrieved:', tasks);
-            logger.debug('Number of tasks:', tasks.length);
+      // Add small debounce to prevent rapid refetches
+      const timeoutId = setTimeout(async () => {
+        try {
+          logger.info('Fetching tasks for project:', projectId);
+          const tasks = await getTasks(token, projectId);
+          logger.debug('Tasks retrieved:', tasks);
+          logger.debug('Number of tasks:', tasks.length);
 
-            if (tasks.length === 0) {
-              logger.info('No tasks found, loading mock tasks');
-              loadMockTasks();
-            } else {
-              logger.debug('Setting tasks:', tasks);
-              setTasks(tasks);
-            }
-            prevToken.current = token;
-          } catch (error) {
-            logger.error('Error fetching tasks:', error);
-            // If there's an error fetching tasks, load mock tasks as fallback
-            logger.info('Error fetching tasks, loading mock tasks as fallback');
+          if (tasks.length === 0) {
+            logger.info('No tasks found, loading mock tasks');
             loadMockTasks();
+          } else {
+            logger.debug('Setting tasks:', tasks);
+            setTasks(tasks);
           }
-        }, 200); // 200ms debounce
+          prevToken.current = token;
+        } catch (error) {
+          logger.error('Error fetching tasks:', error);
+          // If there's an error fetching tasks, load mock tasks as fallback
+          logger.info('Error fetching tasks, loading mock tasks as fallback');
+          loadMockTasks();
+        }
+      }, 200); // 200ms debounce
 
-        return timeoutId;
-      } catch (error) {
-        logger.error('Error in fetchTasks:', error);
-      }
-    };
+      return timeoutId;
+    } catch (error) {
+      logger.error('Error in fetchTasks:', error);
+    }
+  };
 
+  useEffect(() => {
     // Only fetch tasks if we have a valid token
     let timeoutId;
     if (token) {
@@ -80,7 +80,7 @@ export const useTasks = (token, projectId) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [token, loadMockTasks, projectId]);
+  }, [token, fetchTasks, loadMockTasks, projectId]);
 
   const handleDelete = useCallback(async (id) => {
     try {
@@ -203,17 +203,11 @@ export const useTasks = (token, projectId) => {
 
   return {
     tasks,
-    editingTaskId,
-    setEditingTaskId,
-    editingName,
-    setEditingName,
     handleDelete,
     toggleCompletion,
-    loadMockTasks,
-    updateTask,
-    createTask,
-    setTasks,
     handleTaskUpdate,
-    setName
+    fetchTasks
   };
 };
+
+export default useTasks;
