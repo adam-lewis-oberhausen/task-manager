@@ -7,7 +7,8 @@ import TaskPanel from './TaskPanel';
 import TaskRow from './TaskRow';
 import Button from '../ui/Button';
 import stylesButton from '../ui/Button.module.css';
-import useTasks from '../../hooks/tasks/useTasks';
+import useTaskData from '../../hooks/tasks/useTaskData';
+import useTaskOperations from '../../hooks/tasks/useTaskOperations';
 import useTaskPanel from '../../hooks/useTaskPanel';
 import useWorkspaceData from '../../hooks/useWorkspaceData';
 import useTaskCallbacks from '../../hooks/useTaskCallbacks';
@@ -26,7 +27,7 @@ const DEFAULT_TASK = {
 const TaskList = ({ token }) => {
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
-  const { initializeData } = useWorkspaceData(token, useContext(WorkspaceContext)); 
+  const { initializeData } = useWorkspaceData(token, useContext(WorkspaceContext));
 
   // Initialize task data and operations hooks
   const {
