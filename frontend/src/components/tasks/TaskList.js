@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { WorkspaceContext } from '../../context/WorkspaceContext';
 import { Table, TableBody } from '../ui/Table';
@@ -26,7 +26,7 @@ const DEFAULT_TASK = {
 const TaskList = ({ token }) => {
   const { currentProject, fetchWorkspaces, fetchProjects } = useContext(WorkspaceContext);
   const taskPanel = useTaskPanel();
-  const { initializeData } = useWorkspaceData(token, fetchWorkspaces, fetchProjects);
+  const { initializeData } = useWorkspaceData(token, useContext(WorkspaceContext)); 
 
   // Initialize tasks hook
   const {
@@ -45,10 +45,13 @@ const TaskList = ({ token }) => {
   } = useTaskCallbacks(taskPanel, handleTaskUpdate, toggleCompletion, handleDelete);
 
   // Refresh tasks when project changes
+  const prevProjectId = useRef(currentProject?._id);
+
   useEffect(() => {
-    if (currentProject?._id) {
+    if (currentProject?._id && currentProject._id !== prevProjectId.current) {
       logger.debug('Project changed, refreshing tasks');
-      fetchTasks();
+      prevProjectId.current = currentProject._id;
+      fetchTasks(true); // Force refresh when project changes
     }
   }, [currentProject?._id, fetchTasks]);
 

@@ -30,9 +30,15 @@ const useTasks = (token, projectId) => {
     };
   }, []);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async (force = false) => {
     try {
       if (!isMounted.current || !projectId) return;
+
+      // Don't fetch if we already have tasks and aren't forcing a refresh
+      if (!force && tasks.length > 0) {
+        logger.debug('Skipping task fetch - already have tasks');
+        return;
+      }
 
       // Add small debounce to prevent rapid refetches
       const timeoutId = setTimeout(async () => {
@@ -62,7 +68,7 @@ const useTasks = (token, projectId) => {
     } catch (error) {
       logger.error('Error in fetchTasks:', error);
     }
-  };
+  });
 
   useEffect(() => {
     // Only fetch tasks if we have a valid token
