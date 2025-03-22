@@ -20,31 +20,7 @@ const DEFAULT_TASK = {
   dueDate: ''
 };
 
-// Custom Hook for Task Panel Management
-const useTaskPanel = (initialState = false) => {
-  const [isOpen, setIsOpen] = useState(initialState);
-  const [editingTask, setEditingTask] = useState(null);
-
-  const openPanel = useCallback((task = null) => {
-    logger.info('Opening task panel', { taskId: task?._id });
-    setIsOpen(true);
-    setEditingTask(task);
-  }, []);
-
-  const closePanel = useCallback(() => {
-    logger.info('Closing task panel');
-    setIsOpen(false);
-    setEditingTask(null);
-  }, []);
-
-  return {
-    isOpen,
-    editingTask,
-    openPanel,
-    closePanel,
-    togglePanel: useCallback(() => setIsOpen(prev => !prev), [])
-  };
-};
+import useTaskPanel from '../hooks/useTaskPanel';
 
 const TaskList = ({ token }) => {
   // Context and State Management
