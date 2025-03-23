@@ -33,7 +33,7 @@ const TaskPanel = ({ isOpen, editingTask, onSave, onCancel, currentProject }) =>
       aria-labelledby="task-panel-title"
     >
       <h2 id="task-panel-title" className={styles.visuallyHidden}>
-        {editingTask._id ? 'Edit Task' : 'Create New Task'}
+        {editingTask? 'Edit Task' : 'Create New Task'}
       </h2>
       <TaskForm
         key={editingTask?._id || 'new-task'}

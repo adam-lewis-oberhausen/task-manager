@@ -97,52 +97,52 @@ describe('TaskPanel', () => {
     expect(screen.getByText(/edit task/i)).toBeInTheDocument();
   });
 
-  // it('shows create title when creating new task', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={null}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('shows create title when creating new task', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={null}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   expect(screen.getByText(/create new task/i)).toBeInTheDocument();
-  // });
+    expect(screen.getByText(/create new task/i)).toBeInTheDocument();
+  });
 
-  // it('passes correct task data to TaskForm', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('passes correct task data to TaskForm', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   expect(screen.getByDisplayValue(mockTask.name)).toBeInTheDocument();
-  //   expect(screen.getByText(mockTask.description)).toBeInTheDocument();
-  //   expect(screen.getByDisplayValue(mockTask.priority)).toBeInTheDocument();
-  //   expect(screen.getByDisplayValue(mockTask.dueDate)).toBeInTheDocument();
-  // });
+    expect(screen.getByDisplayValue(mockTask.name)).toBeInTheDocument();
+    expect(screen.getByText(mockTask.description)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(mockTask.priority)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(mockTask.dueDate)).toBeInTheDocument();
+  });
 
-  // it('passes current project to TaskForm', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('passes current project to TaskForm', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   // Verify project ID is passed to form
-  //   const form = screen.getByRole('form');
-  //   expect(form).toHaveAttribute('data-project-id', mockProject._id);
-  // });
+    // Verify project ID is passed to form
+    const form = screen.getByRole('form');
+    expect(form).toHaveAttribute('data-project-id', mockProject._id);
+  });
 
   // it('handles missing project gracefully', () => {
   //   render(
