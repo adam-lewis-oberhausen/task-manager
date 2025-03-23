@@ -102,7 +102,10 @@ describe('TaskRow', () => {
     expect(mockCallbacks.startEditing).toHaveBeenCalled();
   });
 
-  it('calls handleDelete when delete button is clicked', () => {
+  it('calls handleDelete when delete button is clicked and confirmed', () => {
+    // Mock window.confirm to return true
+    window.confirm = jest.fn(() => true);
+
     render(
       <table>
         <tbody>
@@ -116,15 +119,49 @@ describe('TaskRow', () => {
       </table>
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /delete-task/i });
     fireEvent.click(deleteButton);
+
+    // Verify confirm was called
+    expect(window.confirm).toHaveBeenCalledWith(
+      `Are you sure you want to delete "${testTask.name}"?`
+    );
+
+    // Verify delete callback was called
     expect(mockCallbacks.handleDelete).toHaveBeenCalledWith(testTask._id);
+  });
+
+  it('does not call handleDelete when delete is canceled', () => {
+    // Mock window.confirm to return false
+    window.confirm = jest.fn(() => false);
+
+    render(
+      <table>
+        <tbody>
+          <TaskRow
+            task={testTask}
+            isOverdue={isOverdue}
+            priorityColors={priorityColors}
+            callbacks={mockCallbacks}
+          />
+        </tbody>
+      </table>
+    );
+
+    const deleteButton = screen.getByRole('button', { name: /delete-task/i });
+    fireEvent.click(deleteButton);
+
+    // Verify confirm was called
+    expect(window.confirm).toHaveBeenCalled();
+
+    // Verify delete callback was NOT called
+    expect(mockCallbacks.handleDelete).not.toHaveBeenCalled();
   });
 
   it('applies overdue styling when task is overdue', () => {
     const overdueTask = { ...testTask, dueDate: '2020-01-01' };
     isOverdue.mockReturnValue(true);
-    
+
     render(
       <table>
         <tbody>
@@ -144,7 +181,7 @@ describe('TaskRow', () => {
 
   it('applies completed styling when task is completed', () => {
     const completedTask = { ...testTask, completed: true };
-    
+
     render(
       <table>
         <tbody>
@@ -164,7 +201,7 @@ describe('TaskRow', () => {
 
   it('applies correct priority color class', () => {
     const highPriorityTask = { ...testTask, priority: 'High' };
-    
+
     render(
       <table>
         <tbody>
@@ -201,7 +238,7 @@ describe('TaskRow', () => {
 
   it('handles empty due dates gracefully', () => {
     const noDateTask = { ...testTask, dueDate: null };
-    
+
     render(
       <table>
         <tbody>
@@ -215,7 +252,7 @@ describe('TaskRow', () => {
       </table>
     );
 
-    const dateCell = screen.getByRole('cell', { name: '' });
+    const dateCell = screen.getByRole('cell', { name: 'due-date' });
     expect(dateCell).toBeInTheDocument();
   });
 });

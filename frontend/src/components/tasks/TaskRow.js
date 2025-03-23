@@ -56,7 +56,10 @@ const TaskRow = ({
       <TableCell className={styles.tableCell} onClick={handleEdit}>
         {task.name}
       </TableCell>
-      <TableCell className={styles.tableCell} onClick={handleEdit}>
+      <TableCell
+        className={styles.tableCell} onClick={handleEdit}
+        aria-label="due-date"
+      >
         {task.dueDate ? new Date(`${task.dueDate}T00:00:00`).toLocaleDateString() : ''}
       </TableCell>
       <TableCell className={`${styles.tableCell} ${priorityColors[task.priority]}`} onClick={handleEdit}>
@@ -74,6 +77,7 @@ const TaskRow = ({
           onClick={handleDeleteTask}
           icon={DeleteIcon}
           className={`${stylesButton.iconOnly} ${stylesButton.deleteButton}`}
+          aria-label="delete-task"
         />
       </TableCell>
     </TableRow>
