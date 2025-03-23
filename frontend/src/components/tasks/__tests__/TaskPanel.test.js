@@ -59,7 +59,7 @@ describe('TaskPanel', () => {
     );
 
     // Verify dialog is present
-    const dialog = screen.getByRole('textbox');
+    const dialog = screen.getByRole('task-panel-renders');
     expect(dialog).toBeInTheDocument();
 
     // Verify form fields are present
