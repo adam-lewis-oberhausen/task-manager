@@ -64,27 +64,33 @@ const TaskForm = ({ task, onSave, onCancel, currentProject }) => {
 
       <div className={styles.formGroup}>
         <label htmlFor="description" className={styles.label}>Description</label>
-        <ReactQuill
-          ref={quillRef}
-          id="description"
-          value={formState.description}
-          onChange={handleDescriptionChange}
-          modules={{
-            toolbar: [
-              [{ 'header': [1, 2, false] }],
-              ['bold', 'italic', 'underline', 'strike'],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['link', 'image'],
-              ['clean']
-            ]
-          }}
-          formats={[
-            'header',
-            'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
-          ]}
-          theme="snow"
+        <div
+          data-testid="description-editor"
           aria-label="Description"
-        />
+          role="textbox"
+          aria-multiline="true"
+        >
+          <ReactQuill
+            ref={quillRef}
+            id="description"
+            value={formState.description}
+            onChange={handleDescriptionChange}
+            modules={{
+              toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+              ]
+            }}
+            formats={[
+              'header',
+              'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
+            ]}
+            theme="snow"
+          />
+        </div>
       </div>
 
       <div className={styles.formGroup}>
