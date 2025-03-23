@@ -66,11 +66,11 @@ const TaskForm = ({ task, onSave, onCancel, currentProject }) => {
         <label htmlFor="description" className={styles.label}>Description</label>
         <div
           data-testid="description-editor"
-          aria-label="Description"
-          role="task-panel-renders"
+          aria-label="description"
+          role="textbox"
           aria-multiline="true"
         >
-          {/* <ReactQuill
+          <ReactQuill
             ref={quillRef}
             id="description"
             value={formState.description}
@@ -89,7 +89,7 @@ const TaskForm = ({ task, onSave, onCancel, currentProject }) => {
               'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image'
             ]}
             theme="snow"
-          /> */}
+          />
         </div>
       </div>
 

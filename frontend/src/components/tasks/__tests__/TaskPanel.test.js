@@ -59,8 +59,8 @@ describe('TaskPanel', () => {
     );
 
     // Verify dialog is present
-    const dialog = screen.getByRole('task-panel-renders');
-    expect(dialog).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'description' })).toBeInTheDocument();
 
     // Verify form fields are present
     expect(screen.getByLabelText('Name')).toBeInTheDocument();
@@ -69,33 +69,33 @@ describe('TaskPanel', () => {
     expect(screen.getByLabelText('Priority')).toBeInTheDocument();
   });
 
-  // it('does not render when isOpen is false', () => {
-  //   const { container } = render(
-  //     <TaskPanel
-  //       isOpen={false}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('does not render when isOpen is false', () => {
+    const { container } = render(
+      <TaskPanel
+        isOpen={false}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   expect(container.firstChild).toBeNull();
-  // });
+    expect(container.firstChild).toBeNull();
+  });
 
-  // it('shows edit title when editing existing task', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('shows edit title when editing existing task', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   expect(screen.getByText(/edit task/i)).toBeInTheDocument();
-  // });
+    expect(screen.getByText(/edit task/i)).toBeInTheDocument();
+  });
 
   // it('shows create title when creating new task', () => {
   //   render(

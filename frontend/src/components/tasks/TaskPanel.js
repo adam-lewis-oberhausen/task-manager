@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TaskForm from './TaskForm';
+import styles from './TaskPanel.module.css';
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('TASK_PANEL');
@@ -25,7 +26,15 @@ const TaskPanel = ({ isOpen, editingTask, onSave, onCancel, currentProject }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="task-panel open">
+    <div
+      className="task-panel open"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="task-panel-title"
+    >
+      <h2 id="task-panel-title" className={styles.visuallyHidden}>
+        {editingTask._id ? 'Edit Task' : 'Create New Task'}
+      </h2>
       <TaskForm
         key={editingTask?._id || 'new-task'}
         task={editingTask}
