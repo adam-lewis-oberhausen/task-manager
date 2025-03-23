@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import TaskPanel from '../TaskPanel';
 import { createLogger } from '../../../utils/logger';
 
@@ -10,23 +10,6 @@ jest.mock('../../../utils/logger', () => ({
     error: jest.fn()
   })
 }));
-
-// jest.mock('react-quill', () => {
-//   const { forwardRef } = jest.requireActual('react');
-//   return forwardRef(({ value, onChange }, ref) => {
-//     return (
-//       <div
-//         ref={ref}
-//         data-testid="description-editor"
-//         aria-label="Description"
-//         role="textbox"
-//         aria-multiline="true"
-//       >
-//         <div className="ql-editor" dangerouslySetInnerHTML={{ __html: value }} />
-//       </div>
-//     );
-//   });
-// });
 
 describe('TaskPanel', () => {
   const mockTask = {
@@ -139,61 +122,72 @@ describe('TaskPanel', () => {
       />
     );
 
-    // Verify project ID is passed to form
+    // Verify form is present
     const form = screen.getByRole('form');
+    expect(form).toBeInTheDocument();
+
+    // Verify project ID is passed to form
     expect(form).toHaveAttribute('data-project-id', mockProject._id);
   });
 
-  // it('handles missing project gracefully', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={null}
-  //     />
-  //   );
+  it('handles missing project gracefully', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={null}
+      />
+    );
 
-  //   // Verify form still renders
-  //   expect(screen.getByRole('form')).toBeInTheDocument();
-  // });
+    // Verify form still renders
+    expect(screen.getByRole('form')).toBeInTheDocument();
+  });
 
-  // it('calls onSave with correct data', async () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+  it('calls onSave with correct data', async () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   // Simulate form submission
-  //   const saveButton = screen.getByRole('button', { name: /save task/i });
-  //   saveButton.click();
+    // Simulate form submission
+    const saveButton = screen.getByRole('button', { name: /save task/i });
+    fireEvent.click(saveButton);
 
-  //   expect(mockCallbacks.onSave).toHaveBeenCalledWith({
-  //     ...mockTask,
-  //     project: mockProject._id
-  //   });
-  // });
+    // Verify onSave was called with correct data
+    expect(mockCallbacks.onSave).toHaveBeenCalledWith(expect.objectContaining({
+      _id: mockTask._id,
+      name: mockTask.name,
+      description: expect.stringContaining('Test Description'), // More flexible check
+      priority: mockTask.priority,
+      project: mockProject._id
+    }));
 
-  // it('calls onCancel when cancel button is clicked', () => {
-  //   render(
-  //     <TaskPanel
-  //       isOpen={true}
-  //       editingTask={mockTask}
-  //       onSave={mockCallbacks.onSave}
-  //       onCancel={mockCallbacks.onCancel}
-  //       currentProject={mockProject}
-  //     />
-  //   );
+    // Verify date is in correct format
+    const savedData = mockCallbacks.onSave.mock.calls[0][0];
+    expect(new Date(savedData.dueDate)).toEqual(new Date('2023-12-31'));
+  });
 
-  //   const cancelButton = screen.getByRole('button', { name: /cancel/i });
-  //   cancelButton.click();
+  it('calls onCancel when cancel button is clicked', () => {
+    render(
+      <TaskPanel
+        isOpen={true}
+        editingTask={mockTask}
+        onSave={mockCallbacks.onSave}
+        onCancel={mockCallbacks.onCancel}
+        currentProject={mockProject}
+      />
+    );
 
-  //   expect(mockCallbacks.onCancel).toHaveBeenCalled();
-  // });
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    cancelButton.click();
+
+    expect(mockCallbacks.onCancel).toHaveBeenCalled();
+  });
 });

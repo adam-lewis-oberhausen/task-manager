@@ -34,7 +34,12 @@ const TaskForm = ({ task, onSave, onCancel, currentProject }) => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <form
+      onSubmit={handleSubmit}
+      className={styles.form}
+      role="form"
+      data-project-id={currentProject?._id || null}
+    >
       <div className={styles.formGroup}>
         <label htmlFor="name" className={styles.label}>Name</label>
         <input
